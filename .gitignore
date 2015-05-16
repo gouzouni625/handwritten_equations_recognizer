@@ -1,0 +1,12 @@
+*.swp
+*.jar
+
+.classpath
+.project
+/bin/
+
+todo
+notes
+
+testing_dir/
+backup/
