@@ -13,37 +13,37 @@ public class Trace{
   public Trace(){
     points_ = new ArrayList<Point>();
   }
-  
+
   public Trace(ArrayList<Point> points){
     points_ = points;
   }
-  
+
   public void addPoint(Point point){
     points_.add(point);
   }
-  
+
   public Point get(int index){
     return points_.get(index);
   }
-  
+
   public int size(){
     return points_.size();
   }
-  
+
   public Mat toImage(Size size){
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    
+
     // Work on a copy of the original points in order not to change them.
     @SuppressWarnings("unchecked")
     ArrayList<Point> points = (ArrayList<Point>)points_.clone();
-    
+
     // Multiply data by 100. ===================================================
     // Data provided by GeoGebra will have 2 decimal digits, that is why the
     // multiplication is done by 100.
     for(int i = 0;i < points_.size();i++){
       points.get(i).multiplyBy(100);
     }
-   
+
     // Find a bounding box around the trace. ====================================
     int minX = (int)(points.get(0).x_);
     int maxX = (int)(points.get(0).x_);
@@ -73,16 +73,16 @@ public class Trace{
     if(height == 0){
       height = 1;
     }
-   
+
     // Translate points around the beginning of the axes. =======================
     Point translation = new Point(minX, minY);
     for(int i = 0;i < points.size();i++){
       points.get(i).substract(translation);
     }
-    
+
     // Create the image. =======================================================
     Mat image = Mat.zeros(height, width, CvType.CV_64F);
-    
+
     // Wanted thickness at 1000 x 1000 pixels = 30.
     int thickness = (int)((width + height) / 2 * 30 / 1000);
     // Check that 0 <= thickness <= 255 (constraint made by OpenCV.
@@ -92,7 +92,7 @@ public class Trace{
     else if(thickness > 255){
       thickness = 255;
     }
-    
+
     // Notice that we use OpenCV points inside Core.line function.
     for(int i = 0;i < points.size() - 1;i++){
       Core.line(image,
@@ -101,16 +101,16 @@ public class Trace{
                                    height - points.get(i + 1).y_),
          new Scalar(255, 255, 255), thickness);
     }
-    
+
     Imgproc.resize(image, image, new Size(1000, 1000));
-      
+
     Imgproc.copyMakeBorder(image, image, 500, 500, 500, 500,
                                   Imgproc.BORDER_CONSTANT, new Scalar(0, 0, 0));
 
     Imgproc.blur(image, image, new Size(200, 200));
-      
+
     Imgproc.resize(image, image, size);
-      
+
     int meanValue = 0;
     for(int i = 0;i < size.height;i++){
       for(int j = 0;j < size.width;j++){
@@ -118,7 +118,7 @@ public class Trace{
       }
     }
     meanValue /= (size.height * size.width);
-      
+
     int value;
     for(int i = 0;i < size.height;i++){
       for(int j = 0;j < size.width;j++){
