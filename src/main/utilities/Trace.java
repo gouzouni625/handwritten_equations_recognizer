@@ -1,4 +1,4 @@
-package utilities;
+package main.utilities;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,9 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class Trace{
-  public Trace(){}
+  public Trace(){
+    points_ = new ArrayList<Point>();
+  }
   
   public Trace(ArrayList<Point> points){
     points_ = points;
@@ -83,6 +85,13 @@ public class Trace{
     
     // Wanted thickness at 1000 x 1000 pixels = 30.
     int thickness = (int)((width + height) / 2 * 30 / 1000);
+    // Check that 0 <= thickness <= 255 (constraint made by OpenCV.
+    if(thickness <= 0){
+      thickness = 1;
+    }
+    else if(thickness > 255){
+      thickness = 255;
+    }
     
     // Notice that we use OpenCV points inside Core.line function.
     for(int i = 0;i < points.size() - 1;i++){

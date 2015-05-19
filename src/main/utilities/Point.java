@@ -1,4 +1,4 @@
-package utilities;
+package main.utilities;
 
 public class Point{
   public Point(){
