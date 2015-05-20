@@ -52,15 +52,15 @@ public class Trace{
     for(int i = 0;i < points.size();i++){
       if(points.get(i).x_ < minX){
         minX = (int)(points.get(i).x_);
-      }  
+      }
       if(points.get(i).x_ > maxX){
         maxX = (int)(points.get(i).x_);
       }
-       
+
       if(points.get(i).y_ < minY){
         minY = (int)(points.get(i).y_);
       }
-       
+
       if(points.get(i).y_ > maxY){
         maxY = (int)(points.get(i).y_);
       }
@@ -81,11 +81,11 @@ public class Trace{
     }
 
     // Create the image. =======================================================
-    Mat image = Mat.zeros(height, width, CvType.CV_64F);
+    Mat image = Mat.zeros(height, width, CvType.CV_32F);
 
     // Wanted thickness at 1000 x 1000 pixels = 30.
-    int thickness = (int)((width + height) / 2 * 30 / 1000);
-    // Check that 0 <= thickness <= 255 (constraint made by OpenCV.
+    int thickness = (width + height) / 2 * 30 / 1000;
+    // Check that 0 <= thickness <= 255 (constraint made by OpenCV).
     if(thickness <= 0){
       thickness = 1;
     }
@@ -98,14 +98,14 @@ public class Trace{
       Core.line(image,
          new org.opencv.core.Point(points.get(i).x_, height - points.get(i).y_),
          new org.opencv.core.Point(points.get(i + 1).x_,
-                                   height - points.get(i + 1).y_),
-         new Scalar(255, 255, 255), thickness);
+              height - points.get(i + 1).y_),
+              new Scalar(255, 255, 255), thickness);
     }
 
     Imgproc.resize(image, image, new Size(1000, 1000));
 
     Imgproc.copyMakeBorder(image, image, 500, 500, 500, 500,
-                                  Imgproc.BORDER_CONSTANT, new Scalar(0, 0, 0));
+        Imgproc.BORDER_CONSTANT, new Scalar(0, 0, 0));
 
     Imgproc.blur(image, image, new Size(200, 200));
 
