@@ -1,8 +1,8 @@
-package partitioners;
+package main.partitioners;
 
 import java.io.IOException;
 
-import classifiers.NeuralNetworkClassifier;
+import main.classifiers.NeuralNetworkClassifier;
 
 /* NN = Neural Network, describes the classifier.
  * MST = Minimum Spanning Tree, describes the partitioning algorithm.

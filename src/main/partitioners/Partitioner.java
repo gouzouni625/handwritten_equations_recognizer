@@ -1,7 +1,7 @@
-package partitioners;
+package main.partitioners;
 
-import classifiers.Classifier;
-import utilities.TraceGroup;
+import main.classifiers.Classifier;
+import main.utilities.TraceGroup;
 
 public abstract class Partitioner{
   public abstract TraceGroup[] partition(TraceGroup expression);

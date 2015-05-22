@@ -1,4 +1,4 @@
-package parsers;
+package main.parsers;
 
 public class SimpleParser {
 
