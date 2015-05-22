@@ -1,6 +1,6 @@
-package classifiers;
+package main.classifiers;
 
-import utilities.TraceGroup;
+import main.utilities.TraceGroup;
 
 /* TODO
  * If there is no need for variables inside Classifier class, then it must be
@@ -10,4 +10,6 @@ import utilities.TraceGroup;
 public abstract class Classifier{
   /* Returns the possibility that the symbol tracegroup is indeed a symbol.*/
   public abstract double classify(TraceGroup symbol, TraceGroup context);
+  
+  public abstract int getClassificationLabel();
 }

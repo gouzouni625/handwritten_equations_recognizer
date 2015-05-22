@@ -1,12 +1,13 @@
-package classifiers;
+package main.classifiers;
 
 import java.io.IOException;
+
+import main.utilities.TraceGroup;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
 import base.NeuralNetwork;
-import utilities.TraceGroup;
 
 public class NeuralNetworkClassifier extends Classifier{
   
