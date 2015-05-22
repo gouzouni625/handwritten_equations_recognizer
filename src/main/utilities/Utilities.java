@@ -53,10 +53,10 @@ public class Utilities{
     }
 
     if(paths.get(0).size() == connections.length){
-      return (Utilities.concatenateLists(existingPaths, paths));
+      return ((ArrayList<ArrayList<Integer> >)(Utilities.concatenateLists(existingPaths, paths)));
     }
     else{
-      return (Utilities.concatenateLists(existingPaths, findPaths(paths, connections)));
+      return ((ArrayList<ArrayList<Integer> >)(Utilities.concatenateLists(existingPaths, findPaths(paths, connections))));
     }
   }
 
@@ -109,12 +109,17 @@ public class Utilities{
     return false;
   }
 
-  public static ArrayList<ArrayList<Integer> > concatenateLists(ArrayList<ArrayList<Integer> > list1,
-                                                                ArrayList<ArrayList<Integer> > list2){
-    for(int i = 0;i < list2.size();i++){
-      list1.add(list2.get(i));
+  public static ArrayList<ArrayList<Integer> > concatenateLists(ArrayList<ArrayList<Integer> > list1, ArrayList<ArrayList<Integer> > list2){
+    ArrayList<ArrayList<Integer> > list = new ArrayList<ArrayList<Integer> >();
+
+    for(int i = 0;i < list1.size();i++){
+      list.add(list1.get(i));
     }
 
-    return list1;
+    for(int i = 0;i < list2.size();i++){
+      list.add(list2.get(i));
+    }
+
+    return list;
   }
 }
