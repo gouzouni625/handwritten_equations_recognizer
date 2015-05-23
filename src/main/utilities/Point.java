@@ -34,6 +34,11 @@ public class Point{
     return this;
   }
 
+  public static double distance(Point point1, Point point2){
+    double distance = Math.sqrt(point1.x_ * point2.x_ + point1.y_ * point2.y_);
+    return distance;
+  }
+
   public double x_;
   public double y_;
 }
