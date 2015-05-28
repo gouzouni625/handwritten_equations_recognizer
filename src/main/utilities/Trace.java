@@ -42,39 +42,39 @@ public class Trace{
   }
 
   // TODO
+  // Not a final version.
   public Mat toImage(Size size){
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
     // Work on a copy of the original points in order not to change them.
-    @SuppressWarnings("unchecked")
-    ArrayList<Point> points = (ArrayList<Point>)points_.clone();
+    Trace trace = new Trace(this);
 
     // Multiply data by 100. ===================================================
     // Data provided by GeoGebra will have 2 decimal digits, that is why the
     // multiplication is done by 100.
     for(int i = 0;i < points_.size();i++){
-      points.get(i).multiplyBy(100);
+      trace.get(i).multiplyBy(100);
     }
 
     // Find a bounding box around the trace. ====================================
-    int minX = (int)(points.get(0).x_);
-    int maxX = (int)(points.get(0).x_);
-    int minY = (int)(points.get(0).y_);
-    int maxY = (int)(points.get(0).y_);
-    for(int i = 0;i < points.size();i++){
-      if(points.get(i).x_ < minX){
-        minX = (int)(points.get(i).x_);
+    int minX = (int)(trace.get(0).x_);
+    int maxX = (int)(trace.get(0).x_);
+    int minY = (int)(trace.get(0).y_);
+    int maxY = (int)(trace.get(0).y_);
+    for(int i = 0;i < trace.size();i++){
+      if(trace.get(i).x_ < minX){
+        minX = (int)(trace.get(i).x_);
       }
-      if(points.get(i).x_ > maxX){
-        maxX = (int)(points.get(i).x_);
-      }
-
-      if(points.get(i).y_ < minY){
-        minY = (int)(points.get(i).y_);
+      if(trace.get(i).x_ > maxX){
+        maxX = (int)(trace.get(i).x_);
       }
 
-      if(points.get(i).y_ > maxY){
-        maxY = (int)(points.get(i).y_);
+      if(trace.get(i).y_ < minY){
+        minY = (int)(trace.get(i).y_);
+      }
+
+      if(trace.get(i).y_ > maxY){
+        maxY = (int)(trace.get(i).y_);
       }
     }
     int width = maxX - minX;
@@ -88,8 +88,8 @@ public class Trace{
 
     // Translate points around the beginning of the axes. =======================
     Point translation = new Point(minX, minY);
-    for(int i = 0;i < points.size();i++){
-      points.get(i).subtract(translation);
+    for(int i = 0;i < trace.size();i++){
+      trace.get(i).subtract(translation);
     }
 
     // Create the image. =======================================================
@@ -106,11 +106,11 @@ public class Trace{
     }
 
     // Notice that we use OpenCV points inside Core.line function.
-    for(int i = 0;i < points.size() - 1;i++){
+    for(int i = 0;i < trace.size() - 1;i++){
       Core.line(image,
-         new org.opencv.core.Point(points.get(i).x_, height - points.get(i).y_),
-         new org.opencv.core.Point(points.get(i + 1).x_,
-              height - points.get(i + 1).y_),
+         new org.opencv.core.Point(trace.get(i).x_, height - trace.get(i).y_),
+         new org.opencv.core.Point(trace.get(i + 1).x_,
+              height - trace.get(i + 1).y_),
               new Scalar(255, 255, 255), thickness);
     }
 
