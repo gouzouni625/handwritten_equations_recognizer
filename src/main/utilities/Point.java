@@ -1,6 +1,16 @@
 package main.utilities;
 
+/**
+ * Class that implements a two dimensional point.
+ *
+ * @author Georgios Ouzounis
+ *
+ */
 public class Point{
+
+  /*
+   * Default constructor. Initializes the coordinates of the point to zero.
+   */
   public Point(){
     x_ = 0;
     y_ = 0;
@@ -11,6 +21,12 @@ public class Point{
     y_ = y;
   }
 
+  // Constructor that will be called to create an identical Point.
+  public Point(Point point){
+    x_ = point.x_;
+    y_ = point.y_;
+  }
+
   public Point multiplyBy(double factor){
     x_ *= factor;
     y_ *= factor;
@@ -18,16 +34,14 @@ public class Point{
     return this;
   }
 
-  public Point substract(double factor){
+  public Point subtract(double factor){
     x_ -= factor;
     y_ -= factor;
 
-    // Return yourself so that expressions line
-    // point.substract(1).substract(2)... are possible.
     return this;
   }
 
-  public Point substract(Point point){
+  public Point subtract(Point point){
     x_ -= point.x_;
     y_ -= point.y_;
 
@@ -35,7 +49,8 @@ public class Point{
   }
 
   public static double distance(Point point1, Point point2){
-    double distance = Math.sqrt(point1.x_ * point2.x_ + point1.y_ * point2.y_);
+    double distance = Math.sqrt(Math.pow(point1.x_ - point2.x_, 2) + Math.pow(point1.y_ - point2.y_, 2));
+
     return distance;
   }
 
