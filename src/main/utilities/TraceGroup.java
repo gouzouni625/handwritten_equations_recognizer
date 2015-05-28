@@ -7,17 +7,27 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
+/**
+ * Class implementing a group of traces as a list of traces.
+ *
+ * @author Georgios Ouzounis
+ *
+ */
 public class TraceGroup{
   public TraceGroup(){
     traces_ = new ArrayList<Trace>();
   }
 
-  public TraceGroup(ArrayList<Trace> traces){
-    traces_ = traces;
+  public TraceGroup(TraceGroup traceGroup){
+    traces_ = new ArrayList<Trace>();
+
+    for(int i = 0;i < traceGroup.size();i++){
+      this.add(traceGroup.get(i));
+    }
   }
 
-  public void addTrace(Trace trace){
-    traces_.add(trace);
+  public void add(Trace trace){
+    traces_.add(new Trace(trace));
   }
 
   public Trace get(int index){
@@ -28,10 +38,8 @@ public class TraceGroup{
     return traces_.size();
   }
 
-  public int indexOf(Trace trace){
-    return traces_.indexOf(trace);
-  }
-
+  // TODO
+  // Not a final version.
   public Mat toImage(Size size){
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
@@ -48,7 +56,7 @@ public class TraceGroup{
     TraceGroup traceGroup = new TraceGroup();
 
     for(int i = 0;i < tracesIndeces.length;i++){
-      traceGroup.addTrace(traces_.get(tracesIndeces[i]));
+      traceGroup.add(traces_.get(tracesIndeces[i]));
     }
 
     return traceGroup;
