@@ -9,17 +9,28 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+/**
+ * Class that implements a trace as a list of two dimensional points.
+ *
+ * @author Georgios Ouzounis.
+ *
+ */
 public class Trace{
   public Trace(){
     points_ = new ArrayList<Point>();
   }
 
-  public Trace(ArrayList<Point> points){
-    points_ = points;
+  // Constructor that will be called to create an identical Trace.
+  public Trace(Trace trace){
+    points_ = new ArrayList<Point>();
+
+    for(int i = 0;i < trace.size();i++){
+      this.add(trace.get(i));
+    }
   }
 
-  public void addPoint(Point point){
-    points_.add(point);
+  public void add(Point point){
+    points_.add(new Point(point));
   }
 
   public Point get(int index){
@@ -30,6 +41,7 @@ public class Trace{
     return points_.size();
   }
 
+  // TODO
   public Mat toImage(Size size){
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
@@ -66,18 +78,18 @@ public class Trace{
       }
     }
     int width = maxX - minX;
-    if(width == 0){
-      width = 1;
+    if(width < 100){
+      width = 100;
     }
     int height = maxY - minY;
-    if(height == 0){
-      height = 1;
+    if(height < 100){
+      height = 100;
     }
 
     // Translate points around the beginning of the axes. =======================
     Point translation = new Point(minX, minY);
     for(int i = 0;i < points.size();i++){
-      points.get(i).substract(translation);
+      points.get(i).subtract(translation);
     }
 
     // Create the image. =======================================================
@@ -131,6 +143,7 @@ public class Trace{
         }
       }
     }
+
     return image;
   }
 
