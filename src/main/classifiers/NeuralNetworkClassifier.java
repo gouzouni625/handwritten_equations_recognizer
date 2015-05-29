@@ -9,8 +9,7 @@ import org.opencv.core.Size;
 
 import base.NeuralNetwork;
 
-public class NeuralNetworkClassifier extends Classifier{
-
+public class NeuralNetworkClassifier implements Classifier{
   public NeuralNetworkClassifier(int[] sizesOfLayers){
     neuralNetwork_ = new NeuralNetwork(sizesOfLayers);
   }
@@ -19,8 +18,7 @@ public class NeuralNetworkClassifier extends Classifier{
     neuralNetwork_.loadNetwork(path);
   }
 
-  public void newNeuralNetwork(int[] sizesOfLayers, String path)
-                                                             throws IOException{
+  public void newNeuralNetwork(int[] sizesOfLayers, String path) throws IOException{
     neuralNetwork_ = new NeuralNetwork(sizesOfLayers);
     neuralNetwork_.loadNetwork(path);
   }
@@ -35,8 +33,7 @@ public class NeuralNetworkClassifier extends Classifier{
    *           valid symbol. The values lies inside [0, 1].
    */
   public double classify(TraceGroup symbol, TraceGroup context){
-    double[] output = neuralNetwork_.feedForward(
-                        imageToVector(symbol.toImage(new Size(28, 28)), -1, 1));
+    double[] output = neuralNetwork_.feedForward(this.imageToVector(symbol.toImage(new Size(28, 28)), -1, 1));
 
     double max = output[0];
     int index = 0;
