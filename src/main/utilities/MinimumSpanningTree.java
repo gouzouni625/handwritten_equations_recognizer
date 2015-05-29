@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class MinimumSpanningTree{
   public MinimumSpanningTree(int numberOfVertices){
-
     connections_ = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
@@ -18,11 +17,21 @@ public class MinimumSpanningTree{
   }
 
   public MinimumSpanningTree(boolean[][] connections){
-    connections_ = connections;
+    int numberOfVertices = connections.length;
+    connections_ = new boolean[numberOfVertices][numberOfVertices];
+
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        connections_[i][j] = connections[i][j];
+      }
+    }
+
   }
 
-  public static MinimumSpanningTree kruskal(double[] edgeWeights,
-                                                          int numberOfVertices){
+  public static MinimumSpanningTree kruskal(double[] edgeWeights, int numberOfVertices){
+    if(numberOfVertices == 0){
+      return (new MinimumSpanningTree(numberOfVertices));
+    }
 
     boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
@@ -67,8 +76,7 @@ public class MinimumSpanningTree{
     }
   }
 
-  public void connect(int vertex1, int vertex2)
-                                               throws IndexOutOfBoundsException{
+  public void connect(int vertex1, int vertex2) throws IndexOutOfBoundsException{
     MinimumSpanningTree.connect(connections_, vertex1, vertex2);
   }
 
@@ -87,14 +95,11 @@ public class MinimumSpanningTree{
      }
   }
 
-  public void disconnect(int vertex1, int vertex2)
-                                               throws IndexOutOfBoundsException{
+  public void disconnect(int vertex1, int vertex2) throws IndexOutOfBoundsException{
     MinimumSpanningTree.disconnect(connections_, vertex1, vertex2);
   }
 
-  public static void disconnect(boolean[][] connections, int vertex1,
-                                                                    int vertex2)
-                                               throws IndexOutOfBoundsException{
+  public static void disconnect(boolean[][] connections, int vertex1, int vertex2) throws IndexOutOfBoundsException{
     if(vertex1 < 0 || vertex1 >= connections.length ||
         vertex2 < 0 || vertex2 >= connections.length){
        throw new IndexOutOfBoundsException();
@@ -147,8 +152,7 @@ public class MinimumSpanningTree{
     }
   }
 
-  private static boolean doIReach(int destination, int beginning,
-                                            boolean[][] connections, int depth){
+  private static boolean doIReach(int destination, int beginning, boolean[][] connections, int depth){
     if(beginning == destination){
       return true;
     }
@@ -179,34 +183,7 @@ public class MinimumSpanningTree{
     // Get all the paths, with duplicates.
     int[][] paths = this.getAllPaths();
 
-    // Add all the paths in a hash table, to eliminate duplicates.
-    Hashtable<Integer, Integer> hashTable = new Hashtable<Integer, Integer>();
-    for(int path = 0;path < paths.length;path++){
-      hashTable.put(new Integer(this.pathHashKey(paths[path])), new Integer(path));
-    }
-
-    // Convert the hash table to an array of integer arrays.
-    int[][] newPaths = new int[hashTable.size()][];
-    int index = 0;
-    Iterator<Map.Entry<Integer, Integer> > iterator = hashTable.entrySet().iterator();
-    while(iterator.hasNext()){
-      Map.Entry<Integer, Integer> entry = iterator.next();
-
-      newPaths[index] = paths[entry.getValue().intValue()];
-      index++;
-    }
-
-    return newPaths;
-  }
-
-  private int pathHashKey(int[] path){
-    int key = 0;
-
-    for(int i = 0;i < path.length;i++){
-      key ^= (int)(Math.pow(2, path[i]));
-    }
-
-    return key;
+    return (Utilities.eliminateDuplicates(paths));
   }
 
   public int[][] getAllPaths(){
@@ -221,17 +198,8 @@ public class MinimumSpanningTree{
 
     paths = findPaths(paths);
 
-    // Transform paths to array of int arrays.
-    int[][] allPaths = new int[paths.size()][];
-    for(int i = 0;i < paths.size();i++){
-      allPaths[i] = new int[paths.get(i).size()];
-
-      for(int j = 0;j < allPaths[i].length;j++){
-        allPaths[i][j] = paths.get(i).get(j).intValue();
-      }
-    }
-
-    return allPaths;
+    // Transform paths to array of integer arrays.
+    return (Utilities.arrayListToArray(paths));
   }
 
   private ArrayList<ArrayList<Integer> > findPaths(ArrayList<ArrayList<Integer> > existingPaths){

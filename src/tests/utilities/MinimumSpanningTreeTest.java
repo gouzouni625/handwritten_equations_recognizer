@@ -98,13 +98,13 @@ public class MinimumSpanningTreeTest{
       }
     }
 
+    assertEquals(0, MinimumSpanningTree.kruskal(null, 0).numberOfVertices(), 0);
   }
 
   @Test
   public void testConnectDisconnect(){
     int numberOfVertices = 10;
-    MinimumSpanningTree minimumSpanningTree =
-                                      new MinimumSpanningTree(numberOfVertices);
+    MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(numberOfVertices);
 
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
