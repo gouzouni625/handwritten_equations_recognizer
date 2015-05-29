@@ -1,6 +1,7 @@
 package tests.utilities;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,6 +11,11 @@ import org.junit.Test;
 
 import main.utilities.Utilities;
 
+/**
+ *
+ * @author Georgios Ouzounis
+ *
+ */
 public class UtilitiesTest{
 
   @Test
@@ -134,4 +140,93 @@ public class UtilitiesTest{
 
   }
 
+  @Test
+  public void testArrayListToArray(){
+    ArrayList<ArrayList<Integer> > arrayList = new ArrayList<ArrayList<Integer> >();
+
+    int rows = 10;
+    int columns = 10;
+    for(int i = 0;i < rows;i++){
+      ArrayList<Integer> list = new ArrayList<Integer>();
+
+      for(int j = 0;j < columns;j++){
+        list.add(new Integer((int)(Math.random())));
+      }
+
+      arrayList.add(list);
+    }
+
+    int[][] array = Utilities.arrayListToArray(arrayList);
+
+    for(int i = 0;i < rows;i++){
+      for(int j = 0;j < columns;j++){
+        assertEquals(arrayList.get(i).get(j).intValue(), array[i][j], 0);
+      }
+    }
+  }
+
+  @Test
+  public void testArrayToArrayList(){
+    int rows = 10;
+    int columns = 10;
+    int[][] array = new int[rows][columns];
+
+    for(int i = 0;i < rows;i++){
+      for(int j = 0;j < columns;j++){
+        array[i][j] = (int)(Math.random());
+      }
+    }
+
+    ArrayList<ArrayList<Integer> > arrayList = Utilities.arrayToArrayList(array);
+
+    for(int i = 0;i < rows;i++){
+      for(int j = 0;j < columns;j++){
+        assertEquals(array[i][j], arrayList.get(i).get(j).intValue(), 0);
+      }
+    }
+  }
+
+  /**
+   * This test will fail if the random generator gives the same series of
+   * numbers (columns in count) two times in a row.
+   */
+  @Test
+  public void testEliminateDuplicates(){
+    int rows = 10;
+    int columns = 3;
+    int[][] originalData = new int[rows][columns];
+
+    for(int i = 0;i < rows;i++){
+      if(i % 2 == 1){
+        for(int j = 0;j < columns;j++){
+          originalData[i][j] = originalData[i - 1][j];
+        }
+      }
+      else{
+        int sum = 0; // used to avoid having the same number twice in a path.
+        for(int j = 0;j < columns;j++){
+          originalData[i][j] = sum + (int)(Math.random() * 10) + 1;
+          sum += originalData[i][j];
+        }
+      }
+    }
+
+    int[][] changedData = Utilities.eliminateDuplicates(originalData);
+
+    assertEquals(rows / 2, changedData.length, 0);
+  }
+
+  @Test
+  public void pathHashkey(){
+    assertEquals(1, Utilities.pathHashkey(new int[] {0}), 0);
+    assertEquals(2, Utilities.pathHashkey(new int[] {1}), 0);
+    assertEquals(4, Utilities.pathHashkey(new int[] {2}), 0);
+    assertEquals(8, Utilities.pathHashkey(new int[] {3}), 0);
+    assertEquals(16, Utilities.pathHashkey(new int[] {4}), 0);
+    assertEquals(3, Utilities.pathHashkey(new int[] {0, 1}), 0);
+    assertEquals(7, Utilities.pathHashkey(new int[] {0, 1, 2}), 0);
+    assertEquals(23, Utilities.pathHashkey(new int[] {0, 1, 2, 4}), 0);
+    assertEquals(1024, Utilities.pathHashkey(new int[] {10}), 0);
+    assertEquals(3073, Utilities.pathHashkey(new int[] {0, 10, 11}), 0);
+  }
 }
