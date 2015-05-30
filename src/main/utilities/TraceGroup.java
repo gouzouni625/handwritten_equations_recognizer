@@ -16,6 +16,7 @@ import org.opencv.core.Size;
 public class TraceGroup{
   public TraceGroup(){
     traces_ = new ArrayList<Trace>();
+    symbol_ = -1;
   }
 
   public TraceGroup(TraceGroup traceGroup){
@@ -24,6 +25,8 @@ public class TraceGroup{
     for(int i = 0;i < traceGroup.size();i++){
       this.add(traceGroup.get(i));
     }
+
+    symbol_ = traceGroup.getSymbol();
   }
 
   public void add(Trace trace){
@@ -62,5 +65,16 @@ public class TraceGroup{
     return traceGroup;
   }
 
+  public int getSymbol(){
+    return symbol_;
+  }
+
+  public void setSymbol(int symbol){
+    symbol_ = symbol;
+  }
+
   private ArrayList<Trace> traces_;
+
+  // The symbol that this trace group represents. It can be useful sometimes.
+  private int symbol_;
 }

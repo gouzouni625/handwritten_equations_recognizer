@@ -96,4 +96,19 @@ public class TraceGroupTest{
     }
   }
 
+  @Test
+  public void testGetSymbol(){
+    TraceGroup traceGroup = new TraceGroup();
+
+    assertEquals(-1, traceGroup.getSymbol(), 0);
+  }
+
+  @Test
+  public void testSetSymbol(){
+    TraceGroup traceGroup = new TraceGroup();
+
+    traceGroup.setSymbol(102);
+
+    assertEquals(102, traceGroup.getSymbol(), 0);
+  }
 }
