@@ -11,3 +11,5 @@ data
 
 testing_dir/
 backup/
+
+src/main/evaluators/
