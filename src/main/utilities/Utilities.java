@@ -112,27 +112,60 @@ public class Utilities{
   }
 
   @SuppressWarnings("unchecked")
-  public static ArrayList<ArrayList<Integer> > findPaths(ArrayList<ArrayList<Integer> > existingPaths, boolean[][] connections){
-    ArrayList<ArrayList<Integer> > paths = new ArrayList<ArrayList<Integer> >();
-    ArrayList<Integer> newPath;
+  public static int[][] findUniquePaths(boolean[][] connections){
+    Hashtable<Integer, ArrayList<Integer> > hashTable = new Hashtable<Integer, ArrayList<Integer> >();
+    int hashTableOldSize = hashTable.size();
 
-    // For every existing path.
-    for(int path = 0;path < existingPaths.size();path++){
-      int[] context = Utilities.getContext(existingPaths.get(path), connections);
+    for(int vertex = 0;vertex < connections.length;vertex++){
+      ArrayList<Integer> path = new ArrayList<Integer>();
+      path.add(vertex);
 
-      for(int neighbour = 0;neighbour < context.length;neighbour++){
-        newPath = (ArrayList<Integer>)(existingPaths.get(path).clone());
-        newPath.add(context[neighbour]);
-        paths.add(newPath);
+      hashTable.put(pathHashKey(path), path);
+    }
+
+    do{
+      Iterator<ArrayList<Integer> > existingPathsIterator = hashTable.values().iterator();
+
+      // Find all possible new paths(even duplicates).
+      ArrayList<ArrayList<Integer> > newPaths = new ArrayList<ArrayList<Integer> >();
+      while(existingPathsIterator.hasNext()){
+        ArrayList<Integer> currentPath = existingPathsIterator.next();
+
+        int[] context = Utilities.getContext(currentPath, connections);
+
+        for(int neighbour = 0;neighbour < context.length;neighbour++){
+          ArrayList<Integer> currentPathClone = (ArrayList<Integer>)(currentPath.clone());
+          currentPathClone.add(context[neighbour]);
+          newPaths.add(currentPathClone);
+        }
       }
+
+      hashTableOldSize = hashTable.size();
+
+      // Add new paths to the hash table to eliminate duplicates.
+      for(int newPath = 0;newPath < newPaths.size();newPath++){
+        hashTable.put(Utilities.pathHashKey(newPaths.get(newPath)), newPaths.get(newPath));
+      }
+
+    }while(hashTableOldSize != hashTable.size());
+
+    // Convert the hash table to an array of arrays of integers.
+    int[][] uniquePaths = new int[hashTable.size()][];
+    int uniquePathsIndex = 0;
+
+    Iterator<ArrayList<Integer> > iterator = hashTable.values().iterator();
+    while(iterator.hasNext()){
+      ArrayList<Integer> currentPath = (ArrayList<Integer>)(iterator.next());
+
+      uniquePaths[uniquePathsIndex] = new int[currentPath.size()];
+      for(int vertex = 0;vertex < currentPath.size();vertex++){
+        uniquePaths[uniquePathsIndex][vertex] = currentPath.get(vertex);
+      }
+
+      uniquePathsIndex++;
     }
 
-    if(paths.get(0).size() == connections.length){
-      return ((ArrayList<ArrayList<Integer> >)(Utilities.concatenateLists(existingPaths, paths)));
-    }
-    else{
-      return ((ArrayList<ArrayList<Integer> >)(Utilities.concatenateLists(existingPaths, findPaths(paths, connections))));
-    }
+    return uniquePaths;
   }
 
   public static int[][] arrayListToArray(ArrayList<ArrayList<Integer> > arrayList){
@@ -168,7 +201,7 @@ public class Utilities{
     // Add all the paths in a hash table, to eliminate duplicates.
     Hashtable<Integer, Integer> hashTable = new Hashtable<Integer, Integer>();
     for(int path = 0;path < paths.length;path++){
-      hashTable.put(new Integer(Utilities.pathHashkey(paths[path])), new Integer(path));
+      hashTable.put(new Integer(Utilities.pathHashKey(paths[path])), new Integer(path));
     }
 
     // Convert the hash table to an array of integer arrays.
@@ -193,8 +226,18 @@ public class Utilities{
     return (Utilities.arrayToArrayList(arrayPathsNoDuplicates));
   }
 
-  // The path should not include the same vertex twice.
-  public static int pathHashkey(int[] path){
+  public static int pathHashKey(ArrayList<Integer> path){
+    int numberOfVertices = path.size();
+
+    int[] array = new int[numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      array[i] = path.get(i).intValue();
+    }
+
+    return pathHashKey(array);
+  }
+
+  public static int pathHashKey(int[] path){
     int key = 0;
 
     for(int i = 0;i < path.length;i++){

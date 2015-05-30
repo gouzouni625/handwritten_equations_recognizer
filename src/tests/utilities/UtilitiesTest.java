@@ -136,8 +136,30 @@ public class UtilitiesTest{
   }
 
   @Test
-  public void testFindPaths(){
+  public void testFindUniquePaths(){
+    int numberOfVertices = 10;
+    boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        connections[i][j] = (i == j);
+      }
+    }
 
+    int[][] uniquePaths = Utilities.findUniquePaths(connections);
+
+    assertEquals(numberOfVertices, uniquePaths.length, 0);
+
+    numberOfVertices = 5;
+    connections = new boolean[numberOfVertices][numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        connections[i][j] = (i >= j);
+      }
+    }
+
+    uniquePaths = Utilities.findUniquePaths(connections);
+
+    assertEquals(31, uniquePaths.length, 0);
   }
 
   @Test
@@ -217,16 +239,16 @@ public class UtilitiesTest{
   }
 
   @Test
-  public void pathHashkey(){
-    assertEquals(1, Utilities.pathHashkey(new int[] {0}), 0);
-    assertEquals(2, Utilities.pathHashkey(new int[] {1}), 0);
-    assertEquals(4, Utilities.pathHashkey(new int[] {2}), 0);
-    assertEquals(8, Utilities.pathHashkey(new int[] {3}), 0);
-    assertEquals(16, Utilities.pathHashkey(new int[] {4}), 0);
-    assertEquals(3, Utilities.pathHashkey(new int[] {0, 1}), 0);
-    assertEquals(7, Utilities.pathHashkey(new int[] {0, 1, 2}), 0);
-    assertEquals(23, Utilities.pathHashkey(new int[] {0, 1, 2, 4}), 0);
-    assertEquals(1024, Utilities.pathHashkey(new int[] {10}), 0);
-    assertEquals(3073, Utilities.pathHashkey(new int[] {0, 10, 11}), 0);
+  public void pathHashKey(){
+    assertEquals(1, Utilities.pathHashKey(new int[] {0}), 0);
+    assertEquals(2, Utilities.pathHashKey(new int[] {1}), 0);
+    assertEquals(4, Utilities.pathHashKey(new int[] {2}), 0);
+    assertEquals(8, Utilities.pathHashKey(new int[] {3}), 0);
+    assertEquals(16, Utilities.pathHashKey(new int[] {4}), 0);
+    assertEquals(3, Utilities.pathHashKey(new int[] {0, 1}), 0);
+    assertEquals(7, Utilities.pathHashKey(new int[] {0, 1, 2}), 0);
+    assertEquals(23, Utilities.pathHashKey(new int[] {0, 1, 2, 4}), 0);
+    assertEquals(1024, Utilities.pathHashKey(new int[] {10}), 0);
+    assertEquals(3073, Utilities.pathHashKey(new int[] {0, 10, 11}), 0);
   }
 }
