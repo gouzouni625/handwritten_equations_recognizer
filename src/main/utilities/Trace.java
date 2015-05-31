@@ -148,4 +148,5 @@ public class Trace{
   }
 
   private ArrayList<Point> points_;
+
 }

@@ -7,4 +7,5 @@ public abstract class Partitioner{
   public abstract TraceGroup[] partition(TraceGroup expression);
 
   protected Classifier classifier_;
+
 }

@@ -16,4 +16,5 @@ public class NNMSTPartitioner extends MSTPartitioner{
     classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
     ((NeuralNetworkClassifier)(classifier_)).loadNeuralNetwork(path);
   }
+
 }

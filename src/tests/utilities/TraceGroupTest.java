@@ -111,4 +111,5 @@ public class TraceGroupTest{
 
     assertEquals(102, traceGroup.getSymbol(), 0);
   }
+
 }

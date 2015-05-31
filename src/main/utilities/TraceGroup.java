@@ -77,4 +77,5 @@ public class TraceGroup{
 
   // The symbol that this trace group represents. It can be useful sometimes.
   private int symbol_;
+
 }
