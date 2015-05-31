@@ -137,9 +137,7 @@ public class MinimumSpanningTree{
   }
 
   private static boolean createsCircle(boolean[][] connections, int index){
-    int[] matrixIndices = MinimumSpanningTree.
-                          vectorIndexToUpperTriangularIndeces(
-                                                     connections.length, index);
+    int[] matrixIndices = MinimumSpanningTree.vectorIndexToUpperTriangularIndeces(connections.length, index);
     int rowIndex = matrixIndices[0];
     int columnIndex = matrixIndices[1];
 
@@ -179,31 +177,8 @@ public class MinimumSpanningTree{
     return false;
   }
 
-  public int[][] getAllPathsUnique(){
-    // Get all the paths, with duplicates.
-    int[][] paths = this.getAllPaths();
-
-    return (Utilities.eliminateDuplicates(paths));
-  }
-
-  public int[][] getAllPaths(){
-    ArrayList<ArrayList<Integer> > paths = new ArrayList<ArrayList<Integer> >();
-
-    ArrayList<Integer> newPath;
-    for(int i = 0;i < connections_.length;i++){
-      newPath = new ArrayList<Integer>();
-      newPath.add(i);
-      paths.add(newPath);
-    }
-
-    paths = findPaths(paths);
-
-    // Transform paths to array of integer arrays.
-    return (Utilities.arrayListToArray(paths));
-  }
-
-  private ArrayList<ArrayList<Integer> > findPaths(ArrayList<ArrayList<Integer> > existingPaths){
-    return (Utilities.findPaths(existingPaths, connections_));
+  public int[][] getUniquePaths(){
+    return (Utilities.findUniquePaths(connections_));
   }
 
   public int[] getContext(int[] vertices){
@@ -211,4 +186,5 @@ public class MinimumSpanningTree{
   }
 
   private boolean[][] connections_;
+
 }

@@ -241,7 +241,7 @@ public class MinimumSpanningTreeTest{
   }
 
   @Test
-  public void testGetAllPaths(){
+  public void testGetUniquePaths(){
     double[] edgeWeights = new double[] {12, 100, 16, 100, 100, 100, 13,
                                          16, 100, 100, 100, 14, 100,
                                          12, 100, 14, 100, 100,
@@ -251,29 +251,9 @@ public class MinimumSpanningTreeTest{
                                          14};
     int numberOfVertices = 8;
 
-    MinimumSpanningTree minimumSpanningTree =
-                     MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
+    MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
 
-    int[][] paths = minimumSpanningTree.getAllPaths();
-
-    assertEquals(502, paths.length, 0);
-  }
-
-  @Test
-  public void testGetAllPathsUnique(){
-    double[] edgeWeights = new double[] {12, 100, 16, 100, 100, 100, 13,
-                                         16, 100, 100, 100, 14, 100,
-                                         12, 100, 14, 100, 100,
-                                         13, 100, 100, 100,
-                                         14, 100, 15,
-                                         15, 100,
-                                         14};
-    int numberOfVertices = 8;
-
-    MinimumSpanningTree minimumSpanningTree =
-        MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
-
-    int[][] paths = minimumSpanningTree.getAllPathsUnique();
+    int[][] paths = minimumSpanningTree.getUniquePaths();
 
     assertEquals(36, paths.length, 0);
   }
