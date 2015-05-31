@@ -48,20 +48,6 @@ public class Utilities{
     return indices;
   }
 
-  public static ArrayList<ArrayList<Integer> > concatenateLists(ArrayList<ArrayList<Integer> > list1, ArrayList<ArrayList<Integer> > list2){
-    ArrayList<ArrayList<Integer> > list = new ArrayList<ArrayList<Integer> >();
-
-    for(int i = 0;i < list1.size();i++){
-      list.add(list1.get(i));
-    }
-
-    for(int i = 0;i < list2.size();i++){
-      list.add(list2.get(i));
-    }
-
-    return list;
-  }
-
   public static boolean arrayContains(int[] array, int value){
     for(int i = 0;i < array.length;i++){
       if(array[i] == value){
@@ -166,64 +152,6 @@ public class Utilities{
     }
 
     return uniquePaths;
-  }
-
-  public static int[][] arrayListToArray(ArrayList<ArrayList<Integer> > arrayList){
-    int[][] array = new int[arrayList.size()][];
-    for(int i = 0;i < arrayList.size();i++){
-      array[i] = new int[arrayList.get(i).size()];
-
-      for(int j = 0;j < array[i].length;j++){
-        array[i][j] = arrayList.get(i).get(j).intValue();
-      }
-    }
-
-    return array;
-  }
-
-  public static ArrayList<ArrayList<Integer> > arrayToArrayList(int[][] array){
-    ArrayList<ArrayList<Integer> > arrayList = new ArrayList<ArrayList<Integer> >();
-
-    for(int i = 0;i < array.length;i++){
-      ArrayList<Integer> list = new ArrayList<Integer>();
-
-      for(int j = 0;j < array[i].length;j++){
-        list.add(new Integer(array[i][j]));
-      }
-
-      arrayList.add(list);
-    }
-
-    return arrayList;
-  }
-
-  public static int[][] eliminateDuplicates(int[][] paths){
-    // Add all the paths in a hash table, to eliminate duplicates.
-    Hashtable<Integer, Integer> hashTable = new Hashtable<Integer, Integer>();
-    for(int path = 0;path < paths.length;path++){
-      hashTable.put(new Integer(Utilities.pathHashKey(paths[path])), new Integer(path));
-    }
-
-    // Convert the hash table to an array of integer arrays.
-    int[][] newPaths = new int[hashTable.size()][];
-    int index = 0;
-    Iterator<Map.Entry<Integer, Integer> > iterator = hashTable.entrySet().iterator();
-    while(iterator.hasNext()){
-      Map.Entry<Integer, Integer> entry = iterator.next();
-
-      newPaths[index] = paths[entry.getValue().intValue()];
-      index++;
-    }
-
-    return newPaths;
-  }
-
-  public static ArrayList<ArrayList<Integer> > eliminateDuplicates(ArrayList<ArrayList<Integer> > paths){
-    int[][] arrayPaths = Utilities.arrayListToArray(paths);
-
-    int[][] arrayPathsNoDuplicates = Utilities.eliminateDuplicates(arrayPaths);
-
-    return (Utilities.arrayToArrayList(arrayPathsNoDuplicates));
   }
 
   public static int pathHashKey(ArrayList<Integer> path){
