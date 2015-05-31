@@ -11,7 +11,7 @@ public class NNMSTPartitioner extends MSTPartitioner{
   public NNMSTPartitioner(int[] sizesOfLayers){
     classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
   }
-  
+
   public NNMSTPartitioner(int[] sizesOfLayers, String path) throws IOException{
     classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
     ((NeuralNetworkClassifier)(classifier_)).loadNeuralNetwork(path);
