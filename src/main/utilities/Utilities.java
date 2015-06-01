@@ -175,4 +175,25 @@ public class Utilities{
     return key;
   }
 
+  public static int indexOfMax(double[] array){
+    if(array.length == 0){
+      return -1;
+    }
+
+    double maxValue = array[0];
+    int maxValueIndex = 0;
+    for(int i = 1;i < array.length;i++){
+      if(array[i] > maxValue){
+        maxValue = array[i];
+        maxValueIndex = i;
+      }
+    }
+
+    return maxValueIndex;
+  }
+
+  public static double maxValue(double[] array){
+    return (array[Utilities.indexOfMax(array)]);
+  }
+
 }
