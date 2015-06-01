@@ -34,13 +34,6 @@ public class Point{
     return this;
   }
 
-  public Point subtract(double factor){
-    x_ -= factor;
-    y_ -= factor;
-
-    return this;
-  }
-
   public Point subtract(Point point){
     x_ -= point.x_;
     y_ -= point.y_;

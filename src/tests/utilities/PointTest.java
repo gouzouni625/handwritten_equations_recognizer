@@ -49,20 +49,12 @@ public class PointTest{
 
   @Test
   public void testSubtract(){
-    // Test subtract that takes a double as input.
     Point point = new Point(5, 6);
-
-    point.subtract(4);
-
-    assertEquals(1, point.x_, 0);
-    assertEquals(2, point.y_, 0);
-
-    // Test subtract that takes a point as input.
     Point point2 = new Point(4, 2);
     point.subtract(point2);
 
-    assertEquals(-3, point.x_, 0);
-    assertEquals(0, point.y_, 0);
+    assertEquals(1, point.x_, 0);
+    assertEquals(4, point.y_, 0);
   }
 
   @Test
@@ -77,10 +69,10 @@ public class PointTest{
   public void testChainOperations(){
     Point point = new Point(10, 15);
 
-    point = point.subtract(3).multiplyBy(2).subtract(new Point(1, 1));
+    point = point.multiplyBy(2).subtract(new Point(1, 1));
 
-    assertEquals(13, point.x_, 0);
-    assertEquals(23, point.y_, 0);
+    assertEquals(19, point.x_, 0);
+    assertEquals(29, point.y_, 0);
   }
 
 }
