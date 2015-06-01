@@ -41,112 +41,85 @@ public class Trace{
     return points_.size();
   }
 
-  // TODO
-  // Not a final version.
-  public Mat toImage(Size size){
+  public Trace multiplyBy(double factor){
+    for(int i = 0;i < points_.size();i++){
+      points_.get(i).multiplyBy(factor);
+    }
+
+    return this;
+  }
+
+  public Trace subtract(Point point){
+    for(int i = 0;i < points_.size();i++){
+      points_.get(i).subtract(point);
+    }
+
+    return this;
+  }
+
+  public void calculateCorners(){
+    double minX = points_.get(0).x_;
+    double maxX = points_.get(0).x_;
+    double minY = points_.get(0).y_;
+    double maxY = points_.get(0).y_;
+
+    for(int i = 0;i < points_.size();i++){
+      Point point = points_.get(i);
+
+      if(point.x_ > maxX){
+        maxX = point.x_;
+      }
+
+      if(point.x_ < minX){
+        minX = point.x_;
+      }
+
+      if(point.y_ > maxY){
+        maxY = point.y_;
+      }
+
+      if(point.y_ < minY){
+        minY = point.y_;
+      }
+    }
+
+    topLeftCorner_ = new Point(minX, minY);
+    bottomRightCorner_ = new Point(maxX, maxY);
+  }
+
+  public Point getTopLeftCorner(){
+    return (new Point(topLeftCorner_));
+  }
+
+  public Point getBottomRightCorner(){
+    return (new Point(bottomRightCorner_));
+  }
+
+  public double getWidth(){
+    return (bottomRightCorner_.x_ - topLeftCorner_.x_);
+  }
+
+  public double getHeight(){
+    return (bottomRightCorner_.y_ - topLeftCorner_.y_);
+  }
+
+  public Mat print(Mat image, int thickness){
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-    // Work on a copy of the original points in order not to change them.
-    Trace trace = new Trace(this);
+    int height = image.rows();
 
-    // Multiply data by 100. ===================================================
-    // Data provided by GeoGebra will have 2 decimal digits, that is why the
-    // multiplication is done by 100.
-    for(int i = 0;i < points_.size();i++){
-      trace.get(i).multiplyBy(100);
-    }
-
-    // Find a bounding box around the trace. ====================================
-    int minX = (int)(trace.get(0).x_);
-    int maxX = (int)(trace.get(0).x_);
-    int minY = (int)(trace.get(0).y_);
-    int maxY = (int)(trace.get(0).y_);
-    for(int i = 0;i < trace.size();i++){
-      if(trace.get(i).x_ < minX){
-        minX = (int)(trace.get(i).x_);
-      }
-      if(trace.get(i).x_ > maxX){
-        maxX = (int)(trace.get(i).x_);
-      }
-
-      if(trace.get(i).y_ < minY){
-        minY = (int)(trace.get(i).y_);
-      }
-
-      if(trace.get(i).y_ > maxY){
-        maxY = (int)(trace.get(i).y_);
-      }
-    }
-    int width = maxX - minX;
-    if(width < 100){
-      width = 100;
-    }
-    int height = maxY - minY;
-    if(height < 100){
-      height = 100;
-    }
-
-    // Translate points around the beginning of the axes. =======================
-    Point translation = new Point(minX, minY);
-    for(int i = 0;i < trace.size();i++){
-      trace.get(i).subtract(translation);
-    }
-
-    // Create the image. =======================================================
-    Mat image = Mat.zeros(height, width, CvType.CV_32F);
-
-    // Wanted thickness at 1000 x 1000 pixels = 30.
-    int thickness = (width + height) / 2 * 30 / 1000;
-    // Check that 0 <= thickness <= 255 (constraint made by OpenCV).
-    if(thickness <= 0){
-      thickness = 1;
-    }
-    else if(thickness > 255){
-      thickness = 255;
-    }
-
-    // Notice that we use OpenCV points inside Core.line function.
-    for(int i = 0;i < trace.size() - 1;i++){
-      Core.line(image,
-         new org.opencv.core.Point(trace.get(i).x_, height - trace.get(i).y_),
-         new org.opencv.core.Point(trace.get(i + 1).x_,
-              height - trace.get(i + 1).y_),
-              new Scalar(255, 255, 255), thickness);
-    }
-
-    Imgproc.resize(image, image, new Size(1000, 1000));
-
-    Imgproc.copyMakeBorder(image, image, 500, 500, 500, 500,
-        Imgproc.BORDER_CONSTANT, new Scalar(0, 0, 0));
-
-    Imgproc.blur(image, image, new Size(200, 200));
-
-    Imgproc.resize(image, image, size);
-
-    int meanValue = 0;
-    for(int i = 0;i < size.height;i++){
-      for(int j = 0;j < size.width;j++){
-        meanValue += image.get(i, j)[0];
-      }
-    }
-    meanValue /= (size.height * size.width);
-
-    int value;
-    for(int i = 0;i < size.height;i++){
-      for(int j = 0;j < size.width;j++){
-        value = (int)(image.get(i, j)[0]);
-        if(value > meanValue){
-          image.put(i, j, 255);
-        }
-        else{
-          image.put(i, j, 0);
-        }
-      }
+    for(int i = 0;i < points_.size() - 1;i++){
+      Core.line(image, new org.opencv.core.Point(points_.get(i).x_, height - points_.get(i).y_),
+                       new org.opencv.core.Point(points_.get(i + 1).x_, height - points_.get(i + 1).y_),
+                       new Scalar(255, 255, 255), thickness);
     }
 
     return image;
   }
 
   private ArrayList<Point> points_;
+
+  private Point topLeftCorner_;
+  private Point bottomRightCorner_;
 
 }
