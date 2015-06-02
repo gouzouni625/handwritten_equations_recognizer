@@ -3,6 +3,11 @@ package tests.utilities;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
 
 import main.utilities.Point;
 import main.utilities.Trace;
@@ -10,6 +15,7 @@ import main.utilities.TraceGroup;
 
 public class TraceGroupTest{
 
+  // Also tests size method.
   @Test
   public void testTraceGroup(){
     TraceGroup traceGroup = new TraceGroup();
@@ -97,19 +103,108 @@ public class TraceGroupTest{
   }
 
   @Test
-  public void testGetSymbol(){
+  public void testMultiplyBy(){
     TraceGroup traceGroup = new TraceGroup();
 
-    assertEquals(-1, traceGroup.getSymbol(), 0);
+    int numberOfTraces = 10;
+    int sizeOfTraces = 10;
+    int multiplicationFactor = 10;
+    for(int i = 0;i < numberOfTraces;i++){
+      Trace trace = new Trace();
+
+      for(int j = 0;j < sizeOfTraces;j++){
+        trace.add(new Point(i, j));
+      }
+
+      traceGroup.add(trace);
+    }
+
+    traceGroup.multiplyBy(multiplicationFactor);
+
+    for(int i = 0;i < numberOfTraces;i++){
+      for(int j = 0;j < sizeOfTraces;j++){
+        assertEquals(i * multiplicationFactor, traceGroup.get(i).get(j).x_, 0);
+        assertEquals(j * multiplicationFactor, traceGroup.get(i).get(j).y_, 0);
+      }
+    }
   }
 
   @Test
-  public void testSetSymbol(){
+  public void testSubtract(){
     TraceGroup traceGroup = new TraceGroup();
 
-    traceGroup.setSymbol(102);
+    int numberOfTraces = 10;
+    int sizeOfTraces = 10;
+    Point point2 = new Point(2, 3);
+    for(int i = 0;i < numberOfTraces;i++){
+      Trace trace = new Trace();
 
-    assertEquals(102, traceGroup.getSymbol(), 0);
+      for(int j = 0;j < sizeOfTraces;j++){
+        trace.add(new Point(i, j));
+      }
+
+      traceGroup.add(trace);
+    }
+
+    traceGroup.subtract(point2);
+
+    for(int i = 0;i < numberOfTraces;i++){
+      for(int j = 0;j < sizeOfTraces;j++){
+        assertEquals(i - point2.x_, traceGroup.get(i).get(j).x_, 0);
+        assertEquals(j - point2.y_, traceGroup.get(i).get(j).y_, 0);
+      }
+    }
+  }
+
+  // Also tests getWidth, getHeight, getTopLefCorner, getBottomRightCorner.
+  @Test
+  public void testCalculateCorners(){
+    TraceGroup traceGroup = new TraceGroup();
+
+    int numberOfTraces = 10;
+    int sizeOfTraces = 10;
+    for(int i = 0;i < numberOfTraces;i++){
+      Trace trace = new Trace();
+
+      for(int j = 0;j < sizeOfTraces;j++){
+        trace.add(new Point(i, j));
+      }
+
+      traceGroup.add(trace);
+    }
+
+    traceGroup.calculateCorners();
+
+    assertEquals(0, traceGroup.getTopLeftCorner().x_, 0);
+    assertEquals(0, traceGroup.getTopLeftCorner().y_, 0);
+    assertEquals(numberOfTraces - 1, traceGroup.getBottomRightCorner().x_, 0);
+    assertEquals(sizeOfTraces - 1, traceGroup.getBottomRightCorner().y_, 0);
+    assertEquals(numberOfTraces - 1, traceGroup.getWidth(), 0);
+    assertEquals(sizeOfTraces - 1, traceGroup.getHeight(), 0);
+  }
+
+  @Test
+  public void testPrint(){
+    TraceGroup traceGroup = new TraceGroup();
+
+    int numberOfPoints = 100;
+
+    Trace trace1 = new Trace();
+    Trace trace2 = new Trace();
+
+    for(int i = 0;i < numberOfPoints;i++){
+      trace1.add(new Point(((double)i) / 100, 0.02 * i + 0.03));
+      trace2.add(new Point(((double)i) / 100, -0.005 * i + 0.03));
+    }
+
+    traceGroup.add(trace1);
+    traceGroup.add(trace2);
+
+    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    Mat image = traceGroup.print(new Size(1000, 1000));
+
+    // The image saved by the following command should show two perpendicular lines with common beginning.
+    //Highgui.imwrite("data/test/utilities/TraceGroup/trace_group_print.tiff", image);
   }
 
 }
