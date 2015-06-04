@@ -69,9 +69,11 @@ public class DataSampleTest{
       dataSample2.data_[i] |= 0x10;
     }
 
-    // Check that the data of dataSample1 have not been changed.
+    // Check that the data of dataSample1 have not been changed
+    // and that they are different from the data of dataSample2.
     for(int i = 0;i < array.length;i++){
       assertEquals(array[i], dataSample1.data_[i], 0);
+      assertEquals(dataSample2.data_[i], dataSample1.data_[i] | 0x10, 0);
     }
   }
 
