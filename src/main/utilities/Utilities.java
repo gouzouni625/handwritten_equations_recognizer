@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Map;
+
+import org.opencv.core.Mat;
 
 /**
  * Class that contains some methods used in many different places of the
@@ -194,6 +195,54 @@ public class Utilities{
 
   public static double maxValue(double[] array){
     return (array[Utilities.indexOfMax(array)]);
+  }
+
+  /** The image should have only integer values inside [0, 255].
+   */
+  public static byte[] imageToByteArray(Mat image){
+    int numberOfRows = image.rows();
+    int numberOfColumns = image.cols();
+
+    byte[] array = new byte[numberOfRows * numberOfColumns];
+    if(array.length == 0){
+      return array;
+    }
+
+    for(int row = 0;row < numberOfRows;row++){
+      for(int column = 0;column < numberOfColumns;column++){
+        array[row * numberOfColumns + column] = (byte)(image.get(row, column)[0]);
+      }
+    }
+
+    return array;
+  }
+
+  public static final int UNKNOWN_LABEL = -1;
+  public static final int DATA_MAGIC_NUMBER = 2051;
+  public static final int LABELS_MAGIC_NUMBER = 2049;
+
+  public enum Labels{
+    ZERO(0),
+    ONE(1),
+    TWO(2),
+    THREE(3),
+    FOUR(4),
+    FIVE(5),
+    SIX(6),
+    SEVEN(7),
+    EIGHT(8),
+    NINE(9),
+    PLUS(10),
+    EQUALS(11),
+    VARIABLE_x(12),
+    VARIABLE_y(13),
+    MINUS(14);
+
+    Labels(int label){
+      label_ = label;
+    }
+
+    public int label_;
   }
 
 }
