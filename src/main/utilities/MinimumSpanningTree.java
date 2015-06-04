@@ -1,10 +1,6 @@
 package main.utilities;
 
 import java.lang.IndexOutOfBoundsException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
 
 public class MinimumSpanningTree{
   public MinimumSpanningTree(int numberOfVertices){

@@ -1,7 +1,6 @@
 package tests.utilities;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -159,6 +158,20 @@ public class UtilitiesTest{
     list.add(0);
     list.add(11);
     assertEquals(3073, Utilities.pathHashKey(list), 0);
+  }
+
+  @Test
+  public void testIndexOfMax(){
+    double[] array = new double[] {9, 8, 7, 6, 5, 4, 3, 2, 1};
+
+    assertEquals(0, Utilities.indexOfMax(array));
+  }
+
+  @Test
+  public void testMaxValue(){
+    double[] array = new double[] {9, 8, 7, 6, 5, 4, 3, 2, 1};
+
+    assertEquals(9, Utilities.maxValue(array), 0);
   }
 
 }

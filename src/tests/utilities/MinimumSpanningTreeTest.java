@@ -257,4 +257,5 @@ public class MinimumSpanningTreeTest{
 
     assertEquals(36, paths.length, 0);
   }
+
 }

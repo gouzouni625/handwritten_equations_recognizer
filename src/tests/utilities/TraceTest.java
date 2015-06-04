@@ -135,7 +135,7 @@ public class TraceTest{
     trace.print(image, thickness);
 
     // The image saved by the following command should be a line with positive slope.
-    //Highgui.imwrite("data/test/utilities/Trace/trace_print.tiff", image);
+    //Highgui.imwrite("data/tests/utilities/Trace/testPrint_image.tiff", image);
   }
 
 }

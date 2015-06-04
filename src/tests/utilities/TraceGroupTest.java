@@ -194,7 +194,7 @@ public class TraceGroupTest{
 
     for(int i = 0;i < numberOfPoints;i++){
       trace1.add(new Point(((double)i) / 100, 0.02 * i + 0.03));
-      trace2.add(new Point(((double)i) / 100, -0.005 * i + 0.03));
+      trace2.add(new Point(((double)i) / 100, -0.05 * i + 0.03));
     }
 
     traceGroup.add(trace1);
@@ -203,8 +203,8 @@ public class TraceGroupTest{
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     Mat image = traceGroup.print(new Size(1000, 1000));
 
-    // The image saved by the following command should show two perpendicular lines with common beginning.
-    //Highgui.imwrite("data/test/utilities/TraceGroup/trace_group_print.tiff", image);
+    // The image saved by the following command should show two lines with common beginning.
+    //Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
   }
 
 }

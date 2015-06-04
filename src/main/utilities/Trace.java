@@ -3,11 +3,8 @@ package main.utilities;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 
 /**
  * Class that implements a trace as a list of two dimensional points.
