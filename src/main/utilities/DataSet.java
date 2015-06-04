@@ -1,11 +1,9 @@
 package main.utilities;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.nio.ByteBuffer;
 
 import main.utilities.DataSample;
@@ -37,7 +35,7 @@ public class DataSet{
   }
 
 
-  public static DataSet loadMNISTLike(String dataFile, String labelsFile) throws IOException{
+  public static DataSet loadIDXFormat(String dataFile, String labelsFile) throws IOException{
     DataSet dataSet = new DataSet();
 
     // Load the data. =========================================================
@@ -67,13 +65,9 @@ public class DataSet{
     // Read the data.
     buffer = new byte[numberOfRows * numberOfColumns];
     for(int item = 0;item < numberOfItems;item++){
-      for(int row = 0;row < numberOfRows;row++){
-        for(int column = 0;column < numberOfColumns;column++){
-          fileInputStream.read(buffer);
+      fileInputStream.read(buffer);
 
-          dataSet.add(new DataSample(buffer));
-        }
-      }
+      dataSet.add(new DataSample(buffer));
     }
 
     // Close the input stream.
@@ -96,6 +90,9 @@ public class DataSet{
     buffer = new byte[1];
     for(int i = 0;i < numberOfItems;i++){
       fileInputStream.read(buffer);
+
+      // Labels must always be positive numbers so convert the byte that is read
+      // to unsigned byte.
       dataSet.get(i).label_ = (int)(buffer[0] & 0xFF);
     }
 
@@ -105,7 +102,7 @@ public class DataSet{
     return dataSet;
   }
 
-  public void saveMNISTLike(String dataFile, String labelsFile) throws IOException{
+  public void saveIDXFormat(String dataFile, String labelsFile) throws IOException{
 
     // Save the data. =========================================================
     FileOutputStream fileOutputStream = new FileOutputStream(dataFile);
@@ -150,7 +147,7 @@ public class DataSet{
 
     // Save the labels.
     for(int i = 0;i < numberOfItems;i++){
-      fileOutputStream.write(ByteBuffer.allocate(4).putInt(samples_.get(i).label_).array());
+      fileOutputStream.write(ByteBuffer.allocate(4).putInt(samples_.get(i).label_).array()[3]);
     }
 
     // Close the output stream.
@@ -159,4 +156,5 @@ public class DataSet{
 
 
   private ArrayList<DataSample> samples_;
+
 }
