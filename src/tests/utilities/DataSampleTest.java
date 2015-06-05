@@ -31,7 +31,7 @@ public class DataSampleTest{
   @Test
   public void testDataSample3(){
     byte[] array = new byte[] {0x01, 0x02, 0x03};
-    int label = 32;
+    byte label = 32;
 
     DataSample dataSample = new DataSample(array, label);
 
@@ -54,7 +54,7 @@ public class DataSampleTest{
   @Test
   public void testDataSample5(){
     byte[] array = new byte[] {0x01, 0x02, 0x03};
-    int label = 32;
+    byte label = 32;
 
     DataSample dataSample1 = new DataSample(array, label);
     DataSample dataSample2 = new DataSample(dataSample1);

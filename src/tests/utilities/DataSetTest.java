@@ -83,7 +83,7 @@ public class DataSetTest{
     DataSet dataSet1 = new DataSet();
 
     byte[] array = new byte[] {0x01, 0x02, 0x03, 0x04};
-    int label = 58;
+    byte label = 58;
     DataSample dataSample = new DataSample(array, label);
 
     dataSet1.add(dataSample);

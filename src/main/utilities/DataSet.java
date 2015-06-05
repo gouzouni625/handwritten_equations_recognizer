@@ -93,7 +93,7 @@ public class DataSet{
 
       // Labels must always be positive numbers so convert the byte that is read
       // to unsigned byte.
-      dataSet.get(i).label_ = (int)(buffer[0] & 0xFF);
+      dataSet.get(i).label_ = buffer[0];
     }
 
     // Close the input stream.
@@ -147,7 +147,7 @@ public class DataSet{
 
     // Save the labels.
     for(int i = 0;i < numberOfItems;i++){
-      fileOutputStream.write(ByteBuffer.allocate(4).putInt(samples_.get(i).label_).array()[3]);
+      fileOutputStream.write(samples_.get(i).label_);
     }
 
     // Close the output stream.

@@ -12,7 +12,7 @@ public class DataSample{
     label_ = Utilities.UNKNOWN_LABEL;
   }
 
-  public DataSample(byte[] data, int label){
+  public DataSample(byte[] data, byte label){
     data_ = data.clone();
     label_ = label;
   }
@@ -28,7 +28,7 @@ public class DataSample{
   }
 
   public byte[] data_;
-  public int label_; // <! The labels should comply with the main.utilities.Utilities
+  public byte label_; // <! The labels should comply with the main.utilities.Utilities
                      //    indexing.
 
 }

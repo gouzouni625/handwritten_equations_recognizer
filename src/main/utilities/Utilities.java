@@ -217,7 +217,7 @@ public class Utilities{
     return array;
   }
 
-  public static final int UNKNOWN_LABEL = -1;
+  public static final byte UNKNOWN_LABEL = -0x01;
   public static final int DATA_MAGIC_NUMBER = 0x00000803;
   public static final int LABELS_MAGIC_NUMBER = 0x00000801;
 
