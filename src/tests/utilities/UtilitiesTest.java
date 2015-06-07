@@ -174,4 +174,14 @@ public class UtilitiesTest{
     assertEquals(9, Utilities.maxValue(array), 0);
   }
 
+  @Test
+  public void testRelativeValues(){
+    double[] array = new double[] {0.5, 0.3, 0.2};
+
+    array = Utilities.relativeValues(array);
+
+    assertEquals(50, array[0], 0);
+    assertEquals(30, array[1], 0);
+    assertEquals(20, array[2], 0);
+  }
 }

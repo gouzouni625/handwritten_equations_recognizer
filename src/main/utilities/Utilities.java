@@ -217,9 +217,29 @@ public class Utilities{
     return array;
   }
 
+  public static double[] relativeValues(double[] array){
+    int length = array.length;
+
+    double sum = 0;
+    for(int i = 0;i < length;i++){
+      sum += array[i];
+    }
+
+    double[] relativeValuesArray = new double[length];
+    for(int i = 0;i < length;i++){
+      relativeValuesArray[i] = array[i] / sum * 100;
+    }
+
+    return relativeValuesArray;
+  }
+
   public static final byte UNKNOWN_LABEL = -0x01;
   public static final int DATA_MAGIC_NUMBER = 0x00000803;
   public static final int LABELS_MAGIC_NUMBER = 0x00000801;
+
+  public static final double GARBAGE_THREASHOLD = 95;
+  public static final double MINIMUM_RATE = 0;
+  public static final double MAXIMUM_RATE = 100;
 
   public enum Labels{
     ZERO(0),
