@@ -114,6 +114,15 @@ public class Trace{
     return image;
   }
 
+  public Point getCentroid(){
+    this.calculateCorners();
+
+    double centroidX = topLeftCorner_.x_ + (bottomRightCorner_.x_ - topLeftCorner_.x_) / 2;
+    double centroidY = topLeftCorner_.y_ + (bottomRightCorner_.y_ - topLeftCorner_.y_) / 2;
+
+    return (new Point(centroidX, centroidY));
+  }
+
   private ArrayList<Point> points_;
 
   private Point topLeftCorner_;
