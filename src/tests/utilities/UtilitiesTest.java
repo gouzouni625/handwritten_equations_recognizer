@@ -99,7 +99,7 @@ public class UtilitiesTest{
       }
     }
 
-    int[][] uniquePaths = Utilities.findUniquePaths(connections);
+    int[][] uniquePaths = Utilities.findUniquePaths(connections, connections.length);
 
     assertEquals(numberOfVertices, uniquePaths.length, 0);
 
@@ -111,9 +111,20 @@ public class UtilitiesTest{
       }
     }
 
-    uniquePaths = Utilities.findUniquePaths(connections);
-
+    uniquePaths = Utilities.findUniquePaths(connections, connections.length);
     assertEquals(31, uniquePaths.length, 0);
+
+    uniquePaths = Utilities.findUniquePaths(connections, connections.length - 1);
+    assertEquals(30, uniquePaths.length, 0);
+
+    uniquePaths = Utilities.findUniquePaths(connections, connections.length - 2);
+    assertEquals(25, uniquePaths.length, 0);
+
+    uniquePaths = Utilities.findUniquePaths(connections, connections.length - 3);
+    assertEquals(15, uniquePaths.length, 0);
+
+    uniquePaths = Utilities.findUniquePaths(connections, connections.length - 4);
+    assertEquals(5, uniquePaths.length, 0);
   }
 
   @Test
@@ -184,4 +195,5 @@ public class UtilitiesTest{
     assertEquals(30, array[1], 0);
     assertEquals(20, array[2], 0);
   }
+
 }

@@ -99,7 +99,7 @@ public class Utilities{
   }
 
   @SuppressWarnings("unchecked")
-  public static int[][] findUniquePaths(boolean[][] connections){
+  public static int[][] findUniquePaths(boolean[][] connections, int maxPathLength){
     Hashtable<Integer, ArrayList<Integer> > hashTable = new Hashtable<Integer, ArrayList<Integer> >();
     int hashTableOldSize = hashTable.size();
 
@@ -110,31 +110,35 @@ public class Utilities{
       hashTable.put(pathHashKey(path), path);
     }
 
-    do{
-      Iterator<ArrayList<Integer> > existingPathsIterator = hashTable.values().iterator();
+    int currentPathLength = 1;
+    if(maxPathLength > currentPathLength){
+      do{
+        Iterator<ArrayList<Integer> > existingPathsIterator = hashTable.values().iterator();
 
-      // Find all possible new paths(even duplicates).
-      ArrayList<ArrayList<Integer> > newPaths = new ArrayList<ArrayList<Integer> >();
-      while(existingPathsIterator.hasNext()){
-        ArrayList<Integer> currentPath = existingPathsIterator.next();
+        // Find all possible new paths(even duplicates).
+        ArrayList<ArrayList<Integer> > newPaths = new ArrayList<ArrayList<Integer> >();
+        while(existingPathsIterator.hasNext()){
+          ArrayList<Integer> currentPath = existingPathsIterator.next();
 
-        int[] context = Utilities.getContext(currentPath, connections);
+          int[] context = Utilities.getContext(currentPath, connections);
 
-        for(int neighbour = 0;neighbour < context.length;neighbour++){
-          ArrayList<Integer> currentPathClone = (ArrayList<Integer>)(currentPath.clone());
-          currentPathClone.add(context[neighbour]);
-          newPaths.add(currentPathClone);
+          for(int neighbour = 0;neighbour < context.length;neighbour++){
+            ArrayList<Integer> currentPathClone = (ArrayList<Integer>)(currentPath.clone());
+            currentPathClone.add(context[neighbour]);
+            newPaths.add(currentPathClone);
+          }
         }
-      }
 
-      hashTableOldSize = hashTable.size();
+        hashTableOldSize = hashTable.size();
 
-      // Add new paths to the hash table to eliminate duplicates.
-      for(int newPath = 0;newPath < newPaths.size();newPath++){
-        hashTable.put(Utilities.pathHashKey(newPaths.get(newPath)), newPaths.get(newPath));
-      }
+        // Add new paths to the hash table to eliminate duplicates.
+        for(int newPath = 0;newPath < newPaths.size();newPath++){
+          hashTable.put(Utilities.pathHashKey(newPaths.get(newPath)), newPaths.get(newPath));
+        }
 
-    }while(hashTableOldSize != hashTable.size());
+        currentPathLength++;
+      }while(hashTableOldSize != hashTable.size() && currentPathLength < maxPathLength);
+    }
 
     // Convert the hash table to an array of arrays of integers.
     int[][] uniquePaths = new int[hashTable.size()][];
@@ -234,35 +238,28 @@ public class Utilities{
   }
 
   public static final byte UNKNOWN_LABEL = -0x01;
+  public static final byte ZERO_LABEL = 0x00;
+  public static final byte ONE_LABEL = 0x01;
+  public static final byte TWO_LABEL = 0x02;
+  public static final byte THREE_LABEL = 0x03;
+  public static final byte FOUR_LABEL = 0x04;
+  public static final byte FIVE_LABEL = 0x05;
+  public static final byte SIX_LABEL = 0x06;
+  public static final byte SEVEN_LABEL = 0x07;
+  public static final byte EIGHT_LABEL = 0x08;
+  public static final byte NINE_LABEL = 0x09;
+  public static final byte PLUS_LABEL = 0x0A;
+  public static final byte EQUALS_LABEL = 0x0B;
+  public static final byte VARIABLE_x_LABEL = 0x0C;
+  public static final byte VARIABLE_y_LABEL = 0x0D;
+
+  public static final int MAX_TRACES_IN_SYMBOL = 3;
+
   public static final int DATA_MAGIC_NUMBER = 0x00000803;
   public static final int LABELS_MAGIC_NUMBER = 0x00000801;
 
   public static final double GARBAGE_THREASHOLD = 95;
   public static final double MINIMUM_RATE = 0;
   public static final double MAXIMUM_RATE = 100;
-
-  public enum Labels{
-    ZERO(0),
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4),
-    FIVE(5),
-    SIX(6),
-    SEVEN(7),
-    EIGHT(8),
-    NINE(9),
-    PLUS(10),
-    EQUALS(11),
-    VARIABLE_x(12),
-    VARIABLE_y(13),
-    MINUS(14);
-
-    Labels(int label){
-      label_ = label;
-    }
-
-    public int label_;
-  }
 
 }
