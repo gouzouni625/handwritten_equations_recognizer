@@ -253,7 +253,7 @@ public class MinimumSpanningTreeTest{
 
     MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
 
-    int[][] paths = minimumSpanningTree.getUniquePaths();
+    int[][] paths = minimumSpanningTree.getUniquePaths(numberOfVertices);
 
     assertEquals(36, paths.length, 0);
   }

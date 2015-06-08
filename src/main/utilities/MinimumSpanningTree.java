@@ -173,8 +173,8 @@ public class MinimumSpanningTree{
     return false;
   }
 
-  public int[][] getUniquePaths(){
-    return (Utilities.findUniquePaths(connections_));
+  public int[][] getUniquePaths(int maxPathLength){
+    return (Utilities.findUniquePaths(connections_, maxPathLength));
   }
 
   public int[] getContext(int[] vertices){
