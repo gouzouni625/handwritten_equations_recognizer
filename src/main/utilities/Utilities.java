@@ -237,6 +237,29 @@ public class Utilities{
     return relativeValuesArray;
   }
 
+  public static int[] vectorIndexToUpperTriangularIndeces(int numberOfRows, int index){
+    int rowIndex = 0;
+    int columnIndex = 0;
+
+    while(index >= numberOfRows - 1 - rowIndex){
+      index -= numberOfRows - 1 - rowIndex;
+      rowIndex++;
+    }
+    columnIndex = rowIndex + 1 + index;
+
+    return (new int[] {rowIndex, columnIndex});
+  }
+
+  public static int upperTriangularIndecesToVectorIndex(int numberOfRows, int row, int column){
+    int index = 0;
+    for(int i = 0;i < row;i++){
+      index += numberOfRows - 1 - i;
+    }
+    index += column;
+
+    return index;
+  }
+
   public static final byte UNKNOWN_LABEL = -0x01;
   public static final byte ZERO_LABEL = 0x00;
   public static final byte ONE_LABEL = 0x01;
@@ -258,7 +281,6 @@ public class Utilities{
   public static final int DATA_MAGIC_NUMBER = 0x00000803;
   public static final int LABELS_MAGIC_NUMBER = 0x00000801;
 
-  public static final double GARBAGE_THREASHOLD = 95;
   public static final double MINIMUM_RATE = 0;
   public static final double MAXIMUM_RATE = 100;
 

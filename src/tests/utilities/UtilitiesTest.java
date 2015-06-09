@@ -7,6 +7,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
 
 import main.utilities.Utilities;
 
@@ -186,6 +190,23 @@ public class UtilitiesTest{
   }
 
   @Test
+  public void testImageToByteArray(){
+    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+    int numberOfRows = 640;
+    int numberOfColumns = 320;
+    Mat image = Mat.zeros(new Size(numberOfRows, numberOfColumns), CvType.CV_32F);
+
+    byte[] array = Utilities.imageToByteArray(image);
+
+    assertEquals(array.length, numberOfRows * numberOfColumns, 0);
+
+    for(int i = 0;i < numberOfRows * numberOfColumns;i++){
+      assertEquals(0, array[i], 0);
+    }
+  }
+
+  @Test
   public void testRelativeValues(){
     double[] array = new double[] {0.5, 0.3, 0.2};
 
@@ -194,6 +215,33 @@ public class UtilitiesTest{
     assertEquals(50, array[0], 0);
     assertEquals(30, array[1], 0);
     assertEquals(20, array[2], 0);
+  }
+
+  @Test
+  public void testVectorIndexToUpperTriangularIndeces(){
+    int[] indices;
+
+    indices = Utilities.vectorIndexToUpperTriangularIndeces(5,  3);
+    assertEquals(0, indices[0], 0);
+    assertEquals(4, indices[1], 0);
+
+    indices = Utilities.vectorIndexToUpperTriangularIndeces(4, 4);
+    assertEquals(1, indices[0], 0);
+    assertEquals(3, indices[1], 0);
+  }
+
+  @Test
+  public void testUpperTriangularIndecesToVectorIndex(){
+    int index;
+
+    index = Utilities.upperTriangularIndecesToVectorIndex(5, 0, 3);
+    assertEquals(3, index, 0);
+
+    index = Utilities.upperTriangularIndecesToVectorIndex(5, 1, 2);
+    assertEquals(6, index, 0);
+
+    index = Utilities.upperTriangularIndecesToVectorIndex(5, 2, 2);
+    assertEquals(9, index, 0);
   }
 
 }
