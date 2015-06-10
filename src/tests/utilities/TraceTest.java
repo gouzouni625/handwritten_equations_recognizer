@@ -1,6 +1,8 @@
 package tests.utilities;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import org.opencv.core.Core;
@@ -111,9 +113,9 @@ public class TraceTest{
     trace.calculateCorners();
 
     assertEquals(0, trace.getTopLeftCorner().x_, 0);
-    assertEquals(10, trace.getTopLeftCorner().y_, 0);
+    assertEquals(numberOfPoints - 1 + 10, trace.getTopLeftCorner().y_, 0);
     assertEquals(numberOfPoints - 1, trace.getBottomRightCorner().x_, 0);
-    assertEquals(numberOfPoints - 1 + 10, trace.getBottomRightCorner().y_, 0);
+    assertEquals(10, trace.getBottomRightCorner().y_, 0);
     assertEquals(numberOfPoints - 1, trace.getWidth(), 0);
     assertEquals(numberOfPoints - 1, trace.getHeight(), 0);
   }
@@ -136,6 +138,46 @@ public class TraceTest{
 
     // The image saved by the following command should be a line with positive slope.
     //Highgui.imwrite("data/tests/utilities/Trace/testPrint_image.tiff", image);
+  }
+
+  @Test
+  public void testGetCentroid(){
+    Trace trace = new Trace();
+
+    int numberOfPoints = 100;
+    for(int i = 0;i < numberOfPoints;i++){
+      trace.add(new Point(i, 2 * i + 3));
+    }
+
+    Point centroid = trace.getCentroid();
+
+    assertEquals(49.5, centroid.x_, 0);
+    assertEquals(102, centroid.y_, 0);
+  }
+
+  @Test
+  public void testAreOverlapped(){
+    int numberOfPoints = 100;
+
+    Trace trace1 = new Trace();
+    Trace trace2 = new Trace();
+
+    for(int i = 0;i < numberOfPoints;i++){
+      trace1.add(new Point(i, 2 * i + 3));
+      trace2.add(new Point(i, -0.5 * i - 10));
+    }
+
+    assertFalse(Trace.areOverlapped(trace1, trace2));
+
+    trace1 = new Trace();
+    trace2 = new Trace();
+
+    for(int i = 0;i < numberOfPoints;i++){
+      trace1.add(new Point(i, 2 * i + 3));
+      trace2.add(new Point(i - numberOfPoints / 2, -0.5 * i + 6));
+    }
+
+    assertTrue(Trace.areOverlapped(trace1, trace2));
   }
 
 }

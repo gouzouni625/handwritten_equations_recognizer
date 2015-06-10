@@ -80,8 +80,8 @@ public class Trace{
       }
     }
 
-    topLeftCorner_ = new Point(minX, minY);
-    bottomRightCorner_ = new Point(maxX, maxY);
+    topLeftCorner_ = new Point(minX, maxY);
+    bottomRightCorner_ = new Point(maxX, minY);
   }
 
   public Point getTopLeftCorner(){
@@ -97,7 +97,7 @@ public class Trace{
   }
 
   public double getHeight(){
-    return (bottomRightCorner_.y_ - topLeftCorner_.y_);
+    return (topLeftCorner_.y_ - bottomRightCorner_.y_);
   }
 
   public Mat print(Mat image, int thickness){
@@ -118,9 +118,22 @@ public class Trace{
     this.calculateCorners();
 
     double centroidX = topLeftCorner_.x_ + (bottomRightCorner_.x_ - topLeftCorner_.x_) / 2;
-    double centroidY = topLeftCorner_.y_ + (bottomRightCorner_.y_ - topLeftCorner_.y_) / 2;
+    double centroidY = bottomRightCorner_.y_ + (topLeftCorner_.y_ - bottomRightCorner_.y_) / 2;
 
     return (new Point(centroidX, centroidY));
+  }
+
+  public static boolean areOverlapped(Trace trace1, Trace trace2){
+    trace1.calculateCorners();
+    trace2.calculateCorners();
+
+    if(trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_){
+      if(trace2.getTopLeftCorner().y_ >= trace1.getBottomRightCorner().y_ && trace2.getBottomRightCorner().y_ <= trace1.getTopLeftCorner().y_){
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private ArrayList<Point> points_;
