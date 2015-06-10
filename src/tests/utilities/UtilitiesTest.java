@@ -244,4 +244,12 @@ public class UtilitiesTest{
     assertEquals(9, index, 0);
   }
 
+  @Test
+  public void testAreAllTrue(){
+    assertTrue(Utilities.areAllTrue(new boolean[] {true, true, true, true, true}));
+    assertFalse(Utilities.areAllTrue(new boolean[] {true, false, false, false, false}));
+    assertFalse(Utilities.areAllTrue(new boolean[] {false, true, true, false, false}));
+    assertFalse(Utilities.areAllTrue(new boolean[] {false, false, false, true, false}));
+  }
+
 }

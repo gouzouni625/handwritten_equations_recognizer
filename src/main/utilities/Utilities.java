@@ -201,8 +201,6 @@ public class Utilities{
     return (array[Utilities.indexOfMax(array)]);
   }
 
-  /** The image should have only integer values inside [0, 255].
-   */
   public static byte[] imageToByteArray(Mat image){
     int numberOfRows = image.rows();
     int numberOfColumns = image.cols();
@@ -259,6 +257,17 @@ public class Utilities{
 
     return index;
   }
+
+  public static boolean areAllTrue(boolean[] array){
+    for(int i = 0;i < array.length;i++){
+      if(!array[i]){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 
   public static final byte UNKNOWN_LABEL = -0x01;
   public static final byte ZERO_LABEL = 0x00;
