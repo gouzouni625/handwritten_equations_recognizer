@@ -69,11 +69,9 @@ public class MinimumSpanningTreeTest{
                                          14};
     int numberOfVertices = 8;
 
-    MinimumSpanningTree minimumSpanningTree =
-                     MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
+    MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
 
-    boolean[][] correctConnections =
-                                new boolean[numberOfVertices][numberOfVertices];
+    boolean[][] correctConnections = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
         correctConnections[i][j] = (i == j);
@@ -99,6 +97,54 @@ public class MinimumSpanningTreeTest{
     }
 
     assertEquals(0, MinimumSpanningTree.kruskal(null, 0).numberOfVertices(), 0);
+
+    // Second example.
+    /*edgeWeights = new double[] {3, 100, 2, 2, 100, 100, 100, 100, 100, 100, 100,
+                                2, 100, 100, 3, 100, 100, 100, 100, 100, 100,
+                                3, 2, 3, 1, 100, 100, 3, 100, 100,
+                                100, 100, 100, 100, 100, 2, 100, 100,
+                                100, 100, 100, 100, 100, 100, 100,
+                                100, 2, 2, 100, 100, 100,
+                                2, 100, 100, 2, 100,
+                                100, 100, 100, 2,
+                                100, 100, 3,
+                                5, 100,
+                                3};
+
+    numberOfVertices = 12;
+
+    minimumSpanningTree = MinimumSpanningTree.kruskal(edgeWeights, numberOfVertices);
+
+    correctConnections = new boolean[numberOfVertices][numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        correctConnections[i][j] = (i == j);
+      }
+    }
+
+    correctConnections[0][3] = true;
+    correctConnections[0][4] = true;
+    correctConnections[1][2] = true;
+    correctConnections[2][4] = true;
+    correctConnections[2][6] = true;
+    correctConnections[3][9] = true;
+    correctConnections[5][7] = true;
+    correctConnections[5][8] = true;
+    correctConnections[6][7] = true;
+    correctConnections[6][10] = true;
+    correctConnections[7][11] = true;
+
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = i + 1;j < numberOfVertices;j++){
+        if(correctConnections[i][j]){
+          assertTrue(minimumSpanningTree.areConnected(i, j));
+        }
+        else{
+          assertFalse(minimumSpanningTree.areConnected(i, j));
+        }
+      }
+    }*/
+
   }
 
   @Test
@@ -155,32 +201,6 @@ public class MinimumSpanningTreeTest{
 
     addConnection.invoke(null, connections, 9);
     assertTrue(connections[3][4]);
-  }
-
-  @Test
-  public void testVectorIndexToUpperTriangularIndeces()
-                                                throws IllegalArgumentException,
-                                                      InvocationTargetException,
-                                                      IllegalAccessException,
-                                                      NoSuchMethodException,
-                                                      SecurityException{
-    Class[] arguments = new Class[2];
-    arguments[0] = int.class;
-    arguments[1] = int.class;
-    Method vectorIndexToUpperTriangularIndeces = MinimumSpanningTree.class.
-       getDeclaredMethod("vectorIndexToUpperTriangularIndeces", arguments);
-
-    vectorIndexToUpperTriangularIndeces.setAccessible(true);
-
-    int[] indices;
-
-    indices = (int[])(vectorIndexToUpperTriangularIndeces.invoke(null, 5, 3));
-    assertEquals(0, indices[0], 0);
-    assertEquals(4, indices[1], 0);
-
-    indices = (int[])(vectorIndexToUpperTriangularIndeces.invoke(null, 4, 4));
-    assertEquals(1, indices[0], 0);
-    assertEquals(3, indices[1], 0);
   }
 
   @Test

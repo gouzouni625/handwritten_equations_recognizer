@@ -26,7 +26,7 @@ public class MinimumSpanningTree{
 
   public static MinimumSpanningTree kruskal(double[] edgeWeights, int numberOfVertices){
     if(numberOfVertices == 0){
-      return (new MinimumSpanningTree(numberOfVertices));
+      return (new MinimumSpanningTree(new boolean[numberOfVertices][numberOfVertices]));
     }
 
     boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
@@ -36,19 +36,27 @@ public class MinimumSpanningTree{
       }
     }
 
-    int[] indeces = Utilities.sortArray(edgeWeights);
-    int verticesLeft = numberOfVertices;
+    int[] sortedIndices = Utilities.sortArray(edgeWeights);
+    boolean[] vertexConnected = new boolean[numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      vertexConnected[i] = false;
+    }
 
-    // Add the first connection to the tree.
-    // Notice that the first connection adds 2 vertices to the tree.
-    MinimumSpanningTree.addConnection(connections, indeces[0]);
-    verticesLeft -= 2;
+    int edgesCreated = 0;
 
-    for(int i = 1;i < indeces.length;i++){
-      if(!MinimumSpanningTree.createsCircle(connections, indeces[i])){
-        MinimumSpanningTree.addConnection(connections, indeces[i]);
-        verticesLeft--;
-        if(verticesLeft == 0){
+    int[] verticesConnected = MinimumSpanningTree.addConnection(connections, sortedIndices[0]);
+    vertexConnected[verticesConnected[0]] = true;
+    vertexConnected[verticesConnected[1]] = true;
+    edgesCreated++;
+
+    for(int i = 1;i < sortedIndices.length;i++){
+      if(!MinimumSpanningTree.createsCircle(connections, sortedIndices[i])){
+        verticesConnected = MinimumSpanningTree.addConnection(connections, sortedIndices[i]);
+        vertexConnected[verticesConnected[0]] = true;
+        vertexConnected[verticesConnected[1]] = true;
+        edgesCreated++;
+
+        if(Utilities.areAllTrue(vertexConnected) && edgesCreated == numberOfVertices - 1){
           break;
         }
       }
@@ -76,8 +84,7 @@ public class MinimumSpanningTree{
     MinimumSpanningTree.connect(connections_, vertex1, vertex2);
   }
 
-  public static void connect(boolean[][] connections, int vertex1, int vertex2)
-                                              throws IndexOutOfBoundsException{
+  public static void connect(boolean[][] connections, int vertex1, int vertex2) throws IndexOutOfBoundsException{
     if(vertex1 < 0 || vertex1 >= connections.length ||
         vertex2 < 0 || vertex2 >= connections.length){
        throw new IndexOutOfBoundsException();
@@ -109,31 +116,16 @@ public class MinimumSpanningTree{
      }
   }
 
-  private static void addConnection(boolean[][] connections, int index){
-    int[] matrixIndices = MinimumSpanningTree.
-                          vectorIndexToUpperTriangularIndeces(
-                                                     connections.length, index);
+  private static int[] addConnection(boolean[][] connections, int index){
+    int[] matrixIndices = Utilities.vectorIndexToUpperTriangularIndeces(connections.length, index);
 
-    MinimumSpanningTree.connect(connections, matrixIndices[0],
-                                                              matrixIndices[1]);
-  }
+    MinimumSpanningTree.connect(connections, matrixIndices[0], matrixIndices[1]);
 
-  private static int[] vectorIndexToUpperTriangularIndeces(int numberOfRows,
-                                                                     int index){
-    int rowIndex = 0;
-    int columnIndex = 0;
-
-    while(index >= numberOfRows - 1 - rowIndex){
-      index -= numberOfRows - 1 - rowIndex;
-      rowIndex++;
-    }
-    columnIndex = rowIndex + 1 + index;
-
-    return (new int[] {rowIndex, columnIndex});
+    return matrixIndices;
   }
 
   private static boolean createsCircle(boolean[][] connections, int index){
-    int[] matrixIndices = MinimumSpanningTree.vectorIndexToUpperTriangularIndeces(connections.length, index);
+    int[] matrixIndices = Utilities.vectorIndexToUpperTriangularIndeces(connections.length, index);
     int rowIndex = matrixIndices[0];
     int columnIndex = matrixIndices[1];
 
