@@ -117,8 +117,8 @@ public class Trace{
   public Point getCentroid(){
     this.calculateCorners();
 
-    double centroidX = topLeftCorner_.x_ + (bottomRightCorner_.x_ - topLeftCorner_.x_) / 2;
-    double centroidY = bottomRightCorner_.y_ + (topLeftCorner_.y_ - bottomRightCorner_.y_) / 2;
+    double centroidX = topLeftCorner_.x_ + this.getWidth() / 2;
+    double centroidY = bottomRightCorner_.y_ + this.getHeight() / 2;
 
     return (new Point(centroidX, centroidY));
   }
