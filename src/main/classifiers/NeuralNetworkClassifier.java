@@ -46,12 +46,59 @@ public class NeuralNetworkClassifier implements Classifier{
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
 
-    // Process context.
-    if(symbolSize == Utilities.MAX_TRACES_IN_SYMBOL || contextSize == 0){
-      return symbolRate;
+    boolean[][] connections = new boolean[symbolSize][symbolSize];
+    for(int i = 0;i < symbolSize;i++){
+      for(int j = 0;j < symbolSize;j++){
+        connections[i][j] = true;
+      }
+    }
+    int[][] symbolSubPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL);
+    int numberOfSubPaths = symbolSubPaths.length;
+
+    /* ===== */
+    System.out.println("=====================Start===========================");
+    System.out.println("numberOfSubPaths: " + numberOfSubPaths);
+    for(int i = 0;i < numberOfSubPaths;i++){
+      System.out.print("SubPath: " + i + " ");
+      for(int j = 0;j < symbolSubPaths[i].length;j++){
+        System.out.print(symbolSubPaths[i][j] + ", ");
+      }
+
+      System.out.println();
+    }
+    System.out.println("======================End============================");
+    /* ===== */
+
+    double finalRate = symbolRate;
+    TraceGroup subSymbol;
+    for(int i = 0;i < numberOfSubPaths;i++){
+      subSymbol = new TraceGroup(symbol.subTraceGroup(symbolSubPaths[i]));
+
+      neuralNetworkOutput = neuralNetwork_.feedForward(this.imageToVector(subSymbol.print(new Size(28, 28)), -1, 1));
+      neuralNetworkOutput = Utilities.relativeValues(neuralNetworkOutput);
+
+      double rate = Utilities.maxValue(neuralNetworkOutput);
+
+      System.out.println("=====================Start===========================");
+      System.out.println("SubPath " + i + " rate: " + rate);
+      System.out.println("======================End============================");
+
+
+      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
+        System.out.println("--------------------------------------------------------------");
+        continue;
+      }
+
+      finalRate -= 0.33 * rate;
+      System.out.println("finalRate: " + finalRate + "  " + (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2);
     }
 
-    boolean[][] connections = new boolean[contextSize][contextSize];
+    // Process context.
+    if(symbolSize == Utilities.MAX_TRACES_IN_SYMBOL || contextSize == 0){
+      return finalRate;
+    }
+
+    connections = new boolean[contextSize][contextSize];
     for(int i = 0;i < contextSize;i++){
       for(int j = 0;j < contextSize;j++){
         connections[i][j] = true;
@@ -60,7 +107,6 @@ public class NeuralNetworkClassifier implements Classifier{
     int[][] contextPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL - symbolSize);
     int numberOfContextPaths = contextPaths.length;
 
-    double finalRate = symbolRate;
     TraceGroup symbolWithContext;
     for(int i = 0;i < numberOfContextPaths;i++){
       symbolWithContext = new TraceGroup(symbol);
