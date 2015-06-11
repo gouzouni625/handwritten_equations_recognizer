@@ -135,6 +135,9 @@ public abstract class MSTPartitioner extends Partitioner{
       // Create the traceGroup of symbols.
       symbol = expression.subTraceGroup(uniquePaths[i]);
 
+      System.out.println("Outer symbol size:" + symbol.size());
+      System.out.println("unique path size:" + uniquePaths[i].length);
+
       // Find the context.
       contextIndices = minimumSpanningTree.getContext(uniquePaths[i]);
       context = expression.subTraceGroup(contextIndices);
