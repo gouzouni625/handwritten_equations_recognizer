@@ -176,9 +176,9 @@ public class TraceGroupTest{
     traceGroup.calculateCorners();
 
     assertEquals(0, traceGroup.getTopLeftCorner().x_, 0);
-    assertEquals(0, traceGroup.getTopLeftCorner().y_, 0);
+    assertEquals(sizeOfTraces - 1, traceGroup.getTopLeftCorner().y_, 0);
     assertEquals(numberOfTraces - 1, traceGroup.getBottomRightCorner().x_, 0);
-    assertEquals(sizeOfTraces - 1, traceGroup.getBottomRightCorner().y_, 0);
+    assertEquals(0, traceGroup.getBottomRightCorner().y_, 0);
     assertEquals(numberOfTraces - 1, traceGroup.getWidth(), 0);
     assertEquals(sizeOfTraces - 1, traceGroup.getHeight(), 0);
   }
@@ -204,7 +204,7 @@ public class TraceGroupTest{
     Mat image = traceGroup.print(new Size(1000, 1000));
 
     // The image saved by the following command should show two lines with common beginning.
-    //Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
+    Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
   }
 
 }

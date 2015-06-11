@@ -72,8 +72,6 @@ public class TraceGroup{
     return this;
   }
 
-  // It is the users responsibility to call calculateCorners each time the traces of this
-  // trace group changes.
   public void calculateCorners(){
     if(traces_ == null || traces_.size() == 0){
       return;
@@ -83,8 +81,8 @@ public class TraceGroup{
 
     double minX = traces_.get(0).getTopLeftCorner().x_;
     double maxX = traces_.get(0).getBottomRightCorner().x_;
-    double minY = traces_.get(0).getTopLeftCorner().y_;
-    double maxY = traces_.get(0).getBottomRightCorner().y_;
+    double minY = traces_.get(0).getBottomRightCorner().y_;
+    double maxY = traces_.get(0).getTopLeftCorner().y_;
 
     for(int i = 0;i < traces_.size();i++){
       traces_.get(i).calculateCorners();
@@ -100,17 +98,17 @@ public class TraceGroup{
         maxX = bottomRightCorner.x_;
       }
 
-      if(topLeftCorner.y_ < minY){
-        minY = topLeftCorner.y_;
+      if(bottomRightCorner.y_ < minY){
+        minY = bottomRightCorner.y_;
       }
 
-      if(bottomRightCorner.y_ > maxY){
-        maxY = bottomRightCorner.y_;
+      if(topLeftCorner.y_ > maxY){
+        maxY = topLeftCorner.y_;
       }
     }
 
-    topLeftCorner_ = new Point(minX, minY);
-    bottomRightCorner_ = new Point(maxX, maxY);
+    topLeftCorner_ = new Point(minX, maxY);
+    bottomRightCorner_ = new Point(maxX, minY);
   }
 
   public Point getTopLeftCorner(){
@@ -126,7 +124,7 @@ public class TraceGroup{
   }
 
   public double getHeight(){
-    return (bottomRightCorner_.y_ - topLeftCorner_.y_);
+    return (topLeftCorner_.y_ - bottomRightCorner_.y_);
   }
 
   public Mat print(Size size){
@@ -141,7 +139,7 @@ public class TraceGroup{
 
     traceGroup.calculateCorners();
 
-    traceGroup.subtract(traceGroup.getTopLeftCorner());
+    traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
 
     double width = traceGroup.getWidth();
     if(width < 100){
