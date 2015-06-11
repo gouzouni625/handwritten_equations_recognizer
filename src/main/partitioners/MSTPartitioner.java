@@ -1,5 +1,7 @@
 package main.partitioners;
 
+import java.util.ArrayList;
+
 import main.utilities.MinimumSpanningTree;
 import main.utilities.Point;
 import main.utilities.Trace;
@@ -14,18 +16,116 @@ public abstract class MSTPartitioner extends Partitioner{
       return (new TraceGroup[] {expression});
     }
 
+    int numberOfTraces = expression.size();
+
     // Calculate the distances between all the traces.
     double[] distances = this.calculateDistancesBetweenTraces(expression);
 
-    // Create a minimum spanning tree using the distances between the traces.
-    MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(distances, expression.size());
+    /* ===== Print Distances ===== */
+    System.out.println("===== Print distances =====");
+    for(int i = 0;i < distances.length;i++){
+      System.out.println("distances[" + i + "] = " + distances[i]);
+    }
+    /* ===== */
 
-    // Feed all the possible combinations of arbitrary number of connected
-    // traces to the classifier and see if they make a symbol.
-    int[][] uniquePaths = minimumSpanningTree.getUniquePaths();
+    boolean[][] connections = new boolean[numberOfTraces][numberOfTraces];
+    for(int i = 0;i < numberOfTraces;i++){
+      for(int j = 0;j < numberOfTraces;j++){
+        connections[i][j] = (i == j);
+      }
+    }
+
+    // Create a minimum spanning tree using the distances between the traces.
+    MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(distances, numberOfTraces);
+
+    /* ===== Print minimum spanning tree ===== */
+    System.out.println("===== Print Minimum Spanning Tree =====");
+    for(int i = 0;i < expression.size();i++){
+      for(int j = 0;j < expression.size();j++){
+        System.out.print(minimumSpanningTree.areConnected(i, j) + ", ");
+      }
+
+      System.out.println();
+    }
+    /* ===== */
+
+    int[][] uniquePaths = minimumSpanningTree.getUniquePaths(Utilities.MAX_TRACES_IN_SYMBOL);
+
+    /* ===== Print uniquePaths on the minimumSpanning tree ===== */
+    System.out.println("===== Minimum Spanning Tree unique paths =====");
+    for(int i = 0;i < uniquePaths.length;i++){
+      System.out.print("path " + i + " = ");
+      for(int j = 0;j < uniquePaths[i].length;j++){
+        System.out.print(uniquePaths[i][j] + ", ");
+      }
+
+     System.out.println();
+    }
+    /* ===== Print uniquePaths on the minimumSpanning tree ===== */
+
+    int[][] overlaps = this.findOverlaps(expression);
+
+    /* ===== Print overlaps ===== */
+    System.out.println("===== Overlaps =====");
+    for(int i = 0;i < overlaps.length;i++){
+      System.out.println(overlaps[i][0] + ", " + overlaps[i][1]);
+    }
+    /* ===== Print overlaps ===== */
+
+    // Delete all the unique Paths that do not comply with the overlaps.
+    ArrayList<int[]> clearedPaths = new ArrayList<int[]>();
+    boolean foundFirst;
+    boolean foundSecond;
+    boolean okFlag = true;
+    for(int path = 0;path < uniquePaths.length;path++){
+
+      for(int overlap = 0;overlap < overlaps.length;overlap++){
+        foundFirst = false;
+        foundSecond = false;
+
+        for(int trace = 0;trace < uniquePaths[path].length;trace++){
+          if(uniquePaths[path][trace] == overlaps[overlap][0]){
+            foundFirst = true;
+          }
+
+          if(uniquePaths[path][trace] == overlaps[overlap][1]){
+            foundSecond = true;
+          }
+        }
+
+        if(foundFirst != foundSecond){
+          okFlag = false;
+          break;
+        }
+      }
+
+      if(okFlag){
+        clearedPaths.add(uniquePaths[path]);
+      }
+      else{
+        okFlag = true;
+      }
+    }
+
+    uniquePaths = new int[clearedPaths.size()][];
+    for(int i = 0;i < clearedPaths.size();i++){
+      uniquePaths[i] = clearedPaths.get(i);
+    }
+    clearedPaths = null;
+
+    /* ===== Print uniquePaths after clearing ===== */
+    System.out.println("===== unique paths after clearing =====");
+    for(int i = 0;i < uniquePaths.length;i++){
+      System.out.print("path " + i + " = ");
+      for(int j = 0;j < uniquePaths[i].length;j++){
+        System.out.print(uniquePaths[i][j] + ", ");
+      }
+
+     System.out.println();
+    }
+    /* ===== Print uniquePaths after clearing ===== */
+
     double[] uniquePathsRates = new double[uniquePaths.length];
-    boolean[] isGarbage = new boolean[uniquePaths.length];
-    int garbageCounter = 0;
 
     TraceGroup symbol;
     TraceGroup context;
@@ -40,54 +140,59 @@ public abstract class MSTPartitioner extends Partitioner{
       context = expression.subTraceGroup(contextIndices);
 
       // Evaluate each path and discard garbage.
-      double rate = classifier_.classify(symbol, context);
+      uniquePathsRates[i] = classifier_.classify(symbol, context);
 
-      if(rate >= 0.5){
-        uniquePathsRates[i] = rate;
-        isGarbage[i] = false;
-      }
-      else{
-        isGarbage[i] = true;
-        garbageCounter++;
-      }
-    }
-
-    // Remove paths that are garbage.
-    int index = 0;
-    int[][] finalPaths = new int[uniquePaths.length - garbageCounter][];
-    double[] finalPathsRates = new double[uniquePaths.length - garbageCounter];
-    for(int i = 0;i < uniquePaths.length;i++){
-      if(!isGarbage[i]){
-        finalPaths[index] = uniquePaths[i];
-        finalPathsRates[index] = uniquePathsRates[i];
-        index++;
-      }
+      /* ===== Print unique paths rates ===== */
+      System.out.println("path " + i + " = " + uniquePathsRates[i]);
+      System.out.println(classifier_.getClassificationLabel());
+      /* ===== */
     }
 
     // Get all the possible partitions.
-    int numberOfPaths = finalPaths.length;
+    int numberOfPaths = uniquePaths.length;
 
-    boolean[][] connections = new boolean[numberOfPaths][numberOfPaths];
+    connections = new boolean[numberOfPaths][numberOfPaths];
     for(int i = 0;i < numberOfPaths;i++){
       for(int j = 0;j < numberOfPaths;j++){
         connections[i][j] = true;
       }
     }
 
-    int[][] partitions = Utilities.findUniquePaths(connections);
+    /**
+     *  Leave the maxPathLength equal to MAX_TRACES_IN_SYMBOL for now. This is not totally valid
+     *  because, even if a partition is of that length, one or more paths might have more than one
+     *  vertices and thus the whole partition will have a length greater that MAX_TRACES_IN_SYMBOL.
+     */
+    int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths);
+
+    /* ===== Print partitions ===== */
+    //System.out.println("===== Print Partitions =====");
+    //for(int i = 0;i < partitions.length;i++){
+    //  for(int j = 0;j < partitions[i].length;j++){
+    //    System.out.print(partitions[i][j] + ", ");
+    //  }
+
+    //  System.out.println();
+    //}
+    /* ===== Print partitions ===== */
 
     // Find the best partition.
     double maxRate = -1;
     int bestPartition = -1;
 
     for(int partition = 0;partition < partitions.length;partition++){
-      if(this.isEligible(partitions[partition], finalPaths, expression.size())){
+      if(this.isEligible(partitions[partition], uniquePaths, expression.size())){
+
+        /* ===== */
+        //System.out.println("partition " + partition + " is eligible.");
+        /* ===== */
 
         // Calculate the rate of this partition.
         double currentRate = 0;
         for(int path = 0;path < partitions[partition].length;path++){
-          currentRate += finalPathsRates[partitions[partition][path]];
+          currentRate += uniquePathsRates[partitions[partition][path]];
         }
+        currentRate /= partitions[partition].length;
 
         if(currentRate > maxRate){
           maxRate = currentRate;
@@ -100,7 +205,7 @@ public abstract class MSTPartitioner extends Partitioner{
     // Each trace group in the final array, constitutes a symbol.
     TraceGroup[] partition = new TraceGroup[partitions[bestPartition].length];
     for(int i = 0;i < partition.length;i++){
-      partition[i] = expression.subTraceGroup(finalPaths[partitions[bestPartition][i]]);
+      partition[i] = expression.subTraceGroup(uniquePaths[partitions[bestPartition][i]]);
     }
 
     return partition;
@@ -114,7 +219,6 @@ public abstract class MSTPartitioner extends Partitioner{
 
     for(int path = 0;path < partition.length;path++){
       for(int trace = 0;trace < paths[partition[path]].length;trace++){
-        System.out.println(paths[partition[path]][trace]);
         tracesOccurenceCounter[paths[partition[path]][trace]]++;
       }
     }
@@ -143,7 +247,30 @@ public abstract class MSTPartitioner extends Partitioner{
     return distances;
   }
 
-  private double distanceOfTraces(Trace trace1, Trace trace2){
+  private int[][] findOverlaps(TraceGroup expression){
+    int numberOfTraces = expression.size();
+
+    ArrayList<int[]> overlaps = new ArrayList<int[]>();
+
+    for(int i = 0;i < numberOfTraces;i++){
+      for(int j = i + 1;j < numberOfTraces;j++){
+        if(Trace.areOverlapped(expression.get(i), expression.get(j))){
+          overlaps.add(new int[] {i, j});
+        }
+      }
+    }
+
+    // Convert array list to array.
+    int[][] overlapsArray = new int[overlaps.size()][2];
+    for(int i = 0;i < overlaps.size();i++){
+      overlapsArray[i][0] = overlaps.get(i)[0];
+      overlapsArray[i][1] = overlaps.get(i)[1];
+    }
+
+    return overlapsArray;
+  }
+
+  /*private double distanceOfTraces(Trace trace1, Trace trace2){
     if(trace1.size() == 0 || trace2.size() == 0){
       return -1;
     }
@@ -166,6 +293,18 @@ public abstract class MSTPartitioner extends Partitioner{
     }
 
     return minimumDistance;
+  }*/
+
+  private double distanceOfTraces(Trace trace1, Trace trace2){
+    if(trace1.size() == 0 || trace2.size() == 0){
+      return -1;
+    }
+
+    // Return the Euclidean distance between the centroids of the bounding boxes.
+    Point centroid1 = trace1.getCentroid();
+    Point centroid2 = trace2.getCentroid();
+
+    return (Point.distance(centroid1, centroid2));
   }
 
 }
