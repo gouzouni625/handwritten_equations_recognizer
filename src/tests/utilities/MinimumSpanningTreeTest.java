@@ -99,7 +99,7 @@ public class MinimumSpanningTreeTest{
     assertEquals(0, MinimumSpanningTree.kruskal(null, 0).numberOfVertices(), 0);
 
     // Second example.
-    /*edgeWeights = new double[] {3, 100, 2, 2, 100, 100, 100, 100, 100, 100, 100,
+    edgeWeights = new double[] {3, 100, 2, 2, 100, 100, 100, 100, 100, 100, 100,
                                 2, 100, 100, 3, 100, 100, 100, 100, 100, 100,
                                 3, 2, 3, 1, 100, 100, 3, 100, 100,
                                 100, 100, 100, 100, 100, 2, 100, 100,
@@ -143,7 +143,7 @@ public class MinimumSpanningTreeTest{
           assertFalse(minimumSpanningTree.areConnected(i, j));
         }
       }
-    }*/
+    }
 
   }
 
@@ -204,63 +204,6 @@ public class MinimumSpanningTreeTest{
   }
 
   @Test
-  public void testCreatesCircle() throws IllegalArgumentException,
-                                         InvocationTargetException,
-                                         IllegalAccessException,
-                                         NoSuchMethodException,
-                                         SecurityException{
-    Class[] arguments = new Class[2];
-    arguments[0] = boolean[][].class;
-    arguments[1] = int.class;
-    Method createsCircle = MinimumSpanningTree.class.getDeclaredMethod(
-                                                    "createsCircle", arguments);
-    createsCircle.setAccessible(true);
-
-    boolean[][] connections = new boolean[4][4];
-    for(int i = 0;i < connections.length;i++){
-      for(int j = 0;j < connections.length;j++){
-        connections[i][j] = (i == j);
-      }
-    }
-
-    connections[0][1] = true;
-    connections[1][3] = true;
-
-    assertTrue((boolean)(createsCircle.invoke(null, connections, 2)));
-    assertFalse((boolean)(createsCircle.invoke(null, connections, 5)));
-  }
-
-  @Test
-  public void testDoIReach() throws IllegalArgumentException,
-                                    InvocationTargetException,
-                                    IllegalAccessException,
-                                    NoSuchMethodException,
-                                    SecurityException{
-    Class[] arguments = new Class[4];
-    arguments[0] = int.class;
-    arguments[1] = int.class;
-    arguments[2] = boolean[][].class;
-    arguments[3] = int.class;
-    Method doIReach = MinimumSpanningTree.class.getDeclaredMethod("doIReach",
-                                                                     arguments);
-    doIReach.setAccessible(true);
-
-    boolean[][] connections = new boolean[4][4];
-    for(int i = 0;i < connections.length;i++){
-      for(int j = 0;j < connections.length;j++){
-        connections[i][j] = (i == j);
-      }
-    }
-
-    connections[0][1] = true;
-    connections[1][3] = true;
-
-    int depth = 0;
-    assertTrue((boolean)(doIReach.invoke(null, 3, 0, connections, depth)));
-    assertFalse((boolean)(doIReach.invoke(null, 3, 2, connections, depth)));
-  }
-
-  @Test
   public void testGetUniquePaths(){
     double[] edgeWeights = new double[] {12, 100, 16, 100, 100, 100, 13,
                                          16, 100, 100, 100, 14, 100,
@@ -276,6 +219,78 @@ public class MinimumSpanningTreeTest{
     int[][] paths = minimumSpanningTree.getUniquePaths(numberOfVertices);
 
     assertEquals(36, paths.length, 0);
+  }
+
+  @Test
+  public void testUpdateCanReach(){
+    int numberOfVertices = 5;
+    boolean[][] canReach = new boolean[numberOfVertices][numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        canReach[i][j] = (i == j);
+      }
+    }
+
+    canReach[0][2] = true; canReach[2][0] = true;
+    canReach[1][4] = true; canReach[4][1] = true;
+
+    canReach = MinimumSpanningTree.updateCanReach(canReach, 1, 2);
+
+    assertTrue(canReach[0][1]); assertTrue(canReach[1][0]);
+    assertTrue(canReach[0][4]); assertTrue(canReach[4][0]);
+    assertTrue(canReach[1][2]); assertTrue(canReach[2][1]);
+
+    numberOfVertices = 10;
+    canReach = new boolean[numberOfVertices][numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        canReach[i][j] = (i == j);
+      }
+    }
+
+    canReach[0][6] = true; canReach[6][0] = true;
+    canReach[1][5] = true; canReach[5][1] = true;
+    canReach[2][9] = true; canReach[9][2] = true;
+    canReach[6][8] = true; canReach[8][6] = true;
+
+    canReach = MinimumSpanningTree.updateCanReach(canReach, 0, 7);
+
+    assertTrue(canReach[0][7]); assertTrue(canReach[7][0]);
+    assertTrue(canReach[6][7]); assertTrue(canReach[7][6]);
+    assertTrue(canReach[7][8]); assertTrue(canReach[8][7]);
+
+    canReach = MinimumSpanningTree.updateCanReach(canReach, 2, 6);
+
+    assertTrue(canReach[0][2]); assertTrue(canReach[2][0]);
+    assertTrue(canReach[0][9]); assertTrue(canReach[9][0]);
+
+    assertTrue(canReach[2][6]); assertTrue(canReach[6][2]);
+    assertTrue(canReach[6][9]); assertTrue(canReach[9][6]);
+
+    assertTrue(canReach[2][7]); assertTrue(canReach[7][2]);
+    assertTrue(canReach[7][9]); assertTrue(canReach[9][7]);
+
+    assertTrue(canReach[2][8]); assertTrue(canReach[8][2]);
+    assertTrue(canReach[8][9]); assertTrue(canReach[9][8]);
+
+    canReach = MinimumSpanningTree.updateCanReach(canReach, 4, 5);
+
+    assertTrue(canReach[1][4]); assertTrue(canReach[4][1]);
+    assertTrue(canReach[4][5]); assertTrue(canReach[5][4]);
+
+    canReach = MinimumSpanningTree.updateCanReach(canReach, 1, 3);
+
+    assertTrue(canReach[1][3]); assertTrue(canReach[3][1]);
+    assertTrue(canReach[3][4]); assertTrue(canReach[4][3]);
+    assertTrue(canReach[3][5]); assertTrue(canReach[5][3]);
+
+    canReach = MinimumSpanningTree.updateCanReach(canReach, 4, 9);
+
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        assertTrue(canReach[i][j]);
+      }
+    }
   }
 
 }

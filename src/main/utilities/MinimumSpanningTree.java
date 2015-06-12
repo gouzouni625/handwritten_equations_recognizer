@@ -1,6 +1,8 @@
 package main.utilities;
 
 import java.lang.IndexOutOfBoundsException;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class MinimumSpanningTree{
   public MinimumSpanningTree(int numberOfVertices){
@@ -30,33 +32,27 @@ public class MinimumSpanningTree{
     }
 
     boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
+    boolean[][] canReach = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
         connections[i][j] = (i == j);
+        canReach[i][j] = (i == j);
       }
     }
 
     int[] sortedIndices = Utilities.sortArray(edgeWeights);
-    boolean[] vertexConnected = new boolean[numberOfVertices];
-    for(int i = 0;i < numberOfVertices;i++){
-      vertexConnected[i] = false;
-    }
 
-    int edgesCreated = 0;
-
-    int[] verticesConnected = MinimumSpanningTree.addConnection(connections, sortedIndices[0]);
-    vertexConnected[verticesConnected[0]] = true;
-    vertexConnected[verticesConnected[1]] = true;
-    edgesCreated++;
+    // Use the first connection.
+    int[] vertices = MinimumSpanningTree.addConnection(connections, sortedIndices[0]);
+    canReach = updateCanReach(canReach, vertices[0], vertices[1]);
 
     for(int i = 1;i < sortedIndices.length;i++){
-      if(!MinimumSpanningTree.createsCircle(connections, sortedIndices[i])){
-        verticesConnected = MinimumSpanningTree.addConnection(connections, sortedIndices[i]);
-        vertexConnected[verticesConnected[0]] = true;
-        vertexConnected[verticesConnected[1]] = true;
-        edgesCreated++;
+      vertices = Utilities.vectorIndexToUpperTriangularIndeces(connections.length, sortedIndices[i]);
+      if(!canReach[vertices[0]][vertices[1]]){
+        MinimumSpanningTree.addConnection(connections, sortedIndices[i]);
+        canReach = updateCanReach(canReach, vertices[0], vertices[1]);
 
-        if(Utilities.areAllTrue(vertexConnected) && edgesCreated == numberOfVertices - 1){
+        if(Utilities.areAllTrue(canReach)){
           break;
         }
       }
@@ -124,53 +120,56 @@ public class MinimumSpanningTree{
     return matrixIndices;
   }
 
-  private static boolean createsCircle(boolean[][] connections, int index){
-    int[] matrixIndices = Utilities.vectorIndexToUpperTriangularIndeces(connections.length, index);
-    int rowIndex = matrixIndices[0];
-    int columnIndex = matrixIndices[1];
-
-    int depth = 0;
-    if(rowIndex > columnIndex){
-      return (MinimumSpanningTree.doIReach(rowIndex, columnIndex, connections, depth));
-    }
-    else{
-      return (MinimumSpanningTree.doIReach(columnIndex, rowIndex, connections, depth));
-    }
-  }
-
-  private static boolean doIReach(int destination, int beginning, boolean[][] connections, int depth){
-    if(beginning == destination){
-      return true;
-    }
-
-    int length = connections.length;
-    depth++;
-    if(depth == (length * (length -1)) / 2){
-      return false;
-    }
-
-    for(int j = 0;j < length;j++){
-      if(beginning == j){
-        continue;
-      }
-      if(!connections[beginning][j]){
-        continue;
-      }
-
-      if(doIReach(destination, j, connections, depth)){
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   public int[][] getUniquePaths(int maxPathLength){
     return (Utilities.findUniquePaths(connections_, maxPathLength));
   }
 
   public int[] getContext(int[] vertices){
     return (Utilities.getContext(vertices, connections_));
+  }
+
+  public static boolean[][] updateCanReach(boolean[][] canReach, int row, int column){
+    int numberOfVertices = canReach.length;
+
+    canReach[row][column] = true;
+    canReach[column][row] = true;
+
+    HashSet<Integer> vertexGroup = new HashSet<Integer>();
+    vertexGroup.add(row);
+    vertexGroup.add(column);
+    int oldSize = vertexGroup.size();
+    int newSize = vertexGroup.size();
+
+    do{
+      oldSize = newSize;
+
+      for(int i = 0;i < numberOfVertices;i++){
+        if(vertexGroup.contains(i)){
+          continue;
+        }
+
+        Iterator<Integer> iterator = vertexGroup.iterator();
+        while(iterator.hasNext()){
+          if(canReach[i][iterator.next().intValue()]){
+
+            Iterator<Integer> innerIterator = vertexGroup.iterator();
+            while(innerIterator.hasNext()){
+              int target = innerIterator.next();
+              canReach[i][target] = true;
+              canReach[target][i] = true;
+            }
+
+            vertexGroup.add(i);
+
+            break;
+          }
+        }
+      }
+
+      newSize = vertexGroup.size();
+    }while(oldSize != newSize);
+
+    return canReach;
   }
 
   private boolean[][] connections_;
