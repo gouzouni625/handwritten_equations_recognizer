@@ -65,6 +65,20 @@ public abstract class MSTPartitioner extends Partitioner{
 
     int[][] overlaps = this.findOverlaps(expression);
 
+    /* Also add possible equals sign to overlaps. */
+    int[][] equals = this.findEquals(expression);
+
+    int[][] finalOverlaps = new int[overlaps.length + equals.length][];
+
+    for(int i = 0;i < overlaps.length;i++){
+      finalOverlaps[i] = overlaps[i];
+    }
+
+    for(int i = 0;i < equals.length;i++){
+      finalOverlaps[overlaps.length + i] = equals[i];
+    }
+    overlaps = finalOverlaps;
+
     /* ===== Print overlaps ===== */
     System.out.println("===== Overlaps =====");
     for(int i = 0;i < overlaps.length;i++){
@@ -273,6 +287,34 @@ public abstract class MSTPartitioner extends Partitioner{
     return overlapsArray;
   }
 
+  private int[][] findEquals(TraceGroup expression){
+    int numberOfTraces = expression.size();
+
+    ArrayList<int[]> equals = new ArrayList<int[]>();
+
+    for(int i = 0;i < numberOfTraces;i++){
+      for(int j = i + 1;j < numberOfTraces;j++){
+        Trace trace1 = expression.get(i);
+        Trace trace2 = expression.get(j);
+
+        if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
+           (trace1.getHeight() <= 0.10 * trace1.getWidth()) &&
+           (trace2.getHeight() <= 0.10 * trace2.getWidth())){
+          equals.add(new int[] {i, j});
+        }
+
+      }
+    }
+
+    // Convert array list to array.
+    int[][] equalsArray = new int[equals.size()][2];
+    for(int i = 0;i < equals.size();i++){
+      equalsArray[i][0] = equals.get(i)[0];
+      equalsArray[i][1] = equals.get(i)[1];
+    }
+
+    return equalsArray;
+  }
   /*private double distanceOfTraces(Trace trace1, Trace trace2){
     if(trace1.size() == 0 || trace2.size() == 0){
       return -1;
