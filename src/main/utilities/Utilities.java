@@ -258,10 +258,12 @@ public class Utilities{
     return index;
   }
 
-  public static boolean areAllTrue(boolean[] array){
+  public static boolean areAllTrue(boolean[][] array){
     for(int i = 0;i < array.length;i++){
-      if(!array[i]){
-        return false;
+      for(int j = 0;j < array[i].length;j++){
+        if(!array[i][j]){
+          return false;
+        }
       }
     }
 
