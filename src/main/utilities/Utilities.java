@@ -1,6 +1,7 @@
 package main.utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -278,6 +279,27 @@ public class Utilities{
     }
 
     return array;
+  }
+
+  public static int[][] removeRows(int[][] array, int[] rowsIndices){
+    int newLength = array.length - rowsIndices.length;
+    int[][] newArray = new int[newLength][];
+
+    Arrays.sort(rowsIndices);
+
+    int currentRowInNewArray = 0;
+    int currentIndexInArray = 0;
+    for(int i = 0;i < array.length;i++){
+      if(currentIndexInArray < rowsIndices.length && i == rowsIndices[currentIndexInArray]){
+        currentIndexInArray++;
+        continue;
+      }
+
+      newArray[currentRowInNewArray] = array[i].clone();
+      currentRowInNewArray++;
+    }
+
+    return newArray;
   }
 
   public static final byte UNKNOWN_LABEL = -0x01;

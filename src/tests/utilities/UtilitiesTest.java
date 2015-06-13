@@ -1,6 +1,7 @@
 package tests.utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -292,6 +293,41 @@ public class UtilitiesTest{
       for(int j = 0;j < size;j++){
         assertEquals(array[size + i][j], array2[i][j], 0);
       }
+    }
+  }
+
+  @Test
+  public void testRemoveRows(){
+    int size = 10;
+
+    int[][] array = new int[size][size];
+    for(int i = 0;i < size;i++){
+      for(int j = 0;j < size;j++){
+        array[i][j] = i * size + j;
+      }
+    }
+
+    int[] rowsIndices = new int[] {0, 2, 7};
+    int[][] newArray = Utilities.removeRows(array, rowsIndices);
+
+    int newSize = size - rowsIndices.length;
+
+    assertEquals(newSize, newArray.length, 0);
+
+    Arrays.sort(rowsIndices);
+
+    int currentRowInNewArray = 0;
+    int currentIndexInArray = 0;
+    for(int i = 0;i < size;i++){
+      if(currentIndexInArray < rowsIndices.length && i == rowsIndices[currentIndexInArray]){
+        currentIndexInArray++;
+        continue;
+      }
+
+      for(int j = 0;j < newArray[currentRowInNewArray].length;j++){
+        assertEquals(array[i][j], newArray[currentRowInNewArray][j], 0);
+      }
+      currentRowInNewArray++;
     }
   }
 
