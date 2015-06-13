@@ -13,6 +13,7 @@ import org.opencv.core.Scalar;
  *
  */
 public class Trace{
+
   public Trace(){
     points_ = new ArrayList<Point>();
   }

@@ -204,7 +204,7 @@ public class TraceGroupTest{
     Mat image = traceGroup.print(new Size(1000, 1000));
 
     // The image saved by the following command should show two lines with common beginning.
-    Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
+    //Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
   }
 
 }

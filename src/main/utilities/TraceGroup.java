@@ -16,6 +16,7 @@ import org.opencv.imgproc.Imgproc;
  *
  */
 public class TraceGroup{
+
   public TraceGroup(){
     traces_ = new ArrayList<Trace>();
   }
