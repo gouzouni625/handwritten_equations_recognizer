@@ -45,6 +45,16 @@ public class PointTest{
 
     assertEquals(25, point.x_, 0);
     assertEquals(30, point.y_, 0);
+
+    point.multiplyBy(-1);
+
+    assertEquals(-25, point.x_, 0);
+    assertEquals(-30, point.y_, 0);
+
+    point.multiplyBy(0);
+
+    assertEquals(0, point.x_, 0);
+    assertEquals(0, point.y_, 0);
   }
 
   @Test
@@ -55,6 +65,16 @@ public class PointTest{
 
     assertEquals(1, point.x_, 0);
     assertEquals(4, point.y_, 0);
+
+    point.subtract((new Point(point)).multiplyBy(2));
+
+    assertEquals(-1, point.x_, 0);
+    assertEquals(-4, point.y_, 0);
+
+    point.subtract(point);
+
+    assertEquals(0, point.x_, 0);
+    assertEquals(0, point.y_, 0);
   }
 
   @Test
@@ -63,6 +83,12 @@ public class PointTest{
     Point point2 = new Point(8, 10);
 
     assertEquals(5, Point.distance(point1, point2), 0);
+    assertEquals(0, Point.distance(point1, point1), 0);
+
+    Point point3 = new Point(3, 4);
+    Point zero = new Point();
+
+    assertEquals(5, Point.distance(point3, zero), 0);
   }
 
   @Test

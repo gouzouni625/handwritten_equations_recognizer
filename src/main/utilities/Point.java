@@ -8,9 +8,6 @@ package main.utilities;
  */
 public class Point{
 
-  /*
-   * Default constructor. Initializes the coordinates of the point to zero.
-   */
   public Point(){
     x_ = 0;
     y_ = 0;
