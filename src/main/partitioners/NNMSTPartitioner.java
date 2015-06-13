@@ -8,6 +8,7 @@ import main.classifiers.NeuralNetworkClassifier;
  * MST = Minimum Spanning Tree, describes the partitioning algorithm.
  */
 public class NNMSTPartitioner extends MSTPartitioner{
+
   public NNMSTPartitioner(int[] sizesOfLayers){
     classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
   }

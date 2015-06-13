@@ -66,7 +66,7 @@ public abstract class MSTPartitioner extends Partitioner{
     int[][] overlaps = this.findOverlaps(expression);
 
     /* Also add possible equals sign to overlaps. */
-    int[][] equals = this.findEquals(expression);
+    int[][] equals = this.findEqualsSymbol(expression);
 
     int[][] finalOverlaps = new int[overlaps.length + equals.length][];
 
@@ -175,12 +175,9 @@ public abstract class MSTPartitioner extends Partitioner{
       }
     }
 
-    /**
-     *  Leave the maxPathLength equal to MAX_TRACES_IN_SYMBOL for now. This is not totally valid
-     *  because, even if a partition is of that length, one or more paths might have more than one
-     *  vertices and thus the whole partition will have a length greater that MAX_TRACES_IN_SYMBOL.
-     */
+    System.out.println("SSStart");
     int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths);
+    System.out.println("EEEnd");
 
     /* ===== Print partitions ===== */
     //System.out.println("===== Print Partitions =====");
@@ -287,22 +284,16 @@ public abstract class MSTPartitioner extends Partitioner{
     return overlapsArray;
   }
 
-  private int[][] findEquals(TraceGroup expression){
+  private int[][] findEqualsSymbol(TraceGroup expression){
     int numberOfTraces = expression.size();
 
     ArrayList<int[]> equals = new ArrayList<int[]>();
 
     for(int i = 0;i < numberOfTraces;i++){
       for(int j = i + 1;j < numberOfTraces;j++){
-        Trace trace1 = expression.get(i);
-        Trace trace2 = expression.get(j);
-
-        if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
-           (trace1.getHeight() <= 0.10 * trace1.getWidth()) &&
-           (trace2.getHeight() <= 0.10 * trace2.getWidth())){
+        if(this.areEqualsSymbol(expression.get(i), expression.get(j))){
           equals.add(new int[] {i, j});
         }
-
       }
     }
 
@@ -315,37 +306,22 @@ public abstract class MSTPartitioner extends Partitioner{
 
     return equalsArray;
   }
-  /*private double distanceOfTraces(Trace trace1, Trace trace2){
-    if(trace1.size() == 0 || trace2.size() == 0){
-      return -1;
+
+  private boolean areEqualsSymbol(Trace trace1, Trace trace2){
+    if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
+        (trace1.getHeight() <= 0.20 * trace1.getWidth()) &&
+        (trace2.getHeight() <= 0.20 * trace2.getWidth())){
+      return true;
     }
 
-    // Return the minimum distance between the points of the traces.
-    double[][] distances = new double[trace1.size()][trace2.size()];
-    for(int i = 0;i < trace1.size();i++){
-      for(int j = 0;j < trace2.size();j++){
-        distances[i][j] = Point.distance(trace1.get(i), trace2.get(j));
-      }
-    }
-
-    double minimumDistance = distances[0][0];
-    for(int i = 0;i < trace1.size();i++){
-      for(int j = 0;j < trace2.size();j++){
-        if(minimumDistance > distances[i][j]){
-          minimumDistance = distances[i][j];
-        }
-      }
-    }
-
-    return minimumDistance;
-  }*/
+    return false;
+  }
 
   private double distanceOfTraces(Trace trace1, Trace trace2){
     if(trace1.size() == 0 || trace2.size() == 0){
       return -1;
     }
 
-    // Return the Euclidean distance between the centroids of the bounding boxes.
     Point centroid1 = trace1.getCentroid();
     Point centroid2 = trace2.getCentroid();
 
