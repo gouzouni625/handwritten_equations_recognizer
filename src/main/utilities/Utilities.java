@@ -1,7 +1,7 @@
 package main.utilities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -281,16 +281,16 @@ public class Utilities{
     return array;
   }
 
-  public static int[][] removeRows(int[][] array, int[] rowsIndices){
-    int newLength = array.length - rowsIndices.length;
+  public static int[][] removeRows(int[][] array, ArrayList<Integer> rowsIndices){
+    int newLength = array.length - rowsIndices.size();
     int[][] newArray = new int[newLength][];
 
-    Arrays.sort(rowsIndices);
+    Collections.sort(rowsIndices);
 
     int currentRowInNewArray = 0;
     int currentIndexInArray = 0;
     for(int i = 0;i < array.length;i++){
-      if(currentIndexInArray < rowsIndices.length && i == rowsIndices[currentIndexInArray]){
+      if(currentIndexInArray < rowsIndices.size() && i == rowsIndices.get(currentIndexInArray)){
         currentIndexInArray++;
         continue;
       }

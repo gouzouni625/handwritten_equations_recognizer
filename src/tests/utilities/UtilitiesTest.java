@@ -1,7 +1,7 @@
 package tests.utilities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -307,19 +307,22 @@ public class UtilitiesTest{
       }
     }
 
-    int[] rowsIndices = new int[] {0, 2, 7};
+    ArrayList<Integer> rowsIndices = new ArrayList<Integer>();
+    rowsIndices.add(0);
+    rowsIndices.add(2);
+    rowsIndices.add(7);
     int[][] newArray = Utilities.removeRows(array, rowsIndices);
 
-    int newSize = size - rowsIndices.length;
+    int newSize = size - rowsIndices.size();
 
     assertEquals(newSize, newArray.length, 0);
 
-    Arrays.sort(rowsIndices);
+    Collections.sort(rowsIndices);
 
     int currentRowInNewArray = 0;
     int currentIndexInArray = 0;
     for(int i = 0;i < size;i++){
-      if(currentIndexInArray < rowsIndices.length && i == rowsIndices[currentIndexInArray]){
+      if(currentIndexInArray < rowsIndices.size() && i == rowsIndices.get(currentIndexInArray)){
         currentIndexInArray++;
         continue;
       }
