@@ -266,4 +266,33 @@ public class UtilitiesTest{
     assertTrue(Utilities.areAllTrue(connections));
   }
 
+  @Test
+  public void testConcatenateArrays(){
+    int size = 10;
+
+    int[][] array1 = new int[size][size];
+    int[][] array2 = new int[size][size];
+
+    for(int i = 0;i < size;i++){
+      for(int j = 0;j < size;j++){
+        array1[i][j] = (int)(Math.random() * 1000);
+        array2[i][j] = (int)(Math.random() * 1000);
+      }
+    }
+
+    int[][] array = Utilities.concatenateArrays(array1, array2);
+
+    for(int i = 0;i < size;i++){
+      for(int j = 0; j < size;j++){
+        assertEquals(array[i][j], array1[i][j], 0);
+      }
+    }
+
+    for(int i = 0;i < size;i++){
+      for(int j = 0;j < size;j++){
+        assertEquals(array[size + i][j], array2[i][j], 0);
+      }
+    }
+  }
+
 }

@@ -266,6 +266,19 @@ public class Utilities{
     return true;
   }
 
+  public static int[][] concatenateArrays(int[][] array1, int[][] array2){
+    int[][] array = new int[array1.length + array2.length][];
+
+    for(int i = 0;i < array1.length;i++){
+      array[i] = array1[i].clone();
+    }
+
+    for(int i = 0;i < array2.length;i++){
+      array[array1.length + i] = array2[i].clone();
+    }
+
+    return array;
+  }
 
   public static final byte UNKNOWN_LABEL = -0x01;
   public static final byte ZERO_LABEL = 0x00;
