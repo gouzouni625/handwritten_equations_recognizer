@@ -246,10 +246,24 @@ public class UtilitiesTest{
 
   @Test
   public void testAreAllTrue(){
-    assertTrue(Utilities.areAllTrue(new boolean[] {true, true, true, true, true}));
-    assertFalse(Utilities.areAllTrue(new boolean[] {true, false, false, false, false}));
-    assertFalse(Utilities.areAllTrue(new boolean[] {false, true, true, false, false}));
-    assertFalse(Utilities.areAllTrue(new boolean[] {false, false, false, true, false}));
+    int numberOfRows = 10;
+    int numberOfColumns = 10;
+    boolean[][] connections = new boolean[numberOfRows][numberOfColumns];
+    for(int i = 0;i < numberOfRows;i++){
+      for(int j = 0;j < numberOfColumns;j++){
+        connections[i][j] = true;
+      }
+    }
+
+    assertTrue(Utilities.areAllTrue(connections));
+
+    connections[1][2] = false;
+
+    assertFalse(Utilities.areAllTrue(connections));
+
+    connections[1][2] = true;
+
+    assertTrue(Utilities.areAllTrue(connections));
   }
 
 }

@@ -18,11 +18,7 @@ import org.opencv.core.Mat;
  *
  */
 public class Utilities{
-  /** \brief Sorts the clone array and returns the indices changed in the same
-   *         way. The original array is not changed.
-   *
-   * Maybe change to something more sophisticated than bubble sort.
-   */
+
   public static int[] sortArray(double[] array){
     int length = array.length;
     double[] arrayClone = array.clone();
