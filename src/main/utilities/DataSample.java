@@ -3,6 +3,7 @@ package main.utilities;
 import main.utilities.Utilities;
 
 public class DataSample{
+
   public DataSample(){
     label_ = Utilities.UNKNOWN_LABEL;
   }
@@ -28,7 +29,6 @@ public class DataSample{
   }
 
   public byte[] data_;
-  public byte label_; // <! The labels should comply with the main.utilities.Utilities
-                     //    indexing.
+  public byte label_;
 
 }

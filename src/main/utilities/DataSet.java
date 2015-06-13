@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import main.utilities.DataSample;
 
 public class DataSet{
+
   public DataSet(){
     samples_ = new ArrayList<DataSample>();
   }
