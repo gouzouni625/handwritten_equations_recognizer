@@ -12,21 +12,31 @@ import main.utilities.Utilities;
 public abstract class MSTPartitioner extends Partitioner{
 
   public TraceGroup[] partition(TraceGroup expression){
-    if(expression.size() == 1){
+    int numberOfTraces = expression.size();
+
+    if(numberOfTraces == 1){
+
+      labels_ = new int[numberOfTraces];
+      classifier_.classify(expression, new TraceGroup());
+      labels_[0] = classifier_.getClassificationLabel();
+
       return (new TraceGroup[] {expression});
     }
-
-    int numberOfTraces = expression.size();
 
     // Calculate the distances between all the traces.
     double[] distances = this.calculateDistancesBetweenTraces(expression);
 
-    /* ===== Print Distances ===== */
-    System.out.println("===== Print distances =====");
-    for(int i = 0;i < distances.length;i++){
-      System.out.println("distances[" + i + "] = " + distances[i]);
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: distances between traces... ===== Start =====");
+
+      for(int i = 0;i < distances.length;i++){
+        System.out.println("distance " + i + ": " + distances[i]);
+      }
+
+      System.out.println("Log: distances between traces... ===== End =======");
     }
-    /* ===== */
+    /* ===== Logs ===== */
 
     boolean[][] connections = new boolean[numberOfTraces][numberOfTraces];
     for(int i = 0;i < numberOfTraces;i++){
@@ -38,191 +48,225 @@ public abstract class MSTPartitioner extends Partitioner{
     // Create a minimum spanning tree using the distances between the traces.
     MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(distances, numberOfTraces);
 
-    /* ===== Print minimum spanning tree ===== */
-    System.out.println("===== Print Minimum Spanning Tree =====");
-    for(int i = 0;i < expression.size();i++){
-      for(int j = 0;j < expression.size();j++){
-        System.out.print(minimumSpanningTree.areConnected(i, j) + ", ");
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: minimum spanning tree... ===== Start =====");
+
+      for(int i = 0;i < numberOfTraces;i++){
+        for(int j = 0;j < numberOfTraces;j++){
+          System.out.print(minimumSpanningTree.areConnected(i, j) + ", ");
+        }
+
+        System.out.println();
       }
 
-      System.out.println();
+      System.out.println("Log: minimum spanning tree... ===== End =======");
     }
-    /* ===== */
+    /* ===== Logs ===== */
 
-    int[][] uniquePaths = minimumSpanningTree.getUniquePaths(Utilities.MAX_TRACES_IN_SYMBOL);
+    int[][] paths = minimumSpanningTree.getUniquePaths(Utilities.MAX_TRACES_IN_SYMBOL);
+    int numberOfPaths = paths.length;
 
-    /* ===== Print uniquePaths on the minimumSpanning tree ===== */
-    System.out.println("===== Minimum Spanning Tree unique paths =====");
-    for(int i = 0;i < uniquePaths.length;i++){
-      System.out.print("path " + i + " = ");
-      for(int j = 0;j < uniquePaths[i].length;j++){
-        System.out.print(uniquePaths[i][j] + ", ");
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: paths upon the minimum spanning tree... ===== Start =====");
+
+      for(int i = 0;i < numberOfPaths;i++){
+        System.out.print("path " + i + " = ");
+        for(int j = 0;j < paths[i].length;j++){
+          System.out.print(paths[i][j] + ", ");
+        }
+
+       System.out.println();
       }
 
-     System.out.println();
+      System.out.println("Log: paths upon the minimum spanning tree... ===== End =======");
     }
-    /* ===== Print uniquePaths on the minimumSpanning tree ===== */
+    /* ===== Logs ===== */
 
-    int[][] overlaps = this.findOverlaps(expression);
+    int[][] overlaps = Utilities.concatenateArrays(this.findOverlaps(expression), this.findEqualsSymbol(expression));
+    int numberOfOverlaps = overlaps.length;
 
-    /* Also add possible equals sign to overlaps. */
-    int[][] equals = this.findEqualsSymbol(expression);
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: overlaps... ===== Start =====");
 
-    int[][] finalOverlaps = new int[overlaps.length + equals.length][];
+      for(int i = 0;i < numberOfOverlaps;i++){
+        System.out.println(overlaps[i][0] + ", " + overlaps[i][1]);
+      }
 
-    for(int i = 0;i < overlaps.length;i++){
-      finalOverlaps[i] = overlaps[i];
+      System.out.println("Log: overlaps... ===== End =======");
     }
+    /* ===== Logs ===== */
 
-    for(int i = 0;i < equals.length;i++){
-      finalOverlaps[overlaps.length + i] = equals[i];
-    }
-    overlaps = finalOverlaps;
+    // Delete all the paths that do not comply with the overlaps.
+    ArrayList<Integer> pathsToClear = new ArrayList<Integer>();
+    boolean foundFirstOverlapIndex;
+    boolean foundSecondOvelapIndex;
+    boolean clearFlag = false;
+    for(int path = 0;path < numberOfPaths;path++){
+      for(int overlap = 0;overlap < numberOfOverlaps;overlap++){
+        foundFirstOverlapIndex = false;
+        foundSecondOvelapIndex = false;
 
-    /* ===== Print overlaps ===== */
-    System.out.println("===== Overlaps =====");
-    for(int i = 0;i < overlaps.length;i++){
-      System.out.println(overlaps[i][0] + ", " + overlaps[i][1]);
-    }
-    /* ===== Print overlaps ===== */
-
-    // Delete all the unique Paths that do not comply with the overlaps.
-    ArrayList<int[]> clearedPaths = new ArrayList<int[]>();
-    boolean foundFirst;
-    boolean foundSecond;
-    boolean okFlag = true;
-    for(int path = 0;path < uniquePaths.length;path++){
-
-      for(int overlap = 0;overlap < overlaps.length;overlap++){
-        foundFirst = false;
-        foundSecond = false;
-
-        for(int trace = 0;trace < uniquePaths[path].length;trace++){
-          if(uniquePaths[path][trace] == overlaps[overlap][0]){
-            foundFirst = true;
+        for(int trace = 0;trace < paths[path].length;trace++){
+          if(paths[path][trace] == overlaps[overlap][0]){
+            foundFirstOverlapIndex = true;
           }
 
-          if(uniquePaths[path][trace] == overlaps[overlap][1]){
-            foundSecond = true;
+          if(paths[path][trace] == overlaps[overlap][1]){
+            foundSecondOvelapIndex = true;
           }
         }
 
-        if(foundFirst != foundSecond){
-          okFlag = false;
+        if(foundFirstOverlapIndex != foundSecondOvelapIndex){
+          clearFlag = true;
           break;
         }
       }
 
-      if(okFlag){
-        clearedPaths.add(uniquePaths[path]);
-      }
-      else{
-        okFlag = true;
-      }
-    }
-
-    uniquePaths = new int[clearedPaths.size()][];
-    for(int i = 0;i < clearedPaths.size();i++){
-      uniquePaths[i] = clearedPaths.get(i);
-    }
-    clearedPaths = null;
-
-    /* ===== Print uniquePaths after clearing ===== */
-    System.out.println("===== unique paths after clearing =====");
-    for(int i = 0;i < uniquePaths.length;i++){
-      System.out.print("path " + i + " = ");
-      for(int j = 0;j < uniquePaths[i].length;j++){
-        System.out.print(uniquePaths[i][j] + ", ");
+      if(clearFlag){
+        pathsToClear.add(path);
       }
 
-     System.out.println();
+      clearFlag = false;
     }
-    /* ===== Print uniquePaths after clearing ===== */
+    paths = Utilities.removeRows(paths, pathsToClear);
+    numberOfPaths = paths.length;
 
-    double[] uniquePathsRates = new double[uniquePaths.length];
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: paths after removing those that didn't satisfy the overlaps... ===== Start =====");
+
+      for(int i = 0;i < numberOfPaths;i++){
+        System.out.print("path " + i + " = ");
+        for(int j = 0;j < paths[i].length;j++){
+          System.out.print(paths[i][j] + ", ");
+        }
+
+       System.out.println();
+      }
+
+      System.out.println("Log: paths after removing those that didn't satisfy the overlaps... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
+    double[] pathsRates = new double[numberOfPaths];
+    int[] pathsLabels = new int[numberOfPaths];
 
     TraceGroup symbol;
     TraceGroup context;
     int[] contextIndices;
 
-    for(int i = 0;i < uniquePaths.length;i++){
+    for(int i = 0;i < numberOfPaths;i++){
       // Create the traceGroup of symbols.
-      symbol = expression.subTraceGroup(uniquePaths[i]);
-
-      System.out.println("Outer symbol size:" + symbol.size());
-      System.out.println("unique path size:" + uniquePaths[i].length);
+      symbol = expression.subTraceGroup(paths[i]);
 
       // Find the context.
-      contextIndices = minimumSpanningTree.getContext(uniquePaths[i]);
+      contextIndices = minimumSpanningTree.getContext(paths[i]);
       context = expression.subTraceGroup(contextIndices);
 
       // Evaluate each path and discard garbage.
-      uniquePathsRates[i] = classifier_.classify(symbol, context);
+      pathsRates[i] = classifier_.classify(symbol, context);
+      pathsLabels[i] = classifier_.getClassificationLabel();
 
-      /* ===== Print unique paths rates ===== */
-      System.out.println("path " + i + " = " + uniquePathsRates[i]);
-      System.out.println(classifier_.getClassificationLabel());
-      /* ===== */
+      /* ===== Logs ===== */
+      if(!silent_){
+        System.out.println("Log: path rate and label... ===== Start =====");
+
+        System.out.println("path " + i + " rate: " + pathsRates[i]);
+        System.out.println("path " + i + " label: " + pathsLabels[i]);
+
+        System.out.println("Log: path rate and label... ===== End =======");
+      }
+      /* ===== Logs ===== */
     }
 
     // Get all the possible partitions.
-    int numberOfPaths = uniquePaths.length;
-
     connections = new boolean[numberOfPaths][numberOfPaths];
     for(int i = 0;i < numberOfPaths;i++){
       for(int j = 0;j < numberOfPaths;j++){
         connections[i][j] = true;
       }
     }
-
-    System.out.println("SSStart");
     int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths);
-    System.out.println("EEEnd");
+    int numberOfPartitions = partitions.length;
 
-    /* ===== Print partitions ===== */
-    //System.out.println("===== Print Partitions =====");
-    //for(int i = 0;i < partitions.length;i++){
-    //  for(int j = 0;j < partitions[i].length;j++){
-    //    System.out.print(partitions[i][j] + ", ");
-    //  }
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: all partitions... ===== Start =====");
 
-    //  System.out.println();
-    //}
-    /* ===== Print partitions ===== */
+      for(int i = 0;i < numberOfPartitions;i++){
+        for(int j = 0;j < partitions[i].length;j++){
+          System.out.print(partitions[i][j] + ", ");
+        }
+
+        System.out.println();
+      }
+
+      System.out.println("Log: all partitions... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
+    // remove partitions that are not eligible(e.g. they contain the same trace more than once).
+    ArrayList<Integer> partitionsToClear = new ArrayList<Integer>();
+    for(int partition = 0;partition < numberOfPartitions;partition++){
+      if(!this.isEligible(partitions[partition], paths, expression.size())){
+        partitionsToClear.add(partition);
+      }
+    }
+    partitions = Utilities.removeRows(partitions, partitionsToClear);
+    numberOfPartitions = partitions.length;
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: partitions after removing those that were not eligible... ===== Start =====");
+
+      for(int i = 0;i < numberOfPartitions;i++){
+        System.out.print("partition " + i + " = ");
+        for(int j = 0;j < partitions[i].length;j++){
+          System.out.print(partitions[i][j] + ", ");
+        }
+
+       System.out.println();
+      }
+
+      System.out.println("Log: partitions after removing those that were not eligible... ===== End =======");
+    }
+    /* ===== Logs ===== */
 
     // Find the best partition.
-    double maxRate = -1;
-    int bestPartition = -1;
+    double maxRate = pathsRates[0];
+    int bestPartition = 0;
 
-    for(int partition = 0;partition < partitions.length;partition++){
-      if(this.isEligible(partitions[partition], uniquePaths, expression.size())){
+    for(int partition = 0;partition < numberOfPartitions;partition++){
+      // Calculate the rate of this partition.
+      double currentRate = 0;
+      for(int path = 0;path < partitions[partition].length;path++){
+        currentRate += pathsRates[partitions[partition][path]];
+      }
+      currentRate /= partitions[partition].length;
 
-        /* ===== */
-        //System.out.println("partition " + partition + " is eligible.");
-        /* ===== */
-
-        // Calculate the rate of this partition.
-        double currentRate = 0;
-        for(int path = 0;path < partitions[partition].length;path++){
-          currentRate += uniquePathsRates[partitions[partition][path]];
-        }
-        currentRate /= partitions[partition].length;
-
-        if(currentRate > maxRate){
-          maxRate = currentRate;
-          bestPartition = partition;
-        }
+      if(currentRate > maxRate){
+        maxRate = currentRate;
+        bestPartition = partition;
       }
     }
 
     // Collect the traces of the best partition into an array of trace groups.
     // Each trace group in the final array, constitutes a symbol.
     TraceGroup[] partition = new TraceGroup[partitions[bestPartition].length];
+    labels_ = new int[partitions[bestPartition].length];
     for(int i = 0;i < partition.length;i++){
-      partition[i] = expression.subTraceGroup(uniquePaths[partitions[bestPartition][i]]);
+      partition[i] = expression.subTraceGroup(paths[partitions[bestPartition][i]]);
+      labels_[i] = pathsLabels[partitions[bestPartition][i]];
     }
 
     return partition;
+  }
+
+  public int[] getLabels(){
+    return labels_;
   }
 
   private boolean isEligible(int[] partition, int[][] paths, int numberOfTraces){
@@ -327,5 +371,17 @@ public abstract class MSTPartitioner extends Partitioner{
 
     return (Point.distance(centroid1, centroid2));
   }
+
+  public void setSilent(boolean silent){
+    silent_ = silent;
+  }
+
+  public boolean getSilent(){
+    return silent_;
+  }
+
+  private boolean silent_ = true;
+
+  private int[] labels_;
 
 }
