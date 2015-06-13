@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class MinimumSpanningTree{
+
   public MinimumSpanningTree(int numberOfVertices){
     connections_ = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
