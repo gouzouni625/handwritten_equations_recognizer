@@ -1,4 +1,4 @@
-package tests.utilities;
+package tests.utilities.traces;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,8 +11,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 
-import main.utilities.Trace;
-import main.utilities.Point;
+import main.utilities.traces.Point;
+import main.utilities.traces.Trace;
 
 public class TraceTest{
 
@@ -137,7 +137,7 @@ public class TraceTest{
     trace.print(image, thickness);
 
     // The image saved by the following command should be a line with positive slope.
-    //Highgui.imwrite("data/tests/utilities/Trace/testPrint_image.tiff", image);
+    //Highgui.imwrite("data/tests/utilities/traces/Trace/testPrint_image.tiff", image);
   }
 
   @Test

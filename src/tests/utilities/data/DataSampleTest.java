@@ -1,11 +1,11 @@
-package tests.utilities;
+package tests.utilities.data;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import main.utilities.DataSample;
 import main.utilities.Utilities;
+import main.utilities.data.DataSample;
 
 public class DataSampleTest{
 

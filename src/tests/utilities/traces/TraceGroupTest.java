@@ -1,4 +1,4 @@
-package tests.utilities;
+package tests.utilities.traces;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,9 +9,9 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 
-import main.utilities.Point;
-import main.utilities.Trace;
-import main.utilities.TraceGroup;
+import main.utilities.traces.Point;
+import main.utilities.traces.Trace;
+import main.utilities.traces.TraceGroup;
 
 public class TraceGroupTest{
 
@@ -204,7 +204,7 @@ public class TraceGroupTest{
     Mat image = traceGroup.print(new Size(1000, 1000));
 
     // The image saved by the following command should show two lines with common beginning.
-    //Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
+    //Highgui.imwrite("data/tests/utilities/traces/TraceGroup/testPrint_image.tiff", image);
   }
 
   @Test

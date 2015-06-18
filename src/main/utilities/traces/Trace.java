@@ -1,4 +1,4 @@
-package main.utilities;
+package main.utilities.traces;
 
 import java.util.ArrayList;
 

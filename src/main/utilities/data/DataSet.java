@@ -1,4 +1,4 @@
-package main.utilities;
+package main.utilities.data;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.nio.ByteBuffer;
 
-import main.utilities.DataSample;
+import main.utilities.Utilities;
 
 public class DataSet{
 

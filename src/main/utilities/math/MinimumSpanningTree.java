@@ -1,8 +1,10 @@
-package main.utilities;
+package main.utilities.math;
 
 import java.lang.IndexOutOfBoundsException;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import main.utilities.Utilities;
 
 public class MinimumSpanningTree{
 

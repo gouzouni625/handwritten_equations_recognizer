@@ -1,4 +1,4 @@
-package main.utilities;
+package main.utilities.traces;
 
 /**
  * Class that implements a two dimensional point.

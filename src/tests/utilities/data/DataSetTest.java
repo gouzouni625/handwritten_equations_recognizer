@@ -1,4 +1,4 @@
-package tests.utilities;
+package tests.utilities.data;
 
 import static org.junit.Assert.*;
 
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import main.utilities.DataSet;
-import main.utilities.DataSample;
+import main.utilities.data.DataSample;
+import main.utilities.data.DataSet;
 
 public class DataSetTest{
 
@@ -88,8 +88,8 @@ public class DataSetTest{
 
     dataSet1.add(dataSample);
 
-    String dataFile = "data/tests/utilities/DataSet/testMNISTLike_data";
-    String labelsFile = "data/tests/utilities/DataSet/testMNISTLike_labels";
+    String dataFile = "data/tests/utilities/data/DataSet/testMNISTLike_data";
+    String labelsFile = "data/tests/utilities/data/DataSet/testMNISTLike_labels";
 
     dataSet1.saveIDXFormat(dataFile, labelsFile);
 

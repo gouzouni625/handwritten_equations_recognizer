@@ -1,4 +1,4 @@
-package tests.utilities;
+package tests.utilities.math;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import main.utilities.MinimumSpanningTree;
+import main.utilities.math.MinimumSpanningTree;
 
 public class MinimumSpanningTreeTest{
 

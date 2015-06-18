@@ -1,10 +1,10 @@
-package tests.utilities;
+package tests.utilities.traces;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import main.utilities.Point;
+import main.utilities.traces.Point;
 
 public class PointTest{
 
