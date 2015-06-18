@@ -38,13 +38,6 @@ public abstract class MSTPartitioner extends Partitioner{
     }
     /* ===== Logs ===== */
 
-    boolean[][] connections = new boolean[numberOfTraces][numberOfTraces];
-    for(int i = 0;i < numberOfTraces;i++){
-      for(int j = 0;j < numberOfTraces;j++){
-        connections[i][j] = (i == j);
-      }
-    }
-
     // Create a minimum spanning tree using the distances between the traces.
     MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(distances, numberOfTraces);
 
@@ -183,7 +176,7 @@ public abstract class MSTPartitioner extends Partitioner{
     }
 
     // Get all the possible partitions.
-    connections = new boolean[numberOfPaths][numberOfPaths];
+    boolean[][] connections = new boolean[numberOfPaths][numberOfPaths];
     for(int i = 0;i < numberOfPaths;i++){
       for(int j = 0;j < numberOfPaths;j++){
         connections[i][j] = true;
