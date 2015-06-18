@@ -1,6 +1,6 @@
 package main.classifiers;
 
-import main.utilities.TraceGroup;
+import main.utilities.traces.TraceGroup;
 
 public abstract interface Classifier{
 

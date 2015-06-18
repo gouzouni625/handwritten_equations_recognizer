@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import main.partitioners.MSTPartitioner;
 import main.partitioners.NNMSTPartitioner;
-import main.utilities.Trace;
-import main.utilities.TraceGroup;
+import main.utilities.traces.Trace;
+import main.utilities.traces.TraceGroup;
 
 public class MSTPartitionerTest{
 

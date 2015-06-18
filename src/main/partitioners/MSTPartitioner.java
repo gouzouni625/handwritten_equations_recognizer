@@ -2,11 +2,11 @@ package main.partitioners;
 
 import java.util.ArrayList;
 
-import main.utilities.MinimumSpanningTree;
-import main.utilities.Point;
-import main.utilities.Trace;
-import main.utilities.TraceGroup;
 import main.utilities.Utilities;
+import main.utilities.math.MinimumSpanningTree;
+import main.utilities.traces.Point;
+import main.utilities.traces.Trace;
+import main.utilities.traces.TraceGroup;
 
 /* MST = Minimum Spanning Tree.*/
 public abstract class MSTPartitioner extends Partitioner{

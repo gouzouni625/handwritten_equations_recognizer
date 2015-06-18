@@ -3,8 +3,8 @@ package main.classifiers;
 import java.io.IOException;
 
 import main.base.NeuralNetwork;
-import main.utilities.TraceGroup;
 import main.utilities.Utilities;
+import main.utilities.traces.TraceGroup;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
