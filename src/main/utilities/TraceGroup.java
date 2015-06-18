@@ -197,6 +197,15 @@ public class TraceGroup{
     return image;
   }
 
+  public Point getCentroid(){
+    this.calculateCorners();
+
+    double centroidX = topLeftCorner_.x_ + this.getWidth() / 2;
+    double centroidY = bottomRightCorner_.y_ + this.getHeight() / 2;
+
+    return (new Point(centroidX, centroidY));
+  }
+
   private ArrayList<Trace> traces_;
 
   private Point topLeftCorner_;

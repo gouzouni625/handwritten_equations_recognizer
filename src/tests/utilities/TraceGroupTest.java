@@ -207,4 +207,22 @@ public class TraceGroupTest{
     //Highgui.imwrite("data/tests/utilities/TraceGroup/testPrint_image.tiff", image);
   }
 
+  @Test
+  public void testGetCentroid(){
+    TraceGroup traceGroup = new TraceGroup();
+    Trace trace = new Trace();
+
+    int numberOfPoints = 100;
+    for(int i = 0;i < numberOfPoints;i++){
+      trace.add(new Point(i, 2 * i + 3));
+    }
+
+    traceGroup.add(trace);
+
+    Point centroid = traceGroup.getCentroid();
+
+    assertEquals(49.5, centroid.x_, 0);
+    assertEquals(102, centroid.y_, 0);
+  }
+
 }
