@@ -303,20 +303,6 @@ public class Utilities{
   }
 
   public static final byte UNKNOWN_LABEL = -0x01;
-  public static final byte ZERO_LABEL = 0x00;
-  public static final byte ONE_LABEL = 0x01;
-  public static final byte TWO_LABEL = 0x02;
-  public static final byte THREE_LABEL = 0x03;
-  public static final byte FOUR_LABEL = 0x04;
-  public static final byte FIVE_LABEL = 0x05;
-  public static final byte SIX_LABEL = 0x06;
-  public static final byte SEVEN_LABEL = 0x07;
-  public static final byte EIGHT_LABEL = 0x08;
-  public static final byte NINE_LABEL = 0x09;
-  public static final byte PLUS_LABEL = 0x0A;
-  public static final byte EQUALS_LABEL = 0x0B;
-  public static final byte VARIABLE_x_LABEL = 0x0C;
-  public static final byte VARIABLE_y_LABEL = 0x0D;
 
   public static final int MAX_TRACES_IN_SYMBOL = 3;
 
