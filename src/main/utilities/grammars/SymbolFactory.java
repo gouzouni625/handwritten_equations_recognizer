@@ -6,74 +6,41 @@ import main.utilities.traces.TraceGroup;
 public class SymbolFactory{
 
   public static Symbol create(TraceGroup traceGroup, int label){
-    Symbol symbol;
 
     switch(label){
       case Utilities.LABEL_ZERO:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.ZERO;
+        return (new Number(Number.Types.ZERO, traceGroup));
       case Utilities.LABEL_ONE:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.ONE;
+        return (new Number(Number.Types.ONE, traceGroup));
       case Utilities.LABEL_TWO:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.TWO;
+        return (new Number(Number.Types.TWO, traceGroup));
       case Utilities.LABEL_THREE:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.THREE;
+        return (new Number(Number.Types.THREE, traceGroup));
       case Utilities.LABEL_FOUR:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.FOUR;
+        return (new Number(Number.Types.FOUR, traceGroup));
       case Utilities.LABEL_FIVE:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.FIVE;
+        return (new Number(Number.Types.FIVE, traceGroup));
       case Utilities.LABEL_SIX:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.SIX;
+        return (new Number(Number.Types.SIX, traceGroup));
       case Utilities.LABEL_SEVEN:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.SEVEN;
+        return (new Number(Number.Types.SEVEN, traceGroup));
       case Utilities.LABEL_EIGHT:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.EIGHT;
+        return (new Number(Number.Types.EIGHT, traceGroup));
       case Utilities.LABEL_NINE:
-        symbol = new Number();
-        ((Number)(symbol)).type_ = Number.Types.NINE;
-        symbol.arguments_ = new Symbol[2];
-        symbol.positionOfArguments_ = new Symbol.ArgumentPosition[2];
-        symbol.positionOfArguments_[0] = Symbol.ArgumentPosition.ARGUMENT_ABOVE_RIGHT;
-        symbol.positionOfArguments_[1] = Symbol.ArgumentPosition.ARGUMENT_DOWN_RIGHT;
-        break;
+        return (new Number(Number.Types.NINE, traceGroup));
       case Utilities.LABEL_PLUS:
+        return (new Operator(Operator.Types.PLUS, traceGroup, false));
       case Utilities.LABEL_EQUALS:
-        symbol = new Operator(false);
-        symbol.positionOfArguments_ = new Symbol.ArgumentPosition[2];
-        symbol.positionOfArguments_[0] = Symbol.ArgumentPosition.ARGUMENT_LEFT;
-        symbol.positionOfArguments_[1] = Symbol.ArgumentPosition.ARGUMENT_RIGHT;
-        break;
+        return (new Operator(Operator.Types.EQUALS, traceGroup, false));
       case Utilities.LABEL_VARIABLE_X:
-        symbol = new Variable();
-        ((Variable)(symbol)).type_ = Variable.Types.X;
+        return (new Variable(Variable.Types.X, traceGroup));
       case Utilities.LABEL_VARIABLE_Y:
-        symbol = new Variable();
-        ((Variable)(symbol)).type_ = Variable.Types.Y;
-        symbol.arguments_ = new Symbol[2];
-        symbol.positionOfArguments_ = new Symbol.ArgumentPosition[2];
-        symbol.positionOfArguments_[0] = Symbol.ArgumentPosition.ARGUMENT_ABOVE_RIGHT;
-        symbol.positionOfArguments_[1] = Symbol.ArgumentPosition.ARGUMENT_DOWN_RIGHT;
-        break;
+        return (new Variable(Variable.Types.Y, traceGroup));
       case Utilities.LABEL_MINUS:
-        symbol = new Operator(true);
-        symbol.positionOfArguments_ = new Symbol.ArgumentPosition[2];
-        symbol.positionOfArguments_[0] = Symbol.ArgumentPosition.ARGUMENT_LEFT;
-        symbol.positionOfArguments_[1] = Symbol.ArgumentPosition.ARGUMENT_RIGHT;
+        return (new Operator(Operator.Types.MINUS, traceGroup, false));
       default:
-        symbol = null;
-        break;
+        return null;
     }
-    symbol.traceGroup_ = new TraceGroup(traceGroup);
-
-    return symbol;
   }
 
 }
