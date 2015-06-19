@@ -1,8 +1,20 @@
 package main.utilities.grammars;
 
 import main.utilities.grammars.Symbol;
+import main.utilities.traces.TraceGroup;
 
 public class Number extends Symbol{
+
+  public Number(Number.Types type, TraceGroup traceGroup){
+    super();
+
+    type_ = type;
+
+    arguments_ = new Symbol[] {null, null};
+    positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.ABOVE_RIGHT, Symbol.ArgumentPosition.BELOW_RIGHT};
+
+    traceGroup_ = traceGroup;
+  }
 
   public boolean isOperator(){
     return false;
@@ -25,6 +37,10 @@ public class Number extends Symbol{
     }
 
     public String stringValue_;
+  }
+
+  public String toString(){
+    return this.type_.stringValue_;
   }
 
   public Types type_;

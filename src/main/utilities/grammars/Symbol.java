@@ -4,7 +4,13 @@ import main.utilities.traces.TraceGroup;
 
 public abstract class Symbol{
 
+  public Symbol(){
+    level_ = -1;
+  }
+
   public abstract boolean isOperator();
+
+  public abstract String toString();
 
   public static int getNewLevel(){
     currentLevel++;
@@ -23,14 +29,14 @@ public abstract class Symbol{
   public ArgumentPosition[] positionOfArguments_;
 
   public enum ArgumentPosition{
-    ARGUMENT_ABOVE,
-    ARGUMENT_ABOVE_RIGHT,
-    ARGUMENT_RIGHT,
-    ARGUMENT_DOWN_RIGHT,
-    ARGUMENT_DOWN,
-    ARGUMENT_DOWN_LEFT,
-    ARGUMENT_LEFT,
-    ARGUMENT_ABOVE_LEFT
+    ABOVE,
+    ABOVE_RIGHT,
+    RIGHT,
+    BELOW_RIGHT,
+    BELOW,
+    BELOW_LEFT,
+    LEFT,
+    ABOVE_LEFT;
   }
 
   public TraceGroup traceGroup_;
