@@ -25,7 +25,6 @@ public class GeometricalGrammar{
 
     if(big.getClass() == Number.class && small.getClass() == Number.class){
       Symbol.ArgumentPosition relativePosition = GeometricalGrammar.relativePosition(big, small);
-
       switch(relativePosition){
       case ABOVE_RIGHT:
         big.arguments_[0] = small;
@@ -44,10 +43,11 @@ public class GeometricalGrammar{
     small.traceGroup_.calculateCorners();
 
     int yPosition;
-    if(small.traceGroup_.getBottomRightCorner().y_ >= big.traceGroup_.getTopLeftCorner().y_){
+    if(small.traceGroup_.getBottomRightCorner().y_ >= big.traceGroup_.getBottomRightCorner().y_ + big.traceGroup_.getHeight() / 2){
       yPosition = 1;
     }
-    else if(small.traceGroup_.getBottomRightCorner().y_ >= big.traceGroup_.getBottomRightCorner().y_){
+    else if(small.traceGroup_.getBottomRightCorner().y_ <= big.traceGroup_.getBottomRightCorner().y_ + big.traceGroup_.getHeight() / 2 &&
+            small.traceGroup_.getTopLeftCorner().y_ >= big.traceGroup_.getBottomRightCorner().y_ + big.traceGroup_.getHeight() / 2){
       yPosition = 0;
     }
     else{
@@ -55,14 +55,15 @@ public class GeometricalGrammar{
     }
 
     int xPosition;
-    if(small.traceGroup_.getBottomRightCorner().x_ <= big.traceGroup_.getTopLeftCorner().x_){
-      xPosition = -1;
+    if(small.traceGroup_.getTopLeftCorner().x_ >= big.traceGroup_.getTopLeftCorner().x_ + big.traceGroup_.getWidth() / 2){
+      xPosition = 1;
     }
-    else if(small.traceGroup_.getBottomRightCorner().x_ <= big.traceGroup_.getBottomRightCorner().x_){
+    else if(small.traceGroup_.getTopLeftCorner().x_ <= big.traceGroup_.getTopLeftCorner().x_ + big.traceGroup_.getWidth() / 2 &&
+            small.traceGroup_.getBottomRightCorner().x_ >= big.traceGroup_.getTopLeftCorner().x_ + big.traceGroup_.getWidth() / 2){
       xPosition = 0;
     }
     else{
-      xPosition = 1;
+      xPosition = -1;
     }
 
     if(yPosition == 1){
