@@ -4,7 +4,6 @@ package main.utilities.grammars;
 public class GeometricalGrammar{
 
   public static void parse(Symbol symbol1, Symbol symbol2){
-
     symbol1.traceGroup_.calculateCorners();
     symbol2.traceGroup_.calculateCorners();
 
@@ -23,7 +22,8 @@ public class GeometricalGrammar{
       small = symbol1;
     }
 
-    if(big.getClass() == Number.class && small.getClass() == Number.class){
+    if((big.getClass() == Number.class || big.getClass() == Variable.class) &&
+       (small.getClass() == Number.class || small.getClass() == Variable.class)){
       Symbol.ArgumentPosition relativePosition = GeometricalGrammar.relativePosition(big, small);
       switch(relativePosition){
       case ABOVE_RIGHT:
