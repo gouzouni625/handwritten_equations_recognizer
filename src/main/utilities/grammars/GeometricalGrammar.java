@@ -1,14 +1,25 @@
 package main.utilities.grammars;
 
 
-public class GeometricalGrammar{
+public class GeometricalGrammar extends Grammar{
 
-  public static void parse(Symbol symbol1, Symbol symbol2){
+  public void parse(Symbol symbol1, Symbol symbol2){
     symbol1.traceGroup_.calculateCorners();
     symbol2.traceGroup_.calculateCorners();
 
     double symbol1Area = symbol1.traceGroup_.getWidth() * symbol1.traceGroup_.getHeight();
     double symbol2Area = symbol2.traceGroup_.getWidth() * symbol2.traceGroup_.getHeight();
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: symbols' areas... ===== Start =====");
+
+      System.out.println("Symbol 1 area: " + symbol1Area);
+      System.out.println("Symbol 2 area: " + symbol2Area);
+
+      System.out.println("Log: symbols' areas... ===== End =======");
+    }
+    /* ===== Logs ===== */
 
     Symbol big;
     Symbol small;
@@ -22,9 +33,20 @@ public class GeometricalGrammar{
       small = symbol1;
     }
 
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: big and small symbols... ===== Start =====");
+
+      System.out.println("Big: " + big);
+      System.out.println("Small: " + small);
+
+      System.out.println("Log: big and small symbols... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
     if((big.getClass() == Number.class || big.getClass() == Variable.class) &&
        (small.getClass() == Number.class || small.getClass() == Variable.class)){
-      Symbol.ArgumentPosition relativePosition = GeometricalGrammar.relativePosition(big, small);
+      Symbol.ArgumentPosition relativePosition = this.relativePosition(big, small);
       switch(relativePosition){
       case ABOVE_RIGHT:
         big.arguments_[0] = small;
@@ -38,7 +60,7 @@ public class GeometricalGrammar{
     }
   }
 
-  public static Symbol.ArgumentPosition relativePosition(Symbol big, Symbol small){
+  public Symbol.ArgumentPosition relativePosition(Symbol big, Symbol small){
     big.traceGroup_.calculateCorners();
     small.traceGroup_.calculateCorners();
 
@@ -65,6 +87,17 @@ public class GeometricalGrammar{
     else{
       xPosition = -1;
     }
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: yPosition and xPosition... ===== Start =====");
+
+      System.out.println("yPosition: " + yPosition);
+      System.out.println("xPosition: " + xPosition);
+
+      System.out.println("Log: yPosition and xPosition... ===== End =======");
+    }
+    /* ===== Logs ===== */
 
     if(yPosition == 1){
 
