@@ -314,8 +314,8 @@ public class Utilities{
   public static final int LABEL_SEVEN = 7;
   public static final int LABEL_EIGHT = 8;
   public static final int LABEL_NINE = 9;
-  public static final int LABEL_EQUALS = 10;
-  public static final int LABEL_PLUS = 11;
+  public static final int LABEL_PLUS = 10;
+  public static final int LABEL_EQUALS = 11;
   public static final int LABEL_VARIABLE_X = 12;
   public static final int LABEL_VARIABLE_Y = 13;
   public static final int LABEL_MINUS = 14;
