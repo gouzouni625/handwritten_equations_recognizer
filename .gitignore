@@ -13,4 +13,4 @@ to_improve
 testing_dir/
 backup/
 
-src/main/evaluators/
+src/main/evaluators/InstantDatabaseEvaluator.java
