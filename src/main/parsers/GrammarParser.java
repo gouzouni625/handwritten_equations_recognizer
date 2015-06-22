@@ -15,9 +15,27 @@ public abstract class GrammarParser extends Parser{
   public void parse(TraceGroup[] traceGroups, int[] labels){
     int numberOfTraceGroups = traceGroups.length;
 
+    // Transform traceGroups to symbols.
+    symbols_ = new Symbol[numberOfTraceGroups];
+    int numberOfSymbols = numberOfTraceGroups;
+    for(int i = 0;i < numberOfSymbols;i++){
+      symbols_[i] = SymbolFactory.create(traceGroups[i], labels[i]);
+    }
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: symbols... ===== Start =====");
+
+      for(int i = 0;i < numberOfSymbols;i++){
+        System.out.println("Symbol " + i + ": " + symbols_[i]);
+      }
+
+      System.out.println("Log: symbols... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
     if(numberOfTraceGroups == 1){
-      // TODO
-      // Return the symbol to string.
+      return;
     }
 
     // Calculate the distances between all the symbols.
@@ -100,25 +118,6 @@ public abstract class GrammarParser extends Parser{
       }
 
       System.out.println("Log: paths after removing single symbols... ===== End =======");
-    }
-    /* ===== Logs ===== */
-
-    // Transform traceGroups to symbols.
-    symbols_ = new Symbol[numberOfTraceGroups];
-    int numberOfSymbols = numberOfTraceGroups;
-    for(int i = 0;i < numberOfSymbols;i++){
-      symbols_[i] = SymbolFactory.create(traceGroups[i], labels[i]);
-    }
-
-    /* ===== Logs ===== */
-    if(!silent_){
-      System.out.println("Log: symbols... ===== Start =====");
-
-      for(int i = 0;i < numberOfSymbols;i++){
-        System.out.println("Symbol " + i + ": " + symbols_[i]);
-      }
-
-      System.out.println("Log: symbols... ===== End =======");
     }
     /* ===== Logs ===== */
 
