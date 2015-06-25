@@ -202,13 +202,13 @@ public abstract class MSTPartitioner extends Partitioner{
     /* ===== Logs ===== */
 
     // remove partitions that are not eligible(e.g. they contain the same trace more than once).
-    ArrayList<Integer> partitionsToClear = new ArrayList<Integer>();
+    ArrayList<Integer> partitionsToRemove = new ArrayList<Integer>();
     for(int partition = 0;partition < numberOfPartitions;partition++){
       if(!this.isEligible(partitions[partition], paths, expression.size())){
-        partitionsToClear.add(partition);
+        partitionsToRemove.add(partition);
       }
     }
-    partitions = Utilities.removeRows(partitions, partitionsToClear);
+    partitions = Utilities.removeRows(partitions, partitionsToRemove);
     numberOfPartitions = partitions.length;
 
     /* ===== Logs ===== */
@@ -346,8 +346,8 @@ public abstract class MSTPartitioner extends Partitioner{
 
   private boolean areEqualsSymbol(Trace trace1, Trace trace2){
     if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
-        (trace1.getHeight() <= 0.20 * trace1.getWidth()) &&
-        (trace2.getHeight() <= 0.20 * trace2.getWidth())){
+        (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
+        (trace2.getHeight() <= 0.40 * trace2.getWidth())){
       return true;
     }
 
