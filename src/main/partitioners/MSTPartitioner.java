@@ -229,12 +229,18 @@ public abstract class MSTPartitioner extends Partitioner{
     /* ===== Logs ===== */
 
     // Find the best partition.
-    double maxRate = pathsRates[0];
+    double currentRate = 0;
+    for(int path = 0;path < partitions[0].length;path++){
+      currentRate += pathsRates[partitions[0][path]];
+    }
+    currentRate /= partitions[0].length;
+
+    double maxRate = currentRate;
     int bestPartition = 0;
 
-    for(int partition = 0;partition < numberOfPartitions;partition++){
+    for(int partition = 1;partition < numberOfPartitions;partition++){
       // Calculate the rate of this partition.
-      double currentRate = 0;
+      currentRate = 0;
       for(int path = 0;path < partitions[partition].length;path++){
         currentRate += pathsRates[partitions[partition][path]];
       }
