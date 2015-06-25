@@ -5,6 +5,7 @@ import java.io.IOException;
 import main.base.NeuralNetwork;
 import main.utilities.Utilities;
 import main.utilities.traces.TraceGroup;
+import main.distorters.ImageDistorter;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -32,8 +33,7 @@ public class NeuralNetworkClassifier implements Classifier{
       return Utilities.MINIMUM_RATE;
     }
 
-    double[] neuralNetworkOutput = neuralNetwork_.feedForward(this.imageToVector(symbol.print(new Size(28, 28)), -1, 1));
-    neuralNetworkOutput = Utilities.relativeValues(neuralNetworkOutput);
+    double[] neuralNetworkOutput = this.feedForward(this.imageToVector(symbol.print(new Size(28, 28)), -1, 1));
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
@@ -70,8 +70,7 @@ public class NeuralNetworkClassifier implements Classifier{
     for(int i = 0;i < numberOfSubPaths;i++){
       subSymbol = new TraceGroup(symbol.subTraceGroup(symbolSubPaths[i]));
 
-      neuralNetworkOutput = neuralNetwork_.feedForward(this.imageToVector(subSymbol.print(new Size(28, 28)), -1, 1));
-      neuralNetworkOutput = Utilities.relativeValues(neuralNetworkOutput);
+      neuralNetworkOutput = this.feedForward(this.imageToVector(subSymbol.print(new Size(28, 28)), -1, 1));
 
       double rate = Utilities.maxValue(neuralNetworkOutput);
 
@@ -129,8 +128,7 @@ public class NeuralNetworkClassifier implements Classifier{
       symbolWithContext = new TraceGroup(symbol);
       symbolWithContext.add(context.subTraceGroup(contextPaths[i]));
 
-      neuralNetworkOutput = neuralNetwork_.feedForward(this.imageToVector(symbolWithContext.print(new Size(28, 28)), -1, 1));
-      neuralNetworkOutput = Utilities.relativeValues(neuralNetworkOutput);
+      neuralNetworkOutput = this.feedForward(this.imageToVector(symbolWithContext.print(new Size(28, 28)), -1, 1));
 
       double rate = Utilities.maxValue(neuralNetworkOutput);
 
@@ -154,12 +152,37 @@ public class NeuralNetworkClassifier implements Classifier{
     return finalRate;
   }
 
-  /* TODO
-   * One can get the possibility that a trace group constitutes a symbol by
-   * calling classify(). One can also get the symbol by calling getSymbol()
-   * function. This function must work with utilities class and use the
-   * enumerations that lie inside there.
-   */
+  private double[] feedForward(double[] imageVector){
+    int numberOfDistortions = 5;
+
+    double[] neuralNetworkOutput = neuralNetwork_.feedForward(imageVector);
+
+    if(imageDistorter_ != null){
+      double[][] dataToDistort = new double[1][];
+
+      for(int i = 0;i < numberOfDistortions;i++){
+        dataToDistort[0] = imageVector.clone();
+        imageDistorter_.distort(dataToDistort);
+
+        double[] currentOutput = neuralNetwork_.feedForward(dataToDistort[0]);
+        for(int j = 0;j < neuralNetworkOutput.length;j++){
+          neuralNetworkOutput[j] += currentOutput[j];
+        }
+
+      }
+
+      if(numberOfDistortions > 0){
+        for(int i = 0;i < neuralNetworkOutput.length;i++){
+          neuralNetworkOutput[i] /= numberOfDistortions;
+        }
+      }
+    }
+
+    neuralNetworkOutput = Utilities.relativeValues(neuralNetworkOutput);
+
+    return neuralNetworkOutput;
+  }
+
   public int getClassificationLabel(){
     return classificationLabel_;
   }
@@ -199,10 +222,20 @@ public class NeuralNetworkClassifier implements Classifier{
     return silent_;
   }
 
+  public void setImageDistorter(ImageDistorter imageDistorter){
+    imageDistorter_ = imageDistorter;
+  }
+
+  public ImageDistorter getImageDistorter(){
+    return imageDistorter_;
+  }
+
   private NeuralNetwork neuralNetwork_;
 
   private int classificationLabel_;
 
   private boolean silent_ = true;
+
+  private ImageDistorter imageDistorter_ = null;
 
 }
