@@ -84,11 +84,11 @@ public class NeuralNetworkClassifier implements Classifier{
       }
       /* ===== Logs ===== */
 
-      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
+      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 10){
         continue;
       }
 
-      finalRate -= 0.33 * rate;
+      finalRate -= 0.50 * rate;
     }
 
     // Process context.
@@ -153,7 +153,7 @@ public class NeuralNetworkClassifier implements Classifier{
   }
 
   private double[] feedForward(double[] imageVector){
-    int numberOfDistortions = 5;
+    int numberOfDistortions = 100;
 
     double[] neuralNetworkOutput = neuralNetwork_.feedForward(imageVector);
 
