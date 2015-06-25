@@ -142,11 +142,11 @@ public class NeuralNetworkClassifier implements Classifier{
       }
       /* ===== Logs ===== */
 
-      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
+      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 10){
         continue;
       }
 
-      finalRate -= 33 / 100 * rate;
+      finalRate -= 50 / 100 * rate;
     }
 
     return finalRate;
