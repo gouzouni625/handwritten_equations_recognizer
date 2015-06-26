@@ -88,7 +88,7 @@ public class NeuralNetworkClassifier implements Classifier{
         continue;
       }
 
-      finalRate -= 0.50 * rate;
+      finalRate /= 2;
     }
 
     // Process context.
@@ -142,11 +142,11 @@ public class NeuralNetworkClassifier implements Classifier{
       }
       /* ===== Logs ===== */
 
-      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 10){
+      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
         continue;
       }
 
-      finalRate -= 50 / 100 * rate;
+      finalRate /= 2;
     }
 
     return finalRate;
