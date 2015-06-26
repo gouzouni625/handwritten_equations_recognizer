@@ -302,6 +302,27 @@ public class Utilities{
     return newArray;
   }
 
+  public static boolean rowInArray(int[][] array, int[] row){
+    int numberOfRows = array.length;
+
+    for(int i = 0;i < numberOfRows;i++){
+      if(array[i].length == row.length){
+        int counter = 0;
+        for(int j = 0;j < row.length;j++){
+          if(array[i][j] == row[j]){
+            counter++;
+          }
+        }
+
+        if(counter == row.length){
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   public static final byte UNKNOWN_LABEL = -0x01;
 
   public static final int LABEL_ZERO = 0;

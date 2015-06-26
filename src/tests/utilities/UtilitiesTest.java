@@ -334,4 +334,28 @@ public class UtilitiesTest{
     }
   }
 
+  @Test
+  public void testRowInArray(){
+    int numberOfRows = 100;
+    int numberOfColumns = 100;
+    int[][] array = new int[numberOfRows][numberOfColumns];
+
+    for(int i = 0;i < numberOfRows;i++){
+      for(int j = 0;j < numberOfColumns;j++){
+        array[i][j] = i * numberOfColumns + j;
+      }
+    }
+
+    for(int i = 0;i < numberOfRows;i++){
+      assertTrue(Utilities.rowInArray(array, array[i]));
+    }
+
+    int[] row = new int[numberOfColumns - 1];
+    for(int i = 0;i < numberOfColumns - 1;i++){
+      row[i] = (int)Math.random();
+    }
+
+    assertFalse(Utilities.rowInArray(array, row));
+  }
+
 }
