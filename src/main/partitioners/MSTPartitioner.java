@@ -235,10 +235,19 @@ public abstract class MSTPartitioner extends Partitioner{
     for(int path = 0;path < partitions[0].length;path++){
       currentRate += pathsRates[partitions[0][path]];
     }
-    currentRate /= partitions[0].length;
 
     double maxRate = currentRate;
     int bestPartition = 0;
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: partition rate... ===== Start =====");
+
+      System.out.println("partition 0 rate: " + currentRate);
+
+      System.out.println("Log: partition rate... ===== End =======");
+    }
+    /* ===== Logs ===== */
 
     for(int partition = 1;partition < numberOfPartitions;partition++){
       // Calculate the rate of this partition.
@@ -246,7 +255,16 @@ public abstract class MSTPartitioner extends Partitioner{
       for(int path = 0;path < partitions[partition].length;path++){
         currentRate += pathsRates[partitions[partition][path]];
       }
-      currentRate /= partitions[partition].length;
+
+      /* ===== Logs ===== */
+      if(!silent_){
+        System.out.println("Log: partition rate... ===== Start =====");
+
+        System.out.println("partition " +  partition + " rate: " + currentRate);
+
+        System.out.println("Log: partition rate... ===== End =======");
+      }
+      /* ===== Logs ===== */
 
       if(currentRate > maxRate){
         maxRate = currentRate;
