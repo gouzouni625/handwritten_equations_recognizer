@@ -25,7 +25,7 @@ public class NeuralNetworkClassifier implements Classifier{
     neuralNetwork_.loadNetwork(path);
   }
 
-  public double classify(TraceGroup symbol, TraceGroup context){
+  public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
     int symbolSize = symbol.size();
     int contextSize = context.size();
 
@@ -37,58 +37,62 @@ public class NeuralNetworkClassifier implements Classifier{
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
+    double finalRate = symbolRate;
 
     boolean[][] connections = new boolean[symbolSize][symbolSize];
-    for(int i = 0;i < symbolSize;i++){
-      for(int j = 0;j < symbolSize;j++){
-        connections[i][j] = true;
-      }
-    }
-    int[][] symbolSubPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL);
-    int numberOfSubPaths = symbolSubPaths.length;
 
-    /* ===== Logs ===== */
-    if(!silent_){
-      System.out.println("Log: symbol sub-paths... ===== Start =====");
-
-      System.out.println("number of symbol sub-paths: " + numberOfSubPaths);
-      for(int i = 0;i < numberOfSubPaths;i++){
-        System.out.print("sub-path: " + i + " ");
-        for(int j = 0;j < symbolSubPaths[i].length;j++){
-          System.out.print(symbolSubPaths[i][j] + ", ");
+    if(subSymbolCheck){
+      for(int i = 0;i < symbolSize;i++){
+        for(int j = 0;j < symbolSize;j++){
+          connections[i][j] = true;
         }
-
-        System.out.println();
       }
-
-      System.out.println("Log: symbol sub-paths... ===== End =======");
-    }
-    /* ===== Logs ===== */
-
-    double finalRate = symbolRate;
-    TraceGroup subSymbol;
-    for(int i = 0;i < numberOfSubPaths;i++){
-      subSymbol = new TraceGroup(symbol.subTraceGroup(symbolSubPaths[i]));
-
-      neuralNetworkOutput = this.feedForward(this.imageToVector(subSymbol.print(new Size(28, 28)), -1, 1));
-
-      double rate = Utilities.maxValue(neuralNetworkOutput);
+      int[][] symbolSubPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL);
+      int numberOfSubPaths = symbolSubPaths.length;
 
       /* ===== Logs ===== */
       if(!silent_){
-        System.out.println("Log: symbol sub-paths' rates... ===== Start =====");
+        System.out.println("Log: symbol sub-paths... ===== Start =====");
 
-        System.out.println("sub-path " + i + " rate: " + rate);
+        System.out.println("number of symbol sub-paths: " + numberOfSubPaths);
+        for(int i = 0;i < numberOfSubPaths;i++){
+          System.out.print("sub-path: " + i + " ");
+          for(int j = 0;j < symbolSubPaths[i].length;j++){
+            System.out.print(symbolSubPaths[i][j] + ", ");
+          }
 
-        System.out.println("Log: symbol sub-paths' rates... ===== End =======");
+          System.out.println();
+        }
+
+        System.out.println("Log: symbol sub-paths... ===== End =======");
       }
       /* ===== Logs ===== */
 
-      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 10){
-        continue;
-      }
 
-      finalRate /= 2;
+      TraceGroup subSymbol;
+      for(int i = 0;i < numberOfSubPaths;i++){
+        subSymbol = new TraceGroup(symbol.subTraceGroup(symbolSubPaths[i]));
+
+        neuralNetworkOutput = this.feedForward(this.imageToVector(subSymbol.print(new Size(28, 28)), -1, 1));
+
+        double rate = Utilities.maxValue(neuralNetworkOutput);
+
+        /* ===== Logs ===== */
+        if(!silent_){
+          System.out.println("Log: symbol sub-paths' rates... ===== Start =====");
+
+          System.out.println("sub-path " + i + " rate: " + rate);
+
+          System.out.println("Log: symbol sub-paths' rates... ===== End =======");
+        }
+        /* ===== Logs ===== */
+
+        if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 10){
+          continue;
+        }
+
+        finalRate /= 2;
+      }
     }
 
     // Process context.
@@ -96,57 +100,59 @@ public class NeuralNetworkClassifier implements Classifier{
       return finalRate;
     }
 
-    connections = new boolean[contextSize][contextSize];
-    for(int i = 0;i < contextSize;i++){
-      for(int j = 0;j < contextSize;j++){
-        connections[i][j] = true;
-      }
-    }
-    int[][] contextPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL - symbolSize);
-    int numberOfContextPaths = contextPaths.length;
-
-    /* ===== Logs ===== */
-    if(!silent_){
-      System.out.println("Log: context paths... ===== Start =====");
-
-      System.out.println("number of context paths: " + numberOfSubPaths);
-      for(int i = 0;i < numberOfSubPaths;i++){
-        System.out.print("path: " + i + " ");
-        for(int j = 0;j < symbolSubPaths[i].length;j++){
-          System.out.print(symbolSubPaths[i][j] + ", ");
+    if(subContextCheck){
+      connections = new boolean[contextSize][contextSize];
+      for(int i = 0;i < contextSize;i++){
+        for(int j = 0;j < contextSize;j++){
+          connections[i][j] = true;
         }
-
-        System.out.println();
       }
-
-      System.out.println("Log: context paths... ===== End =======");
-    }
-    /* ===== Logs ===== */
-
-    TraceGroup symbolWithContext;
-    for(int i = 0;i < numberOfContextPaths;i++){
-      symbolWithContext = new TraceGroup(symbol);
-      symbolWithContext.add(context.subTraceGroup(contextPaths[i]));
-
-      neuralNetworkOutput = this.feedForward(this.imageToVector(symbolWithContext.print(new Size(28, 28)), -1, 1));
-
-      double rate = Utilities.maxValue(neuralNetworkOutput);
+      int[][] contextPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL - symbolSize);
+      int numberOfContextPaths = contextPaths.length;
 
       /* ===== Logs ===== */
       if(!silent_){
-        System.out.println("Log: context paths' rates... ===== Start =====");
+        System.out.println("Log: context paths... ===== Start =====");
 
-        System.out.println("path " + i + " rate: " + rate);
+        System.out.println("number of context paths: " + numberOfContextPaths);
+        for(int i = 0;i < numberOfContextPaths;i++){
+          System.out.print("path: " + i + " ");
+          for(int j = 0;j < contextPaths[i].length;j++){
+            System.out.print(contextPaths[i][j] + ", ");
+          }
 
-        System.out.println("Log: context paths' rates... ===== End =======");
+          System.out.println();
+        }
+
+        System.out.println("Log: context paths... ===== End =======");
       }
       /* ===== Logs ===== */
 
-      if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
-        continue;
-      }
+      TraceGroup symbolWithContext;
+      for(int i = 0;i < numberOfContextPaths;i++){
+        symbolWithContext = new TraceGroup(symbol);
+        symbolWithContext.add(context.subTraceGroup(contextPaths[i]));
 
-      finalRate /= 2;
+        neuralNetworkOutput = this.feedForward(this.imageToVector(symbolWithContext.print(new Size(28, 28)), -1, 1));
+
+        double rate = Utilities.maxValue(neuralNetworkOutput);
+
+        /* ===== Logs ===== */
+        if(!silent_){
+          System.out.println("Log: context paths' rates... ===== Start =====");
+
+          System.out.println("path " + i + " rate: " + rate);
+
+          System.out.println("Log: context paths' rates... ===== End =======");
+        }
+        /* ===== Logs ===== */
+
+        if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
+          continue;
+        }
+
+        finalRate /= 2;
+      }
     }
 
     return finalRate;
