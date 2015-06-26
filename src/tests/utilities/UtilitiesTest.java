@@ -347,7 +347,7 @@ public class UtilitiesTest{
     }
 
     for(int i = 0;i < numberOfRows;i++){
-      assertTrue(Utilities.rowInArray(array, array[i]));
+      assertTrue(Utilities.rowInArray(array, array[i], true));
     }
 
     int[] row = new int[numberOfColumns - 1];
@@ -355,7 +355,7 @@ public class UtilitiesTest{
       row[i] = (int)Math.random();
     }
 
-    assertFalse(Utilities.rowInArray(array, row));
+    assertFalse(Utilities.rowInArray(array, row, false));
   }
 
 }

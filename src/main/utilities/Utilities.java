@@ -1,6 +1,7 @@
 package main.utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -302,14 +303,23 @@ public class Utilities{
     return newArray;
   }
 
-  public static boolean rowInArray(int[][] array, int[] row){
+  public static boolean rowInArray(int[][] array, int[] row, boolean maintainSequence){
     int numberOfRows = array.length;
 
     for(int i = 0;i < numberOfRows;i++){
       if(array[i].length == row.length){
+
+        int[] arrayRow = array[i].clone();
+        int[] checkRow = row.clone();
+
+        if(!maintainSequence){
+          Arrays.sort(arrayRow);
+          Arrays.sort(checkRow);
+        }
+
         int counter = 0;
-        for(int j = 0;j < row.length;j++){
-          if(array[i][j] == row[j]){
+        for(int j = 0;j < checkRow.length;j++){
+          if(arrayRow[j] == checkRow[j]){
             counter++;
           }
         }
