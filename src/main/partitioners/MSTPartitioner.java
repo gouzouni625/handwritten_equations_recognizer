@@ -17,7 +17,7 @@ public abstract class MSTPartitioner extends Partitioner{
     if(numberOfTraces == 1){
 
       labels_ = new int[numberOfTraces];
-      classifier_.classify(expression, new TraceGroup());
+      classifier_.classify(expression, new TraceGroup(), true, true);
       labels_[0] = classifier_.getClassificationLabel();
 
       return (new TraceGroup[] {expression});
@@ -160,13 +160,15 @@ public abstract class MSTPartitioner extends Partitioner{
       context = expression.subTraceGroup(contextIndices);
 
       // Evaluate each path and discard garbage.
-      pathsRates[i] = classifier_.classify(symbol, context);
+      boolean subSymbolCheck = !Utilities.rowInArray(overlaps, paths[i], false);
+      pathsRates[i] = classifier_.classify(symbol, context, subSymbolCheck, true);
       pathsLabels[i] = classifier_.getClassificationLabel();
 
       /* ===== Logs ===== */
       if(!silent_){
         System.out.println("Log: path rate and label... ===== Start =====");
 
+        System.out.println("path " + i + " subSymbolCheck: " + subSymbolCheck);
         System.out.println("path " + i + " rate: " + pathsRates[i]);
         System.out.println("path " + i + " label: " + pathsLabels[i]);
 
