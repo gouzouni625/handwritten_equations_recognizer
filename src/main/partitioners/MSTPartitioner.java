@@ -7,6 +7,7 @@ import main.utilities.math.MinimumSpanningTree;
 import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
+import main.utilities.Callable;
 
 /* MST = Minimum Spanning Tree.*/
 public abstract class MSTPartitioner extends Partitioner{
@@ -188,7 +189,7 @@ public abstract class MSTPartitioner extends Partitioner{
       connections[i][i] = false;
     }
 
-    int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths);
+    int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths, new PartitionCheck(paths, numberOfTraces));
     int numberOfPartitions = partitions.length;
 
     /* ===== Logs ===== */
@@ -421,5 +422,37 @@ public abstract class MSTPartitioner extends Partitioner{
   private boolean silent_ = true;
 
   private int[] labels_;
+
+  private class PartitionCheck implements Callable{
+
+    public PartitionCheck(int[][] paths, int numberOfTraces){
+      paths_ = paths;
+      numberOfTraces_ = numberOfTraces;
+    }
+
+    public boolean call(ArrayList<Integer> list){
+      int[] tracesOccurenceCounter = new int[numberOfTraces_];
+      for(int i = 0;i < numberOfTraces_;i++){
+        tracesOccurenceCounter[i] = 0;
+      }
+
+      for(int path = 0;path < list.size();path++){
+        for(int trace = 0;trace < paths_[list.get(path)].length;trace++){
+          tracesOccurenceCounter[paths_[list.get(path)][trace]]++;
+        }
+      }
+
+      for(int i = 0;i < numberOfTraces_;i++){
+        if(tracesOccurenceCounter[i] > 1){
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    private int[][] paths_;
+    private int numberOfTraces_;
+  }
 
 }
