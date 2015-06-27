@@ -180,10 +180,14 @@ public abstract class MSTPartitioner extends Partitioner{
     // Get all the possible partitions.
     boolean[][] connections = new boolean[numberOfPaths][numberOfPaths];
     for(int i = 0;i < numberOfPaths;i++){
-      for(int j = 0;j < numberOfPaths;j++){
-        connections[i][j] = true;
+      for(int j = i + 1;j < numberOfPaths;j++){
+        connections[i][j] = this.areCombinable(paths[i], paths[j]);
+        connections[j][i] = connections[i][j];
       }
+
+      connections[i][i] = false;
     }
+
     int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths);
     int numberOfPartitions = partitions.length;
 
@@ -206,7 +210,7 @@ public abstract class MSTPartitioner extends Partitioner{
     // remove partitions that are not eligible(e.g. they contain the same trace more than once).
     ArrayList<Integer> partitionsToRemove = new ArrayList<Integer>();
     for(int partition = 0;partition < numberOfPartitions;partition++){
-      if(!this.isEligible(partitions[partition], paths, expression.size())){
+      if(!this.isEligible(partitions[partition], paths, numberOfTraces)){
         partitionsToRemove.add(partition);
       }
     }
@@ -397,6 +401,21 @@ public abstract class MSTPartitioner extends Partitioner{
 
   public boolean getSilent(){
     return silent_;
+  }
+
+  private boolean areCombinable(int[] path1, int[] path2){
+    int length1 = path1.length;
+    int length2 = path2.length;
+
+    for(int i = 0;i < length1;i++){
+      for(int j = 0;j < length2;j++){
+        if(path1[i] == path2[j]){
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   private boolean silent_ = true;
