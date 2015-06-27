@@ -9,6 +9,8 @@ import java.util.Iterator;
 
 import org.opencv.core.Mat;
 
+import main.utilities.Callable;
+
 /**
  * Class that contains some methods used in many different places of the
  * project.
@@ -97,7 +99,7 @@ public class Utilities{
   }
 
   @SuppressWarnings("unchecked")
-  public static int[][] findUniquePaths(boolean[][] connections, int maxPathLength){
+  public static int[][] findUniquePaths(boolean[][] connections, int maxPathLength, Callable... checks){
     Hashtable<Integer, ArrayList<Integer> > hashTable = new Hashtable<Integer, ArrayList<Integer> >();
     int hashTableOldSize = hashTable.size();
 
@@ -123,7 +125,18 @@ public class Utilities{
           for(int neighbour = 0;neighbour < context.length;neighbour++){
             ArrayList<Integer> currentPathClone = (ArrayList<Integer>)(currentPath.clone());
             currentPathClone.add(context[neighbour]);
-            newPaths.add(currentPathClone);
+
+            boolean checksPassed = true;
+            for(int check = 0;check < checks.length;check++){
+              if(!checks[check].call(currentPathClone)){
+                checksPassed = false;
+                break;
+              }
+            }
+
+            if(checksPassed){
+              newPaths.add(currentPathClone);
+            }
           }
         }
 
