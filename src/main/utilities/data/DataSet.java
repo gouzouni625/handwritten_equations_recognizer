@@ -109,7 +109,7 @@ public class DataSet{
     // Save the data. =========================================================
     FileOutputStream fileOutputStream = new FileOutputStream(dataFile);
 
-    int magicNumber = Utilities.DATA_MAGIC_NUMBER;
+    int magicNumber = DataSet.DATA_MAGIC_NUMBER;
 
     // Save the magic number.
     fileOutputStream.write(ByteBuffer.allocate(4).putInt(magicNumber).array());
@@ -139,7 +139,7 @@ public class DataSet{
     // Save the labels. =======================================================
     fileOutputStream = new FileOutputStream(labelsFile);
 
-    magicNumber = Utilities.LABELS_MAGIC_NUMBER;
+    magicNumber = DataSet.LABELS_MAGIC_NUMBER;
 
     // Save the magic number.
     fileOutputStream.write(ByteBuffer.allocate(4).putInt(magicNumber).array());
@@ -161,5 +161,8 @@ public class DataSet{
   }
 
   private ArrayList<DataSample> samples_;
+
+  public static final int DATA_MAGIC_NUMBER = 0x00000803;
+  public static final int LABELS_MAGIC_NUMBER = 0x00000801;
 
 }
