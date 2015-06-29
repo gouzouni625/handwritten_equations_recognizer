@@ -346,30 +346,4 @@ public class Utilities{
     return false;
   }
 
-  public static final byte UNKNOWN_LABEL = -0x01;
-
-  public static final int LABEL_ZERO = 0;
-  public static final int LABEL_ONE = 1;
-  public static final int LABEL_TWO = 2;
-  public static final int LABEL_THREE = 3;
-  public static final int LABEL_FOUR = 4;
-  public static final int LABEL_FIVE = 5;
-  public static final int LABEL_SIX = 6;
-  public static final int LABEL_SEVEN = 7;
-  public static final int LABEL_EIGHT = 8;
-  public static final int LABEL_NINE = 9;
-  public static final int LABEL_PLUS = 10;
-  public static final int LABEL_EQUALS = 11;
-  public static final int LABEL_VARIABLE_X = 12;
-  public static final int LABEL_VARIABLE_Y = 13;
-  public static final int LABEL_MINUS = 14;
-
-  public static final int MAX_TRACES_IN_SYMBOL = 3;
-
-  public static final int DATA_MAGIC_NUMBER = 0x00000803;
-  public static final int LABELS_MAGIC_NUMBER = 0x00000801;
-
-  public static final double MINIMUM_RATE = 0;
-  public static final double MAXIMUM_RATE = 100;
-
 }
