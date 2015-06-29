@@ -9,4 +9,6 @@ public abstract class Partitioner{
 
   protected Classifier classifier_;
 
+  public static int MAX_TRACES_IN_SYMBOL = 3;
+
 }

@@ -58,7 +58,7 @@ public abstract class MSTPartitioner extends Partitioner{
     }
     /* ===== Logs ===== */
 
-    int[][] paths = minimumSpanningTree.getUniquePaths(Utilities.MAX_TRACES_IN_SYMBOL);
+    int[][] paths = minimumSpanningTree.getUniquePaths(Partitioner.MAX_TRACES_IN_SYMBOL);
     int numberOfPaths = paths.length;
 
     /* ===== Logs ===== */
