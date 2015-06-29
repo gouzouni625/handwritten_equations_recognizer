@@ -10,9 +10,11 @@ import main.distorters.ImageDistorter;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
-public class NeuralNetworkClassifier implements Classifier{
+public class NeuralNetworkClassifier extends Classifier{
 
-  public NeuralNetworkClassifier(int[] sizesOfLayers){
+  public NeuralNetworkClassifier(int[] sizesOfLayers, int maxTracesInSymbol){
+    super(maxTracesInSymbol);
+
     neuralNetwork_ = new NeuralNetwork(sizesOfLayers);
   }
 
@@ -29,8 +31,8 @@ public class NeuralNetworkClassifier implements Classifier{
     int symbolSize = symbol.size();
     int contextSize = context.size();
 
-    if(symbolSize > Utilities.MAX_TRACES_IN_SYMBOL){
-      return Utilities.MINIMUM_RATE;
+    if(symbolSize > maxTracesInSymbol_){
+      return Classifier.MINIMUM_RATE;
     }
 
     double[] neuralNetworkOutput = this.feedForward(this.imageToVector(symbol.print(new Size(28, 28)), -1, 1));
@@ -47,7 +49,7 @@ public class NeuralNetworkClassifier implements Classifier{
           connections[i][j] = true;
         }
       }
-      int[][] symbolSubPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL);
+      int[][] symbolSubPaths = Utilities.findUniquePaths(connections, maxTracesInSymbol_);
       int numberOfSubPaths = symbolSubPaths.length;
 
       /* ===== Logs ===== */
@@ -87,7 +89,7 @@ public class NeuralNetworkClassifier implements Classifier{
         }
         /* ===== Logs ===== */
 
-        if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 10){
+        if(rate < (Classifier.MAXIMUM_RATE - Classifier.MINIMUM_RATE) / 10){
           continue;
         }
 
@@ -96,7 +98,7 @@ public class NeuralNetworkClassifier implements Classifier{
     }
 
     // Process context.
-    if(symbolSize == Utilities.MAX_TRACES_IN_SYMBOL || contextSize == 0){
+    if(symbolSize == maxTracesInSymbol_ || contextSize == 0){
       return finalRate;
     }
 
@@ -107,7 +109,7 @@ public class NeuralNetworkClassifier implements Classifier{
           connections[i][j] = true;
         }
       }
-      int[][] contextPaths = Utilities.findUniquePaths(connections, Utilities.MAX_TRACES_IN_SYMBOL - symbolSize);
+      int[][] contextPaths = Utilities.findUniquePaths(connections, maxTracesInSymbol_ - symbolSize);
       int numberOfContextPaths = contextPaths.length;
 
       /* ===== Logs ===== */
@@ -147,7 +149,7 @@ public class NeuralNetworkClassifier implements Classifier{
         }
         /* ===== Logs ===== */
 
-        if(rate < (Utilities.MAXIMUM_RATE - Utilities.MINIMUM_RATE) / 2){
+        if(rate < (Classifier.MAXIMUM_RATE - Classifier.MINIMUM_RATE) / 2){
           continue;
         }
 

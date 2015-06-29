@@ -11,16 +11,16 @@ import main.distorters.ImageDistorter;
 public class NNMSTPartitioner extends MSTPartitioner{
 
   public NNMSTPartitioner(int[] sizesOfLayers){
-    classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
+    classifier_ = new NeuralNetworkClassifier(sizesOfLayers, Partitioner.MAX_TRACES_IN_SYMBOL);
   }
 
   public NNMSTPartitioner(int[] sizesOfLayers, String path) throws IOException{
-    classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
+    classifier_ = new NeuralNetworkClassifier(sizesOfLayers, Partitioner.MAX_TRACES_IN_SYMBOL);
     ((NeuralNetworkClassifier)(classifier_)).loadNeuralNetwork(path);
   }
 
   public NNMSTPartitioner(int[] sizesOfLayers, String path, ImageDistorter imageDistorter) throws IOException{
-    classifier_ = new NeuralNetworkClassifier(sizesOfLayers);
+    classifier_ = new NeuralNetworkClassifier(sizesOfLayers, Partitioner.MAX_TRACES_IN_SYMBOL);
     ((NeuralNetworkClassifier)(classifier_)).loadNeuralNetwork(path);
 
     ((NeuralNetworkClassifier)(classifier_)).setImageDistorter(imageDistorter);
