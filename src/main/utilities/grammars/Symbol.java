@@ -8,21 +8,19 @@ public abstract class Symbol{
     level_ = -1;
   }
 
-  public abstract boolean isOperator();
-
   public abstract String toString();
 
   public static int getNewLevel(){
-    currentLevel++;
-    return currentLevel;
+    CURRENT_LEVEL++;
+    return CURRENT_LEVEL;
   }
 
   public static int getCurrentLevel(){
-    return currentLevel;
+    return CURRENT_LEVEL;
   }
 
   public int level_;
-  private static int currentLevel = -1;
+  private static int CURRENT_LEVEL = -1;
 
   public Symbol[] arguments_;
 

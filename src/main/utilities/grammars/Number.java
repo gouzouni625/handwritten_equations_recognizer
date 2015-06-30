@@ -16,10 +16,6 @@ public class Number extends Symbol{
     traceGroup_ = traceGroup;
   }
 
-  public boolean isOperator(){
-    return false;
-  }
-
   public enum Types{
     ZERO("0"),
     ONE("1"),

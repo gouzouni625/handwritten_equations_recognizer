@@ -16,10 +16,6 @@ public class Variable extends Symbol{
     traceGroup_ = traceGroup;
   }
 
-  public boolean isOperator(){
-    return false;
-  }
-
   public enum Types{
     X("x"),
     Y("y");
