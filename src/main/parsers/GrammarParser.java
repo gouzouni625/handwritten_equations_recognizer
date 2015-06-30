@@ -1,6 +1,8 @@
 package main.parsers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import main.utilities.Utilities;
 import main.utilities.grammars.Grammar;
@@ -37,6 +39,41 @@ public abstract class GrammarParser extends Parser{
     if(numberOfTraceGroups == 1){
       return;
     }
+
+    // Sort symbols by abscissa.
+    for(int i = 0;i < numberOfTraceGroups;i++){
+      symbols_[i].traceGroup_.calculateCorners();
+    }
+
+    Arrays.sort(symbols_, new Comparator<Symbol>(){
+      @Override
+      public int compare(Symbol symbol1, Symbol symbol2){
+        double x1 = symbol1.traceGroup_.getTopLeftCorner().x_;
+        double x2 = symbol2.traceGroup_.getTopLeftCorner().x_;
+
+        if(x1 > x2){
+          return 1;
+        }
+        else if(x1 == x2){
+          return 0;
+        }
+        else{
+          return -1;
+        }
+      }
+    });
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: symbols sorted by abscissa... ===== Start =====");
+
+      for(int i = 0;i < numberOfSymbols;i++){
+        System.out.println("Symbol " + i + ": " + symbols_[i]);
+      }
+
+      System.out.println("Log: symbols sorted by abscissa... ===== End =======");
+    }
+    /* ===== Logs ===== */
 
     // Calculate the distances between all the symbols.
     double[] distances = this.calculateDistancesBetweenSymbols(traceGroups);
@@ -121,6 +158,48 @@ public abstract class GrammarParser extends Parser{
     }
     /* ===== Logs ===== */
 
+    // Sort paths by first symbol and then by second. Note that, since symbols are sorted by abscissa then paths will
+    // also be sorted by abscissa if they are sorted by symbols.
+    Arrays.sort(paths, new Comparator<int[]>(){
+      @Override
+      public int compare(int[] path1, int[] path2){
+        if(path1[0] > path2[0]){
+          return 1;
+        }
+        else if(path1[0] == path2[0]){
+          if(path1[1] > path2[1]){
+            return 1;
+          }
+          else if(path1[1] == path2[1]){
+            return 0;
+          }
+          else{
+            return -1;
+          }
+        }
+        else{
+          return -1;
+        }
+      }
+    });
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: paths after sorting them... ===== Start =====");
+
+      for(int i = 0;i < numberOfPaths;i++){
+        System.out.print("path " + i + " = ");
+        for(int j = 0;j < paths[i].length;j++){
+          System.out.print(paths[i][j] + ", ");
+        }
+
+       System.out.println();
+      }
+
+      System.out.println("Log: paths after sorting them... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
     // Find the relationship between the symbols in each pair.
     for(int i = 0;i < numberOfPaths;i++){
       grammar_.parse(symbols_[paths[i][0]], symbols_[paths[i][1]]);
@@ -129,8 +208,6 @@ public abstract class GrammarParser extends Parser{
   }
 
   public String toString(){
-    int[] sortedIndices = this.sort();
-
     String expression = "";
 
     int i = 0;
@@ -138,14 +215,14 @@ public abstract class GrammarParser extends Parser{
     while(i < symbols_.length){
       offset = 0;
 
-      expression+= symbols_[sortedIndices[i]].toString();
+      expression+= symbols_[i].toString();
 
-      if(symbols_[sortedIndices[i]].arguments_[0] != null){
-        expression += "^{" + symbols_[sortedIndices[i]].arguments_[0].toString() + "}";
+      if(symbols_[i].arguments_[0] != null){
+        expression += "^{" + symbols_[i].arguments_[0].toString() + "}";
         offset++;
       }
-      if(symbols_[sortedIndices[i]].arguments_[1] != null){
-        expression += "_{" + symbols_[sortedIndices[i]].arguments_[1].toString() + "}";
+      if(symbols_[i].arguments_[1] != null){
+        expression += "_{" + symbols_[i].arguments_[1].toString() + "}";
         offset++;
       }
 
@@ -179,27 +256,6 @@ public abstract class GrammarParser extends Parser{
     Point centroid2 = symbol2.getCentroid();
 
     return (Point.distance(centroid1, centroid2));
-  }
-
-  public int[] sort(){
-    int length = symbols_.length;
-
-    int[] indices = new int[length];
-    for(int i = 0;i < length;i++){
-      indices[i] = i;
-    }
-
-    for(int i = 0;i < length;i++){
-      for(int j = 1;j < length - i;j++){
-        if(symbols_[indices[j - 1]].traceGroup_.getTopLeftCorner().x_ > symbols_[indices[j]].traceGroup_.getTopLeftCorner().x_){
-          int temp = indices[j - 1];
-          indices[j - 1] = indices[j];
-          indices[j] = temp;
-        }
-      }
-    }
-
-    return indices;
   }
 
   Symbol[] symbols_;
