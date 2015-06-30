@@ -19,7 +19,7 @@ public abstract class GrammarParser extends Parser{
     symbols_ = new Symbol[numberOfTraceGroups];
     int numberOfSymbols = numberOfTraceGroups;
     for(int i = 0;i < numberOfSymbols;i++){
-      symbols_[i] = SymbolFactory.create(traceGroups[i], labels[i]);
+      symbols_[i] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
     }
 
     /* ===== Logs ===== */
