@@ -12,8 +12,8 @@ public class UnrecognizedSymbol extends Symbol{
     switch(type){
       case HORIZONTAL_LINE:
         possibleSymbols_ = new Symbol[2];
-        possibleSymbols_[0] = SymbolFactory.createByType(traceGroup, Operator.Types.MINUS);
-        possibleSymbols_[1] = SymbolFactory.createByType(traceGroup, Operator.Types.FRACTION_LINE);
+        possibleSymbols_[0] = SymbolFactory.createByType(Operator.Types.MINUS, traceGroup);
+        possibleSymbols_[1] = SymbolFactory.createByType(Operator.Types.FRACTION_LINE, traceGroup);
     }
   }
 
