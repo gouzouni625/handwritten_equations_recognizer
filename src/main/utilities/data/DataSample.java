@@ -1,16 +1,16 @@
 package main.utilities.data;
 
-import main.utilities.Utilities;
+import main.utilities.grammars.SymbolFactory;
 
 public class DataSample{
 
   public DataSample(){
-    label_ = Utilities.UNKNOWN_LABEL;
+    label_ = SymbolFactory.UNKNOWN_LABEL;
   }
 
   public DataSample(byte[] data){
     data_ = data.clone();
-    label_ = Utilities.UNKNOWN_LABEL;
+    label_ = SymbolFactory.UNKNOWN_LABEL;
   }
 
   public DataSample(byte[] data, byte label){
@@ -20,7 +20,7 @@ public class DataSample{
 
   public DataSample(int size){
     data_ = new byte[size];
-    label_ = Utilities.UNKNOWN_LABEL;
+    label_ = SymbolFactory.UNKNOWN_LABEL;
   }
 
   public DataSample(DataSample dataSample){

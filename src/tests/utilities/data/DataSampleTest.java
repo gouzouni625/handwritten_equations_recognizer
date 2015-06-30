@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import main.utilities.Utilities;
 import main.utilities.data.DataSample;
+import main.utilities.grammars.SymbolFactory;
 
 public class DataSampleTest{
 
@@ -13,7 +14,7 @@ public class DataSampleTest{
   public void testDataSample(){
     DataSample dataSample = new DataSample();
 
-    assertEquals(Utilities.UNKNOWN_LABEL, dataSample.label_, 0);
+    assertEquals(SymbolFactory.UNKNOWN_LABEL, dataSample.label_, 0);
   }
 
   @Test
@@ -25,7 +26,7 @@ public class DataSampleTest{
     for(int i = 0;i < array.length;i++){
       assertEquals(array[i], dataSample.data_[i], 0);
     }
-    assertEquals(Utilities.UNKNOWN_LABEL, dataSample.label_, 0);
+    assertEquals(SymbolFactory.UNKNOWN_LABEL, dataSample.label_, 0);
   }
 
   @Test
@@ -48,7 +49,7 @@ public class DataSampleTest{
     DataSample dataSample = new DataSample(size);
 
     assertEquals(size, dataSample.data_.length, 0);
-    assertEquals(Utilities.UNKNOWN_LABEL, dataSample.label_, 0);
+    assertEquals(SymbolFactory.UNKNOWN_LABEL, dataSample.label_, 0);
   }
 
   @Test
