@@ -4,41 +4,95 @@ import main.utilities.traces.TraceGroup;
 
 public class SymbolFactory{
 
-  public static Symbol create(TraceGroup traceGroup, int label){
+  public static Symbol createByLabel(TraceGroup traceGroup, int label){
 
     switch(label){
       case SymbolFactory.LABEL_ZERO:
-        return (new Number(Number.Types.ZERO, traceGroup));
+        return SymbolFactory.createByType(Number.Types.ZERO, traceGroup);
       case SymbolFactory.LABEL_ONE:
-        return (new Number(Number.Types.ONE, traceGroup));
+        return SymbolFactory.createByType(Number.Types.ONE, traceGroup);
       case SymbolFactory.LABEL_TWO:
-        return (new Number(Number.Types.TWO, traceGroup));
+        return SymbolFactory.createByType(Number.Types.TWO, traceGroup);
       case SymbolFactory.LABEL_THREE:
-        return (new Number(Number.Types.THREE, traceGroup));
+        return SymbolFactory.createByType(Number.Types.THREE, traceGroup);
       case SymbolFactory.LABEL_FOUR:
-        return (new Number(Number.Types.FOUR, traceGroup));
+        return SymbolFactory.createByType(Number.Types.FOUR, traceGroup);
       case SymbolFactory.LABEL_FIVE:
-        return (new Number(Number.Types.FIVE, traceGroup));
+        return SymbolFactory.createByType(Number.Types.FIVE, traceGroup);
       case SymbolFactory.LABEL_SIX:
-        return (new Number(Number.Types.SIX, traceGroup));
+        return SymbolFactory.createByType(Number.Types.SIX, traceGroup);
       case SymbolFactory.LABEL_SEVEN:
-        return (new Number(Number.Types.SEVEN, traceGroup));
+        return SymbolFactory.createByType(Number.Types.SEVEN, traceGroup);
       case SymbolFactory.LABEL_EIGHT:
-        return (new Number(Number.Types.EIGHT, traceGroup));
+        return SymbolFactory.createByType(Number.Types.EIGHT, traceGroup);
       case SymbolFactory.LABEL_NINE:
-        return (new Number(Number.Types.NINE, traceGroup));
-      case SymbolFactory.LABEL_PLUS:
-        return (new Operator(Operator.Types.PLUS, traceGroup));
-      case SymbolFactory.LABEL_EQUALS:
-        return (new Operator(Operator.Types.EQUALS, traceGroup));
+        return SymbolFactory.createByType(Number.Types.NINE, traceGroup);
       case SymbolFactory.LABEL_VARIABLE_X:
-        return (new Variable(Variable.Types.X, traceGroup));
+        return SymbolFactory.createByType(Variable.Types.X, traceGroup);
       case SymbolFactory.LABEL_VARIABLE_Y:
-        return (new Variable(Variable.Types.Y, traceGroup));
+        return SymbolFactory.createByType(Variable.Types.Y, traceGroup);
+      case SymbolFactory.LABEL_PLUS:
+        return SymbolFactory.createByType(Operator.Types.PLUS, traceGroup);
+      case SymbolFactory.LABEL_EQUALS:
+        return SymbolFactory.createByType(Operator.Types.EQUALS, traceGroup);
       case SymbolFactory.LABEL_HORIZONTAL_LINE:
-        return (new Operator(Operator.Types.MINUS, traceGroup));
+        return (new UnrecognizedSymbol(UnrecognizedSymbol.Types.HORIZONTAL_LINE, traceGroup));
       default:
         return null;
+    }
+  }
+
+  public static <E extends Enum<E>> Symbol createByType(E type, TraceGroup traceGroup){
+    if(type == Number.Types.ZERO){
+      return (new Number(Number.Types.ZERO, traceGroup));
+    }
+    else if(type == Number.Types.ONE){
+      return (new Number(Number.Types.ONE, traceGroup));
+    }
+    else if(type == Number.Types.TWO){
+      return (new Number(Number.Types.TWO, traceGroup));
+    }
+    else if(type == Number.Types.THREE){
+      return (new Number(Number.Types.THREE, traceGroup));
+    }
+    else if(type == Number.Types.FOUR){
+      return (new Number(Number.Types.FOUR, traceGroup));
+    }
+    else if(type == Number.Types.FIVE){
+      return (new Number(Number.Types.FIVE, traceGroup));
+    }
+    else if(type == Number.Types.SIX){
+      return (new Number(Number.Types.SIX, traceGroup));
+    }
+    else if(type == Number.Types.SEVEN){
+      return (new Number(Number.Types.SEVEN, traceGroup));
+    }
+    else if(type == Number.Types.EIGHT){
+      return (new Number(Number.Types.EIGHT, traceGroup));
+    }
+    else if(type == Number.Types.NINE){
+      return (new Number(Number.Types.NINE, traceGroup));
+    }
+    else if(type == Variable.Types.X){
+      return (new Variable(Variable.Types.X, traceGroup));
+    }
+    else if(type == Variable.Types.Y){
+      return (new Variable(Variable.Types.Y, traceGroup));
+    }
+    else if(type == Operator.Types.PLUS){
+      return (new Operator(Operator.Types.PLUS, traceGroup));
+    }
+    else if(type == Operator.Types.EQUALS){
+      return (new Operator(Operator.Types.EQUALS, traceGroup));
+    }
+    else if(type == Operator.Types.MINUS){
+      return (new Operator(Operator.Types.MINUS, traceGroup));
+    }
+    else if(type == Operator.Types.FRACTION_LINE){
+      return (new Operator(Operator.Types.FRACTION_LINE, traceGroup));
+    }
+    else{
+      return null;
     }
   }
 

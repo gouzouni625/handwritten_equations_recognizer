@@ -5,33 +5,30 @@ import main.utilities.traces.TraceGroup;
 
 public class Operator extends Symbol{
 
-  public Operator(Operator.Types type, TraceGroup traceGroup, boolean levelChanging){
+  public Operator(Operator.Types type, TraceGroup traceGroup){
     super();
 
     type_ = type;
 
     arguments_ = new Symbol[] {null, null};
-    positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.LEFT, Symbol.ArgumentPosition.RIGHT};
+
+    switch(type){
+      case EQUALS:
+      case PLUS:
+      case MINUS:
+        positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.LEFT, Symbol.ArgumentPosition.RIGHT};
+      case FRACTION_LINE:
+        positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.ABOVE, Symbol.ArgumentPosition.BELOW};
+    }
 
     traceGroup_ = traceGroup;
-
-    levelChanging_ = levelChanging;
   }
-
-  public boolean isOperator(){
-    return true;
-  }
-
-  public boolean isLevelChanging(){
-    return levelChanging_;
-  }
-
-  private boolean levelChanging_;
 
   public enum Types{
-    EQUALS("="),
     PLUS("+"),
-    MINUS("-");
+    EQUALS("="),
+    MINUS("-"),
+    FRACTION_LINE("\\frac{?}{?}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;
