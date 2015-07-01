@@ -15,6 +15,8 @@ public class UnrecognizedSymbol extends Symbol{
         possibleSymbols_[0] = SymbolFactory.createByType(Operator.Types.MINUS, traceGroup);
         possibleSymbols_[1] = SymbolFactory.createByType(Operator.Types.FRACTION_LINE, traceGroup);
     }
+
+    traceGroup_ = traceGroup;
   }
 
   public Symbol recognize(){
