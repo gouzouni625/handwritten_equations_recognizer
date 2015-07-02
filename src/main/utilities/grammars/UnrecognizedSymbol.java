@@ -29,7 +29,7 @@ public class UnrecognizedSymbol extends Symbol{
   }
 
   @Override
-  public int setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
+  public boolean setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
     for(int i = 0;i < possibleSymbols_.length;i++){
       for(int j = 0;j < possibleSymbols_[i].positionOfArguments_.length;j++){
         if(possibleSymbols_[i].positionOfArguments_[j] == argumentPosition){
@@ -39,11 +39,21 @@ public class UnrecognizedSymbol extends Symbol{
       }
     }
 
+    // Check if a new level is required.
     if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.RIGHT){
-      return level_;
+      return false;
     }
     else{
-      return Symbol.newLevel();
+      return true;
+    }
+  }
+
+  @Override
+  public void setLevel(int level){
+    level_ = level;
+
+    for(int i = 0;i < possibleSymbols_.length;i++){
+      possibleSymbols_[i].setLevel(level);
     }
   }
 

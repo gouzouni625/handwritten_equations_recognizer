@@ -19,7 +19,15 @@ public abstract class Symbol{
     return CURRENT_LEVEL;
   }
 
-  public int level_;
+  public int getLevel(){
+    return level_;
+  }
+
+  public void setLevel(int level){
+    level_ = level;
+  }
+
+  protected int level_;
   private static int CURRENT_LEVEL = -1;
 
   public Symbol[] arguments_;
@@ -38,7 +46,7 @@ public abstract class Symbol{
   }
 
   // returns the level for the other symbol. Only left and right doesn't change level.
-  public int setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
+  public boolean setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
     for(int i = 0;i < positionOfArguments_.length;i++){
       if(positionOfArguments_[i] == argumentPosition){
         arguments_[i] = symbol;
@@ -46,11 +54,12 @@ public abstract class Symbol{
       }
     }
 
+    // Check if a new level is required.
     if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.RIGHT){
-      return level_;
+      return false;
     }
     else{
-      return Symbol.newLevel();
+      return true;
     }
   }
 
