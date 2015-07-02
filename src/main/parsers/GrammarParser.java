@@ -77,7 +77,7 @@ public abstract class GrammarParser extends Parser{
     /* ===== Logs ===== */
 
     // Calculate the distances between all the symbols.
-    double[] distances = this.calculateDistancesBetweenSymbols(traceGroups);
+    double[] distances = this.calculateDistancesBetweenSymbols(symbols_);
 
     /* ===== Logs ===== */
     if(!silent_){
@@ -241,7 +241,7 @@ public abstract class GrammarParser extends Parser{
     return expression;
   }
 
-  private double[] calculateDistancesBetweenSymbols(TraceGroup[] symbols){
+  private double[] calculateDistancesBetweenSymbols(Symbol[] symbols){
     int numberOfSymbols = symbols.length;
 
     double[] distances = new double[numberOfSymbols * (numberOfSymbols - 1) / 2];
@@ -256,13 +256,13 @@ public abstract class GrammarParser extends Parser{
     return distances;
   }
 
-  private double distanceOfSymbols(TraceGroup symbol1, TraceGroup symbol2){
-    if(symbol1.size() == 0 && symbol2.size() == 0){
+  private double distanceOfSymbols(Symbol symbol1, Symbol symbol2){
+    if(symbol1.traceGroup_.size() == 0 && symbol2.traceGroup_.size() == 0){
       return -1;
     }
 
-    Point centroid1 = symbol1.getCentroid();
-    Point centroid2 = symbol2.getCentroid();
+    Point centroid1 = symbol1.traceGroup_.getCentroid();
+    Point centroid2 = symbol2.traceGroup_.getCentroid();
 
     return (Point.distance(centroid1, centroid2));
   }
