@@ -6,6 +6,16 @@ public class GeometricalGrammar extends Grammar{
     // Find the relative position of the two symbols.
     Symbol.ArgumentPosition relativePosition = this.relativePosition(symbol1, symbol2);
 
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: relative position... ===== Start =====");
+
+      System.out.println("Relative position between: " + symbol1 + ", " + symbol2 + " : " + relativePosition);
+
+      System.out.println("Log: relative position... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
     symbol1.setArgument(relativePosition, symbol2);
     symbol2.setArgument(this.opositePosition(relativePosition), symbol1);
   }
