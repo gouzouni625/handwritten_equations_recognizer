@@ -1,6 +1,5 @@
 package main.utilities.grammars;
 
-
 public class GeometricalGrammar extends Grammar{
 
   public void parse(Symbol symbol1, Symbol symbol2){
@@ -24,13 +23,18 @@ public class GeometricalGrammar extends Grammar{
     Symbol big;
     Symbol small;
 
-    if(symbol1Area >= symbol2Area){
+    if(symbol1Area >= symbol2Area * 0.60){
       big = symbol1;
       small = symbol2;
     }
-    else{
+    else if(symbol2Area >= symbol1Area * 0.60){
       big = symbol2;
       small = symbol1;
+    }
+    else{
+      // There is no distinction between the big and the small symbol.
+      big = symbol1;
+      small = symbol2;
     }
 
     /* ===== Logs ===== */
@@ -44,20 +48,10 @@ public class GeometricalGrammar extends Grammar{
     }
     /* ===== Logs ===== */
 
-    if((big.getClass() == Number.class || big.getClass() == Variable.class) &&
-       (small.getClass() == Number.class || small.getClass() == Variable.class)){
-      Symbol.ArgumentPosition relativePosition = this.relativePosition(big, small);
-      switch(relativePosition){
-      case ABOVE_RIGHT:
-        big.arguments_[0] = small;
-        break;
-      case BELOW_RIGHT:
-        big.arguments_[1] = small;
-        break;
-      default:
-        break;
-      }
-    }
+    // Find the relative position of the two symbols.
+    Symbol.ArgumentPosition relativePosition = this.relativePosition(big, small);
+
+    big.setArgument(relativePosition, small);
   }
 
   public Symbol.ArgumentPosition relativePosition(Symbol big, Symbol small){
