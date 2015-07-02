@@ -202,7 +202,7 @@ public abstract class GrammarParser extends Parser{
     /* ===== Logs ===== */
 
     // Initialize the first level.
-    symbols_[0].level_ = Symbol.getNewLevel();
+    symbols_[0].level_ = Symbol.newLevel();
 
     // Find the relationship between the symbols in each pair.
     for(int i = 0;i < numberOfPaths;i++){
