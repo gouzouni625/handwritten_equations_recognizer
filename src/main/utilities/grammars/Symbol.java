@@ -37,6 +37,8 @@ public abstract class Symbol{
     ABOVE_LEFT;
   }
 
+  public abstract Symbol reEvaluate();
+
   public TraceGroup traceGroup_;
 
 }

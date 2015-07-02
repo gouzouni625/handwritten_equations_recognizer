@@ -41,6 +41,10 @@ public class Operator extends Symbol{
     return this.type_.stringValue_;
   }
 
+  public Symbol reEvaluate(){
+    return this;
+  }
+
   public Types type_;
 
 }
