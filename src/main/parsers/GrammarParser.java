@@ -267,6 +267,14 @@ public abstract class GrammarParser extends Parser{
     return (Point.distance(centroid1, centroid2));
   }
 
+  public boolean isGrammarSilent(){
+    return grammar_.isSilent();
+  }
+
+  public void setGrammarSilent(boolean silent){
+    grammar_.setSilent(silent);
+  }
+
   Symbol[] symbols_;
 
   protected Grammar grammar_;
