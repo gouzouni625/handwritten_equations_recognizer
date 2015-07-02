@@ -19,10 +19,6 @@ public class UnrecognizedSymbol extends Symbol{
     traceGroup_ = traceGroup;
   }
 
-  public Symbol recognize(){
-    return null;
-  }
-
   public enum Types{
     HORIZONTAL_LINE;
   }
@@ -51,15 +47,35 @@ public class UnrecognizedSymbol extends Symbol{
     }
   }
 
+  public Symbol reEvaluate(){
+    // Find the symbol of the possible symbols that has the most arguments filled.
+    int[] foundArguments = new int[possibleSymbols_.length];
+    for(int i = 0;i < foundArguments.length;i++){
+      foundArguments[i] = 0;
+    }
+
+    for(int i = 0;i < possibleSymbols_.length;i++){
+      for(int j = 0;j < possibleSymbols_[i].arguments_.length;j++){
+        if(possibleSymbols_[i].arguments_[j] != null){
+          foundArguments[i]++;
+        }
+      }
+    }
+
+    int max = foundArguments[0];
+    int maxIndex = 0;
+    for(int i = 1;i < foundArguments.length;i++){
+      if(foundArguments[i] > max){
+        max = foundArguments[i];
+        maxIndex = i;
+      }
+    }
+
+    return (possibleSymbols_[maxIndex]);
+  }
+
   public Types type_;
 
   Symbol[] possibleSymbols_;
-
-  @Override
-  public Symbol reEvaluate(){
-    // TODO
-    // Find the symbol of the possible symbols that has the most arguments filled.
-    return null;
-  }
 
 }
