@@ -46,11 +46,11 @@ public abstract class Symbol{
       }
     }
 
-    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.LEFT){
-      return Symbol.newLevel();
+    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.RIGHT){
+      return level_;
     }
     else{
-      return level_;
+      return Symbol.newLevel();
     }
   }
 

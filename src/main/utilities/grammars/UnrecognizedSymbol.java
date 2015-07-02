@@ -43,11 +43,11 @@ public class UnrecognizedSymbol extends Symbol{
       }
     }
 
-    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.LEFT){
-      return Symbol.newLevel();
+    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.RIGHT){
+      return level_;
     }
     else{
-      return level_;
+      return Symbol.newLevel();
     }
   }
 
@@ -56,8 +56,9 @@ public class UnrecognizedSymbol extends Symbol{
   Symbol[] possibleSymbols_;
 
   @Override
-  public Symbol reEvaluate() {
-    // TODO Auto-generated method stub
+  public Symbol reEvaluate(){
+    // TODO
+    // Find the symbol of the possible symbols that has the most arguments filled.
     return null;
   }
 
