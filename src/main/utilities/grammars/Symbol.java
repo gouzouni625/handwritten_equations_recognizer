@@ -10,12 +10,12 @@ public abstract class Symbol{
 
   public abstract String toString();
 
-  public static int getNewLevel(){
+  public static int newLevel(){
     CURRENT_LEVEL++;
     return CURRENT_LEVEL;
   }
 
-  public static int getCurrentLevel(){
+  public static int currentLevel(){
     return CURRENT_LEVEL;
   }
 
@@ -35,6 +35,23 @@ public abstract class Symbol{
     BELOW_LEFT,
     LEFT,
     ABOVE_LEFT;
+  }
+
+  // returns the level for the other symbol. Only left and right doesn't change level.
+  public int setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
+    for(int i = 0;i < positionOfArguments_.length;i++){
+      if(positionOfArguments_[i] == argumentPosition){
+        arguments_[i] = symbol;
+        positionOfArguments_[i] = null;
+      }
+    }
+
+    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.LEFT){
+      return Symbol.newLevel();
+    }
+    else{
+      return level_;
+    }
   }
 
   public abstract Symbol reEvaluate();
