@@ -29,11 +29,36 @@ public class UnrecognizedSymbol extends Symbol{
 
   /** Do not use this method. Instead use the one for possible Symbols. */
   public String toString(){
-    return null;
+    return "";
+  }
+
+  @Override
+  public int setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
+    for(int i = 0;i < possibleSymbols_.length;i++){
+      for(int j = 0;j < possibleSymbols_[i].positionOfArguments_.length;j++){
+        if(possibleSymbols_[i].positionOfArguments_[j] == argumentPosition){
+          possibleSymbols_[i].arguments_[j] = symbol;
+          possibleSymbols_[i].positionOfArguments_[j] = null;
+        }
+      }
+    }
+
+    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.LEFT){
+      return Symbol.newLevel();
+    }
+    else{
+      return level_;
+    }
   }
 
   public Types type_;
 
   Symbol[] possibleSymbols_;
+
+  @Override
+  public Symbol reEvaluate() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }
