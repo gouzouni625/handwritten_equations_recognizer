@@ -2,34 +2,39 @@ package main.utilities.grammars;
 
 public class GeometricalGrammar extends Grammar{
 
-  public void parse(Symbol symbol1, Symbol symbol2){
+  public void parse(Symbol primary, Symbol secondary){
     // Find the relative position of the two symbols.
-    Symbol.ArgumentPosition relativePosition = this.relativePosition(symbol1, symbol2);
+    Symbol.ArgumentPosition relativePosition = this.relativePosition(primary, secondary);
 
     /* ===== Logs ===== */
     if(!silent_){
       System.out.println("Log: relative position... ===== Start =====");
 
-      System.out.println("Relative position between: " + symbol1 + ", " + symbol2 + " : " + relativePosition);
+      System.out.println("Relative position between: " + primary + ", " + secondary + " : " + relativePosition);
 
       System.out.println("Log: relative position... ===== End =======");
     }
     /* ===== Logs ===== */
 
-    symbol1.setArgument(relativePosition, symbol2);
-    symbol2.setArgument(this.opositePosition(relativePosition), symbol1);
+    if(primary.setArgument(relativePosition, secondary)){
+      secondary.setLevel(Symbol.newLevel());
+    }
+    else{
+      secondary.setLevel(primary.getLevel());
+    }
+    secondary.setArgument(this.opositePosition(relativePosition), primary);
   }
 
-  public Symbol.ArgumentPosition relativePosition(Symbol symbol1, Symbol symbol2){
-    symbol1.traceGroup_.calculateCorners();
-    symbol2.traceGroup_.calculateCorners();
+  public Symbol.ArgumentPosition relativePosition(Symbol primary, Symbol secondary){
+    primary.traceGroup_.calculateCorners();
+    secondary.traceGroup_.calculateCorners();
 
     int yPosition;
-    if(symbol2.traceGroup_.getBottomRightCorner().y_ >= symbol1.traceGroup_.getBottomRightCorner().y_ + symbol1.traceGroup_.getHeight() / 2){
+    if(secondary.traceGroup_.getBottomRightCorner().y_ >= primary.traceGroup_.getBottomRightCorner().y_ + primary.traceGroup_.getHeight() / 2){
       yPosition = 1;
     }
-    else if(symbol2.traceGroup_.getBottomRightCorner().y_ <= symbol1.traceGroup_.getBottomRightCorner().y_ + symbol1.traceGroup_.getHeight() / 2 &&
-            symbol2.traceGroup_.getTopLeftCorner().y_ >= symbol1.traceGroup_.getBottomRightCorner().y_ + symbol1.traceGroup_.getHeight() / 2){
+    else if(secondary.traceGroup_.getBottomRightCorner().y_ <= primary.traceGroup_.getBottomRightCorner().y_ + primary.traceGroup_.getHeight() / 2 &&
+            secondary.traceGroup_.getTopLeftCorner().y_ >= primary.traceGroup_.getBottomRightCorner().y_ + primary.traceGroup_.getHeight() / 2){
       yPosition = 0;
     }
     else{
@@ -37,11 +42,11 @@ public class GeometricalGrammar extends Grammar{
     }
 
     int xPosition;
-    if(symbol2.traceGroup_.getTopLeftCorner().x_ >= symbol1.traceGroup_.getTopLeftCorner().x_ + symbol1.traceGroup_.getWidth() / 2){
+    if(secondary.traceGroup_.getTopLeftCorner().x_ >= primary.traceGroup_.getTopLeftCorner().x_ + primary.traceGroup_.getWidth() / 2){
       xPosition = 1;
     }
-    else if(symbol2.traceGroup_.getTopLeftCorner().x_ <= symbol1.traceGroup_.getTopLeftCorner().x_ + symbol1.traceGroup_.getWidth() / 2 &&
-            symbol2.traceGroup_.getBottomRightCorner().x_ >= symbol1.traceGroup_.getTopLeftCorner().x_ + symbol1.traceGroup_.getWidth() / 2){
+    else if(secondary.traceGroup_.getTopLeftCorner().x_ <= primary.traceGroup_.getTopLeftCorner().x_ + primary.traceGroup_.getWidth() / 2 &&
+            secondary.traceGroup_.getBottomRightCorner().x_ >= primary.traceGroup_.getTopLeftCorner().x_ + primary.traceGroup_.getWidth() / 2){
       xPosition = 0;
     }
     else{
