@@ -8,6 +8,7 @@ import main.utilities.Utilities;
 import main.utilities.grammars.Grammar;
 import main.utilities.grammars.Symbol;
 import main.utilities.grammars.SymbolFactory;
+import main.utilities.grammars.UnrecognizedSymbol;
 import main.utilities.math.MinimumSpanningTree;
 import main.utilities.traces.Point;
 import main.utilities.traces.TraceGroup;
@@ -206,6 +207,11 @@ public abstract class GrammarParser extends Parser{
     // Find the relationship between the symbols in each pair.
     for(int i = 0;i < numberOfPaths;i++){
       grammar_.parse(symbols_[paths[i][0]], symbols_[paths[i][1]]);
+    }
+
+    // Check if the symbols were correctly recognized.
+    for(int i = 0;i < numberOfSymbols;i++){
+      symbols_[i] = symbols_[i].reEvaluate();
     }
 
   }
