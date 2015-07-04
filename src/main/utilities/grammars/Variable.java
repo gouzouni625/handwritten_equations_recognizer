@@ -40,8 +40,6 @@ public class Variable extends Symbol{
     private String stringValue_;
   }
 
-  public Symbol reEvaluate(){
-    return this;
-  }
+  public void reEvaluate(){}
 
 }
