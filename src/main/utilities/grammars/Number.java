@@ -10,39 +10,38 @@ public class Number extends Symbol{
 
     type_ = type;
 
-    arguments_ = new Symbol[] {null, null};
-    positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.ABOVE_RIGHT, Symbol.ArgumentPosition.BELOW_RIGHT};
+    arguments_ = new Symbol[] {null};
+    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
 
     traceGroup_ = traceGroup;
   }
 
   public enum Types{
-    ZERO("0^{?}"),
-    ONE("1^{?}"),
-    TWO("2^{?}"),
-    THREE("3^{?}"),
-    FOUR("4^{?}"),
-    FIVE("5^{?}"),
-    SIX("6^{?}"),
-    SEVEN("7^{?}"),
-    EIGHT("8^{?}"),
-    NINE("9^{?}");
+    ZERO("0^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    ONE("1^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    TWO("2^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    THREE("3^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    FOUR("4^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    FIVE("5^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    SIX("6^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    SEVEN("7^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    EIGHT("8^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
+    NINE("9^{" + ArgumentPosition.ABOVE_RIGHT + "}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;
     }
 
-    public String stringValue_;
-  }
+    @Override
+    public String toString(){
+      return stringValue_;
+    }
 
-  public String toString(){
-    return this.type_.stringValue_;
+    private String stringValue_;
   }
 
   public Symbol reEvaluate(){
     return this;
   }
-
-  public Types type_;
 
 }

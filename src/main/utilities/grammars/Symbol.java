@@ -8,7 +8,18 @@ public abstract class Symbol{
     level_ = -1;
   }
 
-  public abstract String toString();
+  public String toString(){
+    String stringValue = type_.toString();
+
+    for(int argument = 0;argument < arguments_.length;argument++){
+      if(arguments_[argument] != null && stringValue.contains(positionOfArguments_[argument].toString())){
+
+        stringValue.replaceAll(positionOfArguments_[argument].toString(), arguments_[argument].toString());
+      }
+    }
+
+    return stringValue;
+  }
 
   public static int newLevel(){
     CURRENT_LEVEL++;
@@ -64,6 +75,12 @@ public abstract class Symbol{
 
   public abstract Symbol reEvaluate();
 
+  public Enum<?> getType(){
+    return type_;
+  }
+
   public TraceGroup traceGroup_;
+
+  protected Enum<?> type_;
 
 }

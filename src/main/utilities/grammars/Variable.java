@@ -11,30 +11,29 @@ public class Variable extends Symbol{
     type_ = type;
 
     arguments_ = new Symbol[] {null, null};
-    positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.ABOVE_RIGHT, Symbol.ArgumentPosition.BELOW_RIGHT};
+    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
 
     traceGroup_ = traceGroup;
   }
 
   public enum Types{
-    X("x^{?}_{?}"),
-    Y("y^{?}_{?}");
+    X("x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"),
+    Y("y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;
     }
 
-    public String stringValue_;
-  }
+    @Override
+    public String toString(){
+      return stringValue_;
+    }
 
-  public String toString(){
-    return this.type_.stringValue_;
+    private String stringValue_;
   }
 
   public Symbol reEvaluate(){
     return this;
   }
-
-  public Types type_;
 
 }

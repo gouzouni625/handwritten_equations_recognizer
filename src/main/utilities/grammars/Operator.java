@@ -16,10 +16,10 @@ public class Operator extends Symbol{
       case EQUALS:
       case PLUS:
       case MINUS:
-        positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.LEFT, Symbol.ArgumentPosition.RIGHT};
+        positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.RIGHT};
         break;
       case FRACTION_LINE:
-        positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.ABOVE, Symbol.ArgumentPosition.BELOW};
+        positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
         break;
     }
 
@@ -27,26 +27,25 @@ public class Operator extends Symbol{
   }
 
   public enum Types{
-    PLUS("?+?"),
-    EQUALS("?=?"),
-    MINUS("?-?"),
-    FRACTION_LINE("\\frac{?}{?}");
+    PLUS(ArgumentPosition.LEFT + "+" + ArgumentPosition.RIGHT),
+    EQUALS(ArgumentPosition.LEFT + "=" + ArgumentPosition.RIGHT),
+    MINUS(ArgumentPosition.LEFT + "-" + ArgumentPosition.RIGHT),
+    FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;
     }
 
-    public String stringValue_;
-  }
+    @Override
+    public String toString(){
+      return stringValue_;
+    }
 
-  public String toString(){
-    return this.type_.stringValue_;
+    private String stringValue_;
   }
 
   public Symbol reEvaluate(){
     return this;
   }
-
-  public Types type_;
 
 }
