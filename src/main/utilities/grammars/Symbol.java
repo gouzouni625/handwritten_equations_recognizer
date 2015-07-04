@@ -32,7 +32,7 @@ public abstract class Symbol{
         argumentValue += arguments_.get(i).get(j).toString();
       }
 
-      stringValue.replaceAll(positionOfArguments_[i].toString(), argumentValue);
+      stringValue = stringValue.replaceAll(positionOfArguments_[i].toString(), argumentValue);
     }
 
     return stringValue;
