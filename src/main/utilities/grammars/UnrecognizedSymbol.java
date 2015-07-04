@@ -9,6 +9,8 @@ public class UnrecognizedSymbol extends Symbol{
 
     type_ = type;
 
+    chosenSymbol_ = null;
+
     switch(type){
       case HORIZONTAL_LINE:
         possibleSymbols_ = new Symbol[2];
@@ -35,35 +37,18 @@ public class UnrecognizedSymbol extends Symbol{
   }
 
   @Override
-  public boolean setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
+  public void setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
     for(int i = 0;i < possibleSymbols_.length;i++){
       for(int j = 0;j < possibleSymbols_[i].positionOfArguments_.length;j++){
         if(possibleSymbols_[i].positionOfArguments_[j] == argumentPosition){
 
-          possibleSymbols_[i].arguments_[j] = symbol;
+          possibleSymbols_[i].arguments_.get(j).add(symbol);
         }
       }
     }
-
-    // Check if a new level is required.
-    if(argumentPosition == Symbol.ArgumentPosition.LEFT || argumentPosition == Symbol.ArgumentPosition.RIGHT){
-      return false;
-    }
-    else{
-      return true;
-    }
   }
 
-  @Override
-  public void setLevel(int level){
-    level_ = level;
-
-    for(int i = 0;i < possibleSymbols_.length;i++){
-      possibleSymbols_[i].setLevel(level);
-    }
-  }
-
-  public Symbol reEvaluate(){
+  public void reEvaluate(){
     // Find the symbol of the possible symbols that has the most arguments filled.
     int[] foundArguments = new int[possibleSymbols_.length];
     for(int i = 0;i < foundArguments.length;i++){
@@ -71,8 +56,8 @@ public class UnrecognizedSymbol extends Symbol{
     }
 
     for(int i = 0;i < possibleSymbols_.length;i++){
-      for(int j = 0;j < possibleSymbols_[i].arguments_.length;j++){
-        if(possibleSymbols_[i].arguments_[j] != null){
+      for(int j = 0;j < possibleSymbols_[i].arguments_.size();j++){
+        if(possibleSymbols_[i].arguments_.get(j).size() != 0){
           foundArguments[i]++;
         }
       }
@@ -88,13 +73,11 @@ public class UnrecognizedSymbol extends Symbol{
     }
 
     chosenSymbol_ = possibleSymbols_[maxIndex];
-
-    return (chosenSymbol_);
   }
 
   public Types type_;
 
   Symbol[] possibleSymbols_;
-  Symbol chosenSymbol_ = null;
+  Symbol chosenSymbol_;
 
 }
