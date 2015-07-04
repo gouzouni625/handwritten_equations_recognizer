@@ -17,8 +17,8 @@ public class Variable extends Symbol{
   }
 
   public enum Types{
-    X("x"),
-    Y("y");
+    X("x^{?}_{?}"),
+    Y("y^{?}_{?}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;

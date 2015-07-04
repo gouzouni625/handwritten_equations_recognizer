@@ -14,6 +14,7 @@ public class UnrecognizedSymbol extends Symbol{
         possibleSymbols_ = new Symbol[2];
         possibleSymbols_[0] = SymbolFactory.createByType(Operator.Types.MINUS, traceGroup);
         possibleSymbols_[1] = SymbolFactory.createByType(Operator.Types.FRACTION_LINE, traceGroup);
+        break;
     }
 
     traceGroup_ = traceGroup;
@@ -25,7 +26,7 @@ public class UnrecognizedSymbol extends Symbol{
 
   /** Do not use this method. Instead use the one for possible Symbols. */
   public String toString(){
-    return "";
+    return (chosenSymbol_.toString());
   }
 
   @Override
@@ -33,6 +34,7 @@ public class UnrecognizedSymbol extends Symbol{
     for(int i = 0;i < possibleSymbols_.length;i++){
       for(int j = 0;j < possibleSymbols_[i].positionOfArguments_.length;j++){
         if(possibleSymbols_[i].positionOfArguments_[j] == argumentPosition){
+
           possibleSymbols_[i].arguments_[j] = symbol;
           possibleSymbols_[i].positionOfArguments_[j] = null;
         }
@@ -81,11 +83,14 @@ public class UnrecognizedSymbol extends Symbol{
       }
     }
 
-    return (possibleSymbols_[maxIndex]);
+    chosenSymbol_ = possibleSymbols_[maxIndex];
+
+    return (chosenSymbol_);
   }
 
   public Types type_;
 
   Symbol[] possibleSymbols_;
+  Symbol chosenSymbol_ = null;
 
 }

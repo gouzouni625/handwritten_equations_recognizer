@@ -27,9 +27,9 @@ public class Operator extends Symbol{
   }
 
   public enum Types{
-    PLUS("+"),
-    EQUALS("="),
-    MINUS("-"),
+    PLUS("?+?"),
+    EQUALS("?=?"),
+    MINUS("?-?"),
     FRACTION_LINE("\\frac{?}{?}");
 
     private Types(String stringValue){
