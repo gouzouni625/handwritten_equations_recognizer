@@ -213,14 +213,15 @@ public abstract class GrammarParser extends Parser{
 
   }
 
+  // TODO
+  // Implement it.
   public String toString(){
-    String expression = "";
-
-    for(int i = 0;i < symbols_.length;i++){
-      expression += symbols_[i].toString();
+    if(symbols_.length > 0){
+      return symbols_[0].toString();
     }
-
-    return expression;
+    else{
+      return "";
+    }
   }
 
   private double[] calculateDistancesBetweenSymbols(Symbol[] symbols){
