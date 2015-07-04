@@ -8,9 +8,9 @@ import main.utilities.Utilities;
 import main.utilities.grammars.Grammar;
 import main.utilities.grammars.Symbol;
 import main.utilities.grammars.SymbolFactory;
-import main.utilities.grammars.UnrecognizedSymbol;
 import main.utilities.math.MinimumSpanningTree;
 import main.utilities.traces.Point;
+import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
 
 public abstract class GrammarParser extends Parser{
@@ -201,9 +201,6 @@ public abstract class GrammarParser extends Parser{
     }
     /* ===== Logs ===== */
 
-    // Initialize the first level.
-    symbols_[0].setLevel(Symbol.newLevel());
-
     // Find the relationship between the symbols in each pair.
     for(int i = 0;i < numberOfPaths;i++){
       grammar_.parse(symbols_[paths[i][0]], symbols_[paths[i][1]]);
@@ -211,7 +208,7 @@ public abstract class GrammarParser extends Parser{
 
     // Check if the symbols were correctly recognized.
     for(int i = 0;i < numberOfSymbols;i++){
-      symbols_[i] = symbols_[i].reEvaluate();
+      symbols_[i].reEvaluate();
     }
 
   }
@@ -219,23 +216,8 @@ public abstract class GrammarParser extends Parser{
   public String toString(){
     String expression = "";
 
-    int i = 0;
-    int offset;
-    while(i < symbols_.length){
-      offset = 0;
-
-      expression+= symbols_[i].toString();
-
-      if(symbols_[i].arguments_[0] != null){
-        expression += "^{" + symbols_[i].arguments_[0].toString() + "}";
-        offset++;
-      }
-      if(symbols_[i].arguments_[1] != null){
-        expression += "_{" + symbols_[i].arguments_[1].toString() + "}";
-        offset++;
-      }
-
-      i += offset + 1;
+    for(int i = 0;i < symbols_.length;i++){
+      expression += symbols_[i].toString();
     }
 
     return expression;
@@ -257,14 +239,29 @@ public abstract class GrammarParser extends Parser{
   }
 
   private double distanceOfSymbols(Symbol symbol1, Symbol symbol2){
-    if(symbol1.traceGroup_.size() == 0 && symbol2.traceGroup_.size() == 0){
+    TraceGroup traceGroup1 = symbol1.traceGroup_;
+    TraceGroup traceGroup2 = symbol2.traceGroup_;
+
+    if(traceGroup1.size() == 0 || traceGroup2.size() == 0){
       return -1;
     }
 
-    Point centroid1 = symbol1.traceGroup_.getCentroid();
-    Point centroid2 = symbol2.traceGroup_.getCentroid();
+    int size1 = traceGroup1.size();
+    int size2 = traceGroup2.size();
 
-    return (Point.distance(centroid1, centroid2));
+    double min = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
+
+    for(int i = 0;i < size1;i++){
+      for(int j = 0;j < size2;j++){
+        double distance = Trace.minimumDistance(traceGroup1.get(i), traceGroup2.get(j));
+
+        if(distance < min){
+          min = distance;
+        }
+      }
+    }
+
+    return min;
   }
 
   public boolean isGrammarSilent(){
