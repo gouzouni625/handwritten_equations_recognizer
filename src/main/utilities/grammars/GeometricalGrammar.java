@@ -16,13 +16,7 @@ public class GeometricalGrammar extends Grammar{
     }
     /* ===== Logs ===== */
 
-    if(primary.setArgument(relativePosition, secondary)){
-      secondary.setLevel(Symbol.newLevel());
-    }
-    else{
-      secondary.setLevel(primary.getLevel());
-    }
-    secondary.setArgument(this.opositePosition(relativePosition), primary);
+    primary.setArgument(relativePosition, secondary);
   }
 
   public Symbol.ArgumentPosition relativePosition(Symbol primary, Symbol secondary){
