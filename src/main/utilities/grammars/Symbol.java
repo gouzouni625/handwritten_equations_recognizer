@@ -25,11 +25,14 @@ public abstract class Symbol{
   public String toString(){
     String stringValue = type_.toString();
 
-    for(int argument = 0;argument < arguments_.length;argument++){
-      if(arguments_[argument] != null && stringValue.contains(positionOfArguments_[argument].toString())){
+    for(int i = 0;i < positionOfArguments_.length;i++){
+      String argumentValue = "";
 
-        stringValue.replaceAll(positionOfArguments_[argument].toString(), arguments_[argument].toString());
+      for(int j = 0;j < arguments_.get(i).size();j++){
+        argumentValue += arguments_.get(i).get(j).toString();
       }
+
+      stringValue.replaceAll(positionOfArguments_[i].toString(), argumentValue);
     }
 
     return stringValue;
