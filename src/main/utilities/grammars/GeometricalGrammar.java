@@ -96,26 +96,4 @@ public class GeometricalGrammar extends Grammar{
     }
   }
 
-  public Symbol.ArgumentPosition opositePosition(Symbol.ArgumentPosition position){
-    switch(position){
-      case ABOVE:
-        return Symbol.ArgumentPosition.BELOW;
-      case ABOVE_RIGHT:
-        return Symbol.ArgumentPosition.BELOW_LEFT;
-      case RIGHT:
-        return Symbol.ArgumentPosition.LEFT;
-      case BELOW_RIGHT:
-        return Symbol.ArgumentPosition.ABOVE_LEFT;
-      case BELOW:
-        return Symbol.ArgumentPosition.ABOVE;
-      case BELOW_LEFT:
-        return Symbol.ArgumentPosition.ABOVE_RIGHT;
-      case LEFT:
-        return Symbol.ArgumentPosition.RIGHT;
-      case ABOVE_LEFT:
-        return Symbol.ArgumentPosition.BELOW_RIGHT;
-      default:
-        return null;
-    }
-  }
 }
