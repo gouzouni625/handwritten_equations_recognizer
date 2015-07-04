@@ -26,7 +26,6 @@ public class UnrecognizedSymbol extends Symbol{
     HORIZONTAL_LINE;
   }
 
-  /** Do not use this method. Instead use the one for possible Symbols. */
   public String toString(){
     if(chosenSymbol_ != null){
       return (chosenSymbol_.toString());
