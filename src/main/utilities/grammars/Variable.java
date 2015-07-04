@@ -1,7 +1,10 @@
 package main.utilities.grammars;
 
-import main.utilities.traces.TraceGroup;
+import java.util.List;
+import java.util.ArrayList;
 
+import main.utilities.grammars.Symbol.ArgumentPosition;
+import main.utilities.traces.TraceGroup;
 
 public class Variable extends Symbol{
 
@@ -10,15 +13,20 @@ public class Variable extends Symbol{
 
     type_ = type;
 
-    arguments_ = new Symbol[] {null, null};
-    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
+    arguments_ = new ArrayList<List<Symbol>>();
+    arguments_.add(new ArrayList<Symbol>());
+    arguments_.add(new ArrayList<Symbol>());
+    arguments_.add(new ArrayList<Symbol>());
+    arguments_.add(new ArrayList<Symbol>());
+
+    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT, ArgumentPosition.RIGHT};
 
     traceGroup_ = traceGroup;
   }
 
   public enum Types{
-    X("x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"),
-    Y("y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}");
+    X(ArgumentPosition.LEFT + "x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}" + ArgumentPosition.RIGHT),
+    Y(ArgumentPosition.LEFT + "y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}" + ArgumentPosition.RIGHT);
 
     private Types(String stringValue){
       stringValue_ = stringValue;

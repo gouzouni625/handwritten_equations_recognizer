@@ -1,5 +1,8 @@
 package main.utilities.grammars;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import main.utilities.grammars.Symbol;
 import main.utilities.traces.TraceGroup;
 
@@ -10,23 +13,27 @@ public class Number extends Symbol{
 
     type_ = type;
 
-    arguments_ = new Symbol[] {null};
-    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
+    arguments_ = new ArrayList<List<Symbol>>();
+    arguments_.add(new ArrayList<Symbol>());
+    arguments_.add(new ArrayList<Symbol>());
+    arguments_.add(new ArrayList<Symbol>());
+
+    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.RIGHT};
 
     traceGroup_ = traceGroup;
   }
 
   public enum Types{
-    ZERO("0^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    ONE("1^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    TWO("2^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    THREE("3^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    FOUR("4^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    FIVE("5^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    SIX("6^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    SEVEN("7^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    EIGHT("8^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
-    NINE("9^{" + ArgumentPosition.ABOVE_RIGHT + "}");
+    ZERO(ArgumentPosition.LEFT + "0^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    ONE(ArgumentPosition.LEFT + "1^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    TWO(ArgumentPosition.LEFT + "2^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    THREE(ArgumentPosition.LEFT + "3^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    FOUR(ArgumentPosition.LEFT + "4^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    FIVE(ArgumentPosition.LEFT + "5^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    SIX(ArgumentPosition.LEFT + "6^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    SEVEN(ArgumentPosition.LEFT + "7^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    EIGHT(ArgumentPosition.LEFT + "8^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT),
+    NINE(ArgumentPosition.LEFT + "9^{" + ArgumentPosition.ABOVE_RIGHT + "}" + ArgumentPosition.RIGHT);
 
     private Types(String stringValue){
       stringValue_ = stringValue;
