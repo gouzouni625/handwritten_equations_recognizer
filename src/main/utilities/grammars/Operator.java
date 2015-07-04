@@ -17,8 +17,10 @@ public class Operator extends Symbol{
       case PLUS:
       case MINUS:
         positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.LEFT, Symbol.ArgumentPosition.RIGHT};
+        break;
       case FRACTION_LINE:
         positionOfArguments_ = new Symbol.ArgumentPosition[] {Symbol.ArgumentPosition.ABOVE, Symbol.ArgumentPosition.BELOW};
+        break;
     }
 
     traceGroup_ = traceGroup;
