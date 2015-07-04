@@ -26,7 +26,12 @@ public class UnrecognizedSymbol extends Symbol{
 
   /** Do not use this method. Instead use the one for possible Symbols. */
   public String toString(){
-    return (chosenSymbol_.toString());
+    if(chosenSymbol_ != null){
+      return (chosenSymbol_.toString());
+    }
+    else{
+      return "";
+    }
   }
 
   @Override
