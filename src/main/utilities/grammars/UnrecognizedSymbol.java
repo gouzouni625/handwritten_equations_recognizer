@@ -41,7 +41,6 @@ public class UnrecognizedSymbol extends Symbol{
         if(possibleSymbols_[i].positionOfArguments_[j] == argumentPosition){
 
           possibleSymbols_[i].arguments_[j] = symbol;
-          possibleSymbols_[i].positionOfArguments_[j] = null;
         }
       }
     }

@@ -50,7 +50,6 @@ public abstract class Symbol{
     for(int i = 0;i < positionOfArguments_.length;i++){
       if(positionOfArguments_[i] == argumentPosition){
         arguments_[i] = symbol;
-        positionOfArguments_[i] = null;
       }
     }
 
