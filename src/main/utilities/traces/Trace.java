@@ -137,6 +137,27 @@ public class Trace{
     return false;
   }
 
+  // TODO
+  // write tests.
+  public static double minimumDistance(Trace trace1, Trace trace2){
+    double min = Point.distance(trace1.get(0), trace2.get(0));
+
+    int size1 = trace1.size();
+    int size2 = trace2.size();
+
+    for(int i = 0;i < size1;i++){
+      for(int j = 0;j < size2;j++){
+        double distance = Point.distance(trace1.get(i), trace2.get(j));
+
+        if(distance < min){
+          min = distance;
+        }
+      }
+    }
+
+    return min;
+  }
+
   private ArrayList<Point> points_;
 
   private Point topLeftCorner_;
