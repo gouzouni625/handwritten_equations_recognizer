@@ -14,13 +14,7 @@ public abstract class Symbol{
     return type_;
   }
 
-  public void setArgument(ArgumentPosition argumentPosition, Symbol symbol){
-    for(int i = 0;i < positionOfArguments_.length;i++){
-      if(positionOfArguments_[i] == argumentPosition){
-        arguments_.get(i).add(symbol);
-      }
-    }
-  }
+  public abstract void setArgument(ArgumentPosition argumentPosition, Symbol symbol);
 
   public String toString(){
     String stringValue = type_.toString();
