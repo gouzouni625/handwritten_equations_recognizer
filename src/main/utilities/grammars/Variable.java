@@ -3,25 +3,24 @@ package main.utilities.grammars;
 import java.util.List;
 import java.util.ArrayList;
 
-import main.utilities.grammars.Symbol.ArgumentPosition;
 import main.utilities.traces.TraceGroup;
 
 public class Variable extends Symbol{
 
   public Variable(Variable.Types type, TraceGroup traceGroup){
-    super();
+    super(traceGroup);
 
     type_ = type;
 
-    arguments_ = new ArrayList<List<Symbol>>();
-    arguments_.add(new ArrayList<Symbol>());
-    arguments_.add(new ArrayList<Symbol>());
-    arguments_.add(new ArrayList<Symbol>());
-    arguments_.add(new ArrayList<Symbol>());
+    passiveArguments_ = new ArrayList<List<Symbol>>();
+    passiveArguments_.add(new ArrayList<Symbol>());
+    passiveArguments_.add(new ArrayList<Symbol>());
+    passiveArguments_.add(new ArrayList<Symbol>());
+    passiveArguments_.add(new ArrayList<Symbol>());
 
-    positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT, ArgumentPosition.RIGHT};
+    positionOfPassiveArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT, ArgumentPosition.RIGHT};
 
-    traceGroup_ = traceGroup;
+    positionOfActiveArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
   }
 
   public enum Types{
@@ -39,7 +38,5 @@ public class Variable extends Symbol{
 
     private String stringValue_;
   }
-
-  public void reEvaluate(){}
 
 }

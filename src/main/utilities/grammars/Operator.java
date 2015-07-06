@@ -9,30 +9,30 @@ import main.utilities.traces.TraceGroup;
 public class Operator extends Symbol{
 
   public Operator(Operator.Types type, TraceGroup traceGroup){
-    super();
+    super(traceGroup);
 
     type_ = type;
 
-    arguments_ = new ArrayList<List<Symbol>>();
+    passiveArguments_ = new ArrayList<List<Symbol>>();
 
     switch(type){
       case EQUALS:
       case PLUS:
       case MINUS:
-        positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.RIGHT};
-        arguments_.add(new ArrayList<Symbol>());
-        arguments_.add(new ArrayList<Symbol>());
+        positionOfPassiveArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.RIGHT};
+        passiveArguments_.add(new ArrayList<Symbol>());
+        passiveArguments_.add(new ArrayList<Symbol>());
+        positionOfActiveArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
         break;
       case FRACTION_LINE:
-        positionOfArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE, ArgumentPosition.BELOW, ArgumentPosition.RIGHT};
-        arguments_.add(new ArrayList<Symbol>());
-        arguments_.add(new ArrayList<Symbol>());
-        arguments_.add(new ArrayList<Symbol>());
-        arguments_.add(new ArrayList<Symbol>());
+        positionOfPassiveArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE, ArgumentPosition.BELOW, ArgumentPosition.RIGHT};
+        passiveArguments_.add(new ArrayList<Symbol>());
+        passiveArguments_.add(new ArrayList<Symbol>());
+        passiveArguments_.add(new ArrayList<Symbol>());
+        passiveArguments_.add(new ArrayList<Symbol>());
+        positionOfActiveArguments_ = new ArgumentPosition[] {};
         break;
     }
-
-    traceGroup_ = traceGroup;
   }
 
   public enum Types{
@@ -52,7 +52,5 @@ public class Operator extends Symbol{
 
     private String stringValue_;
   }
-
-  public void reEvaluate(){}
 
 }
