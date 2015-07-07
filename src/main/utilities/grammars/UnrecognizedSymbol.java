@@ -24,9 +24,20 @@ public class UnrecognizedSymbol extends Symbol{
     HORIZONTAL_LINE;
   }
 
+  @Override
   public String toString(){
     if(chosenSymbol_ != null){
       return (chosenSymbol_.toString());
+    }
+    else{
+      return "";
+    }
+  }
+
+  @Override
+  public String printPassive(ArgumentPosition[] argumentPosition, String... argument){
+    if(chosenSymbol_ != null){
+      return (chosenSymbol_.printPassive(argumentPosition, argument));
     }
     else{
       return "";
