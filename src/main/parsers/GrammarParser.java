@@ -9,7 +9,6 @@ import main.utilities.grammars.Grammar;
 import main.utilities.grammars.Symbol;
 import main.utilities.grammars.SymbolFactory;
 import main.utilities.math.MinimumSpanningTree;
-import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
 
@@ -198,6 +197,32 @@ public abstract class GrammarParser extends Parser{
       }
 
       System.out.println("Log: paths after sorting them... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
+    // Sort symbols in paths(e.g. path 4, 3 should be 3, 4).
+    for(int i = 0;i < numberOfPaths;i++){
+      if(paths[i][0] > paths[i][1]){
+        int temp = paths[i][0];
+        paths[i][0] = paths[i][1];
+        paths[i][1] = temp;
+      }
+    }
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: paths after sorting symbols inside them... ===== Start =====");
+
+      for(int i = 0;i < numberOfPaths;i++){
+        System.out.print("path " + i + " = ");
+        for(int j = 0;j < paths[i].length;j++){
+          System.out.print(paths[i][j] + ", ");
+        }
+
+       System.out.println();
+      }
+
+      System.out.println("Log: paths after sorting symbols inside them... ===== End =======");
     }
     /* ===== Logs ===== */
 
