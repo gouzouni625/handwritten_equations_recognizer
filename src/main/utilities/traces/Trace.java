@@ -158,9 +158,9 @@ public class Trace{
     return min;
   }
 
-  protected ArrayList<Point> points_;
+  private ArrayList<Point> points_;
 
-  protected Point topLeftCorner_;
-  protected Point bottomRightCorner_;
+  private Point topLeftCorner_;
+  private Point bottomRightCorner_;
 
 }

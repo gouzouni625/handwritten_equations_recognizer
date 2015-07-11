@@ -206,9 +206,9 @@ public class TraceGroup{
     return (new Point(centroidX, centroidY));
   }
 
-  protected ArrayList<Trace> traces_;
+  private ArrayList<Trace> traces_;
 
-  protected Point topLeftCorner_;
-  protected Point bottomRightCorner_;
+  private Point topLeftCorner_;
+  private Point bottomRightCorner_;
 
 }
