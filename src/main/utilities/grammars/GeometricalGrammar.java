@@ -17,7 +17,7 @@ public class GeometricalGrammar extends Grammar{
     /* ===== Logs ===== */
 
     primary.setArgument(relativePosition, secondary);
-    secondary.setArgument(this.oppositePosition(relativePosition), primary);
+    //secondary.setArgument(this.oppositePosition(relativePosition), primary);
   }
 
   public Symbol.ArgumentPosition relativePosition(Symbol primary, Symbol secondary){

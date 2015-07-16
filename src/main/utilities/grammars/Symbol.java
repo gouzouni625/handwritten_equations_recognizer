@@ -2,6 +2,7 @@ package main.utilities.grammars;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import main.utilities.traces.TraceGroup;
 
@@ -9,6 +10,8 @@ public abstract class Symbol{
 
   public Symbol(TraceGroup traceGroup){
     traceGroup_ = traceGroup;
+
+    activeArgument_ = null;
   }
 
   public void reEvaluate(){}
@@ -25,22 +28,16 @@ public abstract class Symbol{
 
       if(index == -1){
         switch(argumentPosition){
-          case ABOVE:
-            this.setArgument(Symbol.ArgumentPosition.ABOVE_RIGHT, symbol);
-            break;
           case ABOVE_RIGHT:
           case BELOW_RIGHT:
             this.setArgument(Symbol.ArgumentPosition.RIGHT, symbol);
             break;
-          case BELOW:
-            this.setArgument(Symbol.ArgumentPosition.BELOW_RIGHT, symbol);
-          case BELOW_LEFT:
           case ABOVE_LEFT:
-            this.setArgument(Symbol.ArgumentPosition.RIGHT, symbol);
-          case LEFT:
-            this.setArgument(Symbol.ArgumentPosition.ABOVE_LEFT, symbol);
-          case RIGHT:
-            this.setArgument(Symbol.ArgumentPosition.ABOVE_RIGHT, symbol);
+          case BELOW_LEFT:
+            this.setArgument(Symbol.ArgumentPosition.LEFT, symbol);
+            break;
+          default:
+            return;
         }
       }
       else{
@@ -52,21 +49,58 @@ public abstract class Symbol{
     }
   }
 
-  /*public String toString(){
+  /**
+   * Calls print passive on the passive arguments. There is no need to print the active argument
+   * of the passive arguments since this is the current Symbol.
+   * @return
+   */
+  public String printPassive(ArgumentPosition[] argumentPosition, String... argument){
     String stringValue = type_.toString();
 
-    for(int i = 0;i < positionOfArguments_.length;i++){
-      String argumentValue = "";
+    for(int i = 0;i < positionOfPassiveArguments_.length;i++){
+      String argumentValue;
+      int index;
 
-      for(int j = 0;j < arguments_.get(i).size();j++){
-        argumentValue += arguments_.get(i).get(j).toString();
+      if(argumentPosition != null){
+        index = Arrays.asList(argumentPosition).indexOf(positionOfPassiveArguments_[i]);
+
+        argumentValue = argument[index];
+      }
+      else{
+        argumentValue = "";
+
+        for(int j = 0;j < passiveArguments_.get(i).size();j++){
+          argumentValue += passiveArguments_.get(i).get(j).printPassive(null);
+        }
       }
 
-      stringValue = stringValue.replaceAll(positionOfArguments_[i].toString(), argumentValue);
+      stringValue = stringValue.replaceAll(positionOfPassiveArguments_[i].toString(), argumentValue);
     }
 
     return stringValue;
-  }*/
+  }
+
+  public String toString(){
+    String stringValue;
+
+    if(activeArgument_ == null){
+      stringValue = this.printPassive(null);
+    }
+    else{
+      stringValue = activeArgument_.printPassive(null);
+    }
+
+    return (this.clearString(stringValue));
+  }
+
+  public String clearString(String string){
+    String result = new String(string);
+
+    result = result.replaceAll(Pattern.quote("^{}"), "");
+    result = result.replaceAll(Pattern.quote("_{}"), "");
+
+    return result;
+  }
 
   protected Enum<?> type_;
 
