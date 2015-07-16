@@ -16,8 +16,53 @@ public class GeometricalGrammar extends Grammar{
     }
     /* ===== Logs ===== */
 
-    primary.setArgument(relativePosition, secondary);
-    //secondary.setArgument(this.oppositePosition(relativePosition), primary);
+    Symbol.ArgumentType argumentType = primary.setArgument(relativePosition, secondary);
+    switch(argumentType){
+      case CHILD:
+        secondary.setParent(primary);
+        break;
+      case NEXT_SYMBOL:
+        if(primary.parent_ != null){
+          // The relative position should be found such, so that secondary becomes the child of
+          // primary's parent. That is because, secondary is the next symbol of primary and thus
+          // they have the same parent(if any).
+          relativePosition = this.relativePosition(primary.parent_, secondary);
+          primary.parent_.setArgument(relativePosition, secondary);
+          secondary.setParent(primary.parent_);
+        }
+        break;
+      case NONE:
+        // If this while loop goes to the last parent, and no relation is found between the parent
+        // and secondary, then, the input is unrecognizable and the result produced is garbage.
+        while(primary.parent_ != null){
+          relativePosition = this.relativePosition(primary.parent_, secondary);
+
+          /* ===== Logs ===== */
+          if(!silent_){
+            System.out.println("Log: parent relative position... ===== Start =====");
+
+            System.out.println("Relative position between: " + primary.parent_ + ", " + secondary + " : " + relativePosition);
+
+            System.out.println("Log: parent relative position... ===== End =======");
+          }
+          /* ===== Logs ===== */
+
+          argumentType = primary.parent_.setArgument(relativePosition, secondary);
+          if(argumentType == Symbol.ArgumentType.NONE){
+            primary = primary.parent_;
+          }
+          else if(argumentType == Symbol.ArgumentType.CHILD){
+            secondary.setParent(primary.parent_);
+            break;
+          }
+          else{
+            break;
+          }
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   public Symbol.ArgumentPosition relativePosition(Symbol primary, Symbol secondary){
@@ -62,7 +107,7 @@ public class GeometricalGrammar extends Grammar{
     if(yPosition == 1){
 
       if(xPosition == -1){
-        return Symbol.ArgumentPosition.ABOVE_LEFT;
+        return null; //Symbol.ArgumentPosition.ABOVE_LEFT;
       }
       else if(xPosition == 0){
         return Symbol.ArgumentPosition.ABOVE;
@@ -75,7 +120,7 @@ public class GeometricalGrammar extends Grammar{
     else if(yPosition == 0){
 
       if(xPosition == -1){
-        return Symbol.ArgumentPosition.LEFT;
+        return null; //Symbol.ArgumentPosition.LEFT;
       }
       else{
         return Symbol.ArgumentPosition.RIGHT;
@@ -85,7 +130,7 @@ public class GeometricalGrammar extends Grammar{
     else{
 
       if(xPosition == -1){
-        return Symbol.ArgumentPosition.BELOW_LEFT;
+        return null; //Symbol.ArgumentPosition.BELOW_LEFT;
       }
       else if(xPosition == 0){
         return Symbol.ArgumentPosition.BELOW;
@@ -94,29 +139,6 @@ public class GeometricalGrammar extends Grammar{
         return Symbol.ArgumentPosition.BELOW_RIGHT;
       }
 
-    }
-  }
-
-  public Symbol.ArgumentPosition oppositePosition(Symbol.ArgumentPosition position){
-    switch(position){
-      case ABOVE:
-        return Symbol.ArgumentPosition.BELOW;
-      case ABOVE_RIGHT:
-        return Symbol.ArgumentPosition.BELOW_LEFT;
-      case RIGHT:
-        return Symbol.ArgumentPosition.LEFT;
-      case BELOW_RIGHT:
-        return Symbol.ArgumentPosition.ABOVE_LEFT;
-      case BELOW:
-        return Symbol.ArgumentPosition.ABOVE;
-      case BELOW_LEFT:
-        return Symbol.ArgumentPosition.ABOVE_RIGHT;
-      case LEFT:
-        return Symbol.ArgumentPosition.RIGHT;
-      case ABOVE_LEFT:
-        return Symbol.ArgumentPosition.BELOW_RIGHT;
-      default:
-        return null;
     }
   }
 
