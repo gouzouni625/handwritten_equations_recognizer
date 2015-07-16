@@ -27,9 +27,9 @@ public class SymbolFactory{
         return SymbolFactory.createByType(Number.Types.EIGHT, traceGroup);
       case SymbolFactory.LABEL_NINE:
         return SymbolFactory.createByType(Number.Types.NINE, traceGroup);
-      case SymbolFactory.LABEL_VARIABLE_X:
+      case SymbolFactory.LABEL_LOWER_X:
         return SymbolFactory.createByType(Variable.Types.X, traceGroup);
-      case SymbolFactory.LABEL_VARIABLE_Y:
+      case SymbolFactory.LABEL_LOWER_Y:
         return SymbolFactory.createByType(Variable.Types.Y, traceGroup);
       case SymbolFactory.LABEL_PLUS:
         return SymbolFactory.createByType(Operator.Types.PLUS, traceGroup);
@@ -96,7 +96,6 @@ public class SymbolFactory{
     }
   }
 
-  public static final int UNKNOWN_LABEL = -1;
   public static final int LABEL_ZERO = 0;
   public static final int LABEL_ONE = 1;
   public static final int LABEL_TWO = 2;
@@ -109,8 +108,8 @@ public class SymbolFactory{
   public static final int LABEL_NINE = 9;
   public static final int LABEL_PLUS = 10;
   public static final int LABEL_EQUALS = 11;
-  public static final int LABEL_VARIABLE_X = 12;
-  public static final int LABEL_VARIABLE_Y = 13;
+  public static final int LABEL_LOWER_X = 12;
+  public static final int LABEL_LOWER_Y = 13;
   public static final int LABEL_HORIZONTAL_LINE = 14;
 
 }
