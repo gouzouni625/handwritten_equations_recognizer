@@ -275,19 +275,31 @@ public abstract class GrammarParser extends Parser{
     int size1 = traceGroup1.size();
     int size2 = traceGroup2.size();
 
-    double min = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
+    double minDistance = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
 
     for(int i = 0;i < size1;i++){
       for(int j = 0;j < size2;j++){
         double distance = Trace.minimumDistance(traceGroup1.get(i), traceGroup2.get(j));
 
-        if(distance < min){
-          min = distance;
+        if(distance < minDistance){
+          minDistance = distance;
         }
       }
     }
 
-    return min;
+    traceGroup1.calculateCorners();
+    traceGroup2.calculateCorners();
+
+    double direction;
+    if((traceGroup2.getCentroid().y_ - traceGroup1.getCentroid().y_) /
+       (traceGroup2.getCentroid().x_ - traceGroup1.getCentroid().x_) > 0){
+      direction = Math.abs(Math.atan2(traceGroup2.getCentroid().y_ - traceGroup1.getCentroid().y_, traceGroup2.getCentroid().x_ - traceGroup1.getCentroid().x_) / Math.PI);
+    }
+    else{
+      direction = Math.abs(Math.atan2(traceGroup1.getCentroid().y_ - traceGroup2.getCentroid().y_, traceGroup1.getCentroid().x_ - traceGroup2.getCentroid().x_) / Math.PI);
+    }
+
+    return (minDistance * direction);
   }
 
   public boolean isGrammarSilent(){
