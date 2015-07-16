@@ -10,84 +10,43 @@ public abstract class Symbol{
 
   public Symbol(TraceGroup traceGroup){
     traceGroup_ = traceGroup;
-
-    activeArgument_ = null;
   }
 
-  public void reEvaluate(){}
+  public ArgumentType setArgument(ArgumentPosition relativePosition, Symbol symbol){
+    if(Arrays.asList(childrenPositions_).contains(relativePosition)){
+      int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
 
-  public Enum<?> getType(){
-    return type_;
+      children_.get(index).add(symbol);
+      return ArgumentType.CHILD;
+    }
+    else if(Arrays.asList(nextSymbolPositions_).contains(relativePosition)){
+      nextSymbol_ = symbol;
+
+      return ArgumentType.NEXT_SYMBOL;
+    }
+
+    return ArgumentType.NONE;
   }
 
-  public void setArgument(ArgumentPosition argumentPosition, Symbol symbol){
-    int index = Arrays.asList(positionOfPassiveArguments_).indexOf(argumentPosition);
-
-    if(index == -1){
-      index = Arrays.asList(positionOfActiveArguments_).indexOf(argumentPosition);
-
-      if(index == -1){
-        switch(argumentPosition){
-          case ABOVE_RIGHT:
-          case BELOW_RIGHT:
-            this.setArgument(Symbol.ArgumentPosition.RIGHT, symbol);
-            break;
-          case ABOVE_LEFT:
-          case BELOW_LEFT:
-            this.setArgument(Symbol.ArgumentPosition.LEFT, symbol);
-            break;
-          default:
-            return;
-        }
-      }
-      else{
-        activeArgument_ = symbol;
-      }
-    }
-    else{
-      passiveArguments_.get(index).add(symbol);
-    }
-  }
-
-  /**
-   * Calls print passive on the passive arguments. There is no need to print the active argument
-   * of the passive arguments since this is the current Symbol.
-   * @return
-   */
-  public String printPassive(ArgumentPosition[] argumentPosition, String... argument){
-    String stringValue = type_.toString();
-
-    for(int i = 0;i < positionOfPassiveArguments_.length;i++){
-      String argumentValue;
-      int index;
-
-      if(argumentPosition != null){
-        index = Arrays.asList(argumentPosition).indexOf(positionOfPassiveArguments_[i]);
-
-        argumentValue = argument[index];
-      }
-      else{
-        argumentValue = "";
-
-        for(int j = 0;j < passiveArguments_.get(i).size();j++){
-          argumentValue += passiveArguments_.get(i).get(j).printPassive(null);
-        }
-      }
-
-      stringValue = stringValue.replaceAll(positionOfPassiveArguments_[i].toString(), argumentValue);
-    }
-
-    return stringValue;
+  public void setParent(Symbol symbol){
+    parent_ = symbol;
   }
 
   public String toString(){
-    String stringValue;
+    String stringValue = type_.toString();
 
-    if(activeArgument_ == null){
-      stringValue = this.printPassive(null);
-    }
-    else{
-      stringValue = activeArgument_.printPassive(null);
+    for(int i = 0;i < childrenPositions_.length;i++){
+      if(children_.get(i).size() == 0){
+        continue;
+      }
+
+      String childrenValue = children_.get(i).get(0).toString();
+
+      for(int j = 0;j < children_.get(i).size() - 1;j++){
+        childrenValue += children_.get(i).get(j).nextSymbol_.toString();
+      }
+
+      stringValue = stringValue.replaceAll(childrenPositions_[i].toString(), childrenValue);
     }
 
     return (this.clearString(stringValue));
@@ -96,18 +55,20 @@ public abstract class Symbol{
   public String clearString(String string){
     String result = new String(string);
 
-    result = result.replaceAll(Pattern.quote("^{}"), "");
-    result = result.replaceAll(Pattern.quote("_{}"), "");
+    for(ArgumentPosition argumentPosition : childrenPositions_){
+      result = result.replaceAll(Pattern.quote("^{") + argumentPosition + Pattern.quote("}"), "");
+      result = result.replaceAll(Pattern.quote("_{") + argumentPosition + Pattern.quote("}"), "");
+    }
 
     return result;
   }
 
-  protected Enum<?> type_;
+  public enum ArgumentType{
+    NONE,
+    CHILD,
+    NEXT_SYMBOL;
+  }
 
-  public List<List<Symbol>> passiveArguments_;
-  Symbol activeArgument_;
-  public ArgumentPosition[] positionOfActiveArguments_;  // Symbols to which, this symbol, is an argument.
-  public ArgumentPosition[] positionOfPassiveArguments_; // Arguments of this symbol.
   public enum ArgumentPosition{
     ABOVE,
     ABOVE_RIGHT,
@@ -117,9 +78,44 @@ public abstract class Symbol{
     BELOW_LEFT,
     LEFT,
     ABOVE_LEFT;
-    //INSIDE
+    //INSIDE,
+    //OUTSIDE,
+
+    public static ArgumentPosition oppositePosition(ArgumentPosition position){
+      switch(position){
+        case ABOVE:
+          return ArgumentPosition.BELOW;
+        case ABOVE_RIGHT:
+          return ArgumentPosition.BELOW_LEFT;
+        case RIGHT:
+          return ArgumentPosition.LEFT;
+        case BELOW_RIGHT:
+          return ArgumentPosition.ABOVE_LEFT;
+        case BELOW:
+          return ArgumentPosition.ABOVE;
+        case BELOW_LEFT:
+          return ArgumentPosition.ABOVE_RIGHT;
+        case LEFT:
+          return ArgumentPosition.RIGHT;
+        case ABOVE_LEFT:
+          return ArgumentPosition.BELOW_RIGHT;
+        default:
+          return position;
+      }
+    }
+
   }
 
   public TraceGroup traceGroup_;
+
+  public Symbol parent_;
+
+  public List<List<Symbol>> children_;
+  public ArgumentPosition[] childrenPositions_;
+
+  public Symbol nextSymbol_;
+  public ArgumentPosition[] nextSymbolPositions_;
+
+  public Enum<?> type_;
 
 }
