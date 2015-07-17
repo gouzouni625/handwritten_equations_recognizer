@@ -8,16 +8,25 @@ import main.utilities.traces.TraceGroup;
 
 public abstract class Symbol{
 
-  public Symbol(TraceGroup traceGroup){
+  public Symbol(TraceGroup traceGroup, SymbolClass symbolClass){
     traceGroup_ = traceGroup;
+
+    symbolClass_ = symbolClass;
   }
 
+  // TODO
+  // Should check if the argument is compatible with the childrenClass.
   public ArgumentType setArgument(ArgumentPosition relativePosition, Symbol symbol){
     if(Arrays.asList(childrenPositions_).contains(relativePosition)){
       int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
 
-      children_.get(index).add(symbol);
-      return ArgumentType.CHILD;
+      if(Arrays.asList(childrenClass_[index]).contains(symbol.symbolClass_)){
+        children_.get(index).add(symbol);
+        return ArgumentType.CHILD;
+      }
+      else{
+        return ArgumentType.NONE;
+      }
     }
     else if(Arrays.asList(nextSymbolPositions_).contains(relativePosition)){
       nextSymbol_ = symbol;
@@ -62,6 +71,14 @@ public abstract class Symbol{
 
     return result;
   }
+
+  public enum SymbolClass{
+    NUMBER,
+    OPERATOR,
+    LETTER;
+  }
+
+  public final SymbolClass symbolClass_;
 
   public enum ArgumentType{
     NONE,
@@ -112,6 +129,7 @@ public abstract class Symbol{
 
   public List<List<Symbol>> children_;
   public ArgumentPosition[] childrenPositions_;
+  public SymbolClass[][] childrenClass_;
 
   public Symbol nextSymbol_;
   public ArgumentPosition[] nextSymbolPositions_;
