@@ -28,9 +28,9 @@ public class SymbolFactory{
       case SymbolFactory.LABEL_NINE:
         return SymbolFactory.createByType(Number.Types.NINE, traceGroup);
       case SymbolFactory.LABEL_LOWER_X:
-        return SymbolFactory.createByType(Variable.Types.X, traceGroup);
+        return SymbolFactory.createByType(Letter.Types.LOWER_X, traceGroup);
       case SymbolFactory.LABEL_LOWER_Y:
-        return SymbolFactory.createByType(Variable.Types.Y, traceGroup);
+        return SymbolFactory.createByType(Letter.Types.LOWER_Y, traceGroup);
       case SymbolFactory.LABEL_PLUS:
         return SymbolFactory.createByType(Operator.Types.PLUS, traceGroup);
       case SymbolFactory.LABEL_EQUALS:
@@ -73,11 +73,11 @@ public class SymbolFactory{
     else if(type == Number.Types.NINE){
       return (new Number(Number.Types.NINE, traceGroup));
     }
-    else if(type == Variable.Types.X){
-      return (new Variable(Variable.Types.X, traceGroup));
+    else if(type == Letter.Types.LOWER_X){
+      return (new Letter(Letter.Types.LOWER_X, traceGroup));
     }
-    else if(type == Variable.Types.Y){
-      return (new Variable(Variable.Types.Y, traceGroup));
+    else if(type == Letter.Types.LOWER_Y){
+      return (new Letter(Letter.Types.LOWER_Y, traceGroup));
     }
     else if(type == Operator.Types.PLUS){
       return (new Operator(Operator.Types.PLUS, traceGroup));
@@ -96,6 +96,7 @@ public class SymbolFactory{
     }
   }
 
+  public static final int UNKNOWN_LABEL = -1;
   public static final int LABEL_ZERO = 0;
   public static final int LABEL_ONE = 1;
   public static final int LABEL_TWO = 2;

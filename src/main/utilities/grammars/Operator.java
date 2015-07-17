@@ -4,42 +4,44 @@ import java.util.List;
 import java.util.ArrayList;
 
 import main.utilities.grammars.Symbol;
+import main.utilities.grammars.Symbol.SymbolClass;
 import main.utilities.traces.TraceGroup;
 
 public class Operator extends Symbol{
 
   public Operator(Operator.Types type, TraceGroup traceGroup){
-    super(traceGroup);
+    super(traceGroup, SymbolClass.OPERATOR);
 
     type_ = type;
 
-    passiveArguments_ = new ArrayList<List<Symbol>>();
+    parent_ = null;
 
     switch(type){
-      case EQUALS:
       case PLUS:
+      case EQUALS:
       case MINUS:
-        positionOfPassiveArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.RIGHT};
-        passiveArguments_.add(new ArrayList<Symbol>());
-        passiveArguments_.add(new ArrayList<Symbol>());
-        positionOfActiveArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
+        children_ = new ArrayList<List<Symbol>>();
+        childrenPositions_ = new ArgumentPosition[] {};
+        childrenClass_ = new SymbolClass[][] {};
         break;
       case FRACTION_LINE:
-        positionOfPassiveArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE, ArgumentPosition.BELOW, ArgumentPosition.RIGHT};
-        passiveArguments_.add(new ArrayList<Symbol>());
-        passiveArguments_.add(new ArrayList<Symbol>());
-        passiveArguments_.add(new ArrayList<Symbol>());
-        passiveArguments_.add(new ArrayList<Symbol>());
-        positionOfActiveArguments_ = new ArgumentPosition[] {};
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+        children_.add(new ArrayList<Symbol>());
+        childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}};
         break;
     }
+
+    nextSymbol_ = null;
+    nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
   }
 
   public enum Types{
-    PLUS(ArgumentPosition.LEFT + "+" + ArgumentPosition.RIGHT),
-    EQUALS(ArgumentPosition.LEFT + "=" + ArgumentPosition.RIGHT),
-    MINUS(ArgumentPosition.LEFT + "-" + ArgumentPosition.RIGHT),
-    FRACTION_LINE(ArgumentPosition.LEFT + "\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}" + ArgumentPosition.RIGHT);
+    PLUS("+"),
+    EQUALS("="),
+    MINUS("-"),
+    FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;

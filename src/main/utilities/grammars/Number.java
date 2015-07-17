@@ -9,7 +9,7 @@ import main.utilities.traces.TraceGroup;
 public class Number extends Symbol{
 
   public Number(Number.Types type, TraceGroup traceGroup){
-    super(traceGroup);
+    super(traceGroup, SymbolClass.NUMBER);
 
     type_ = type;
 
@@ -18,6 +18,7 @@ public class Number extends Symbol{
     children_ = new ArrayList<List<Symbol>>();
     children_.add(new ArrayList<Symbol>());
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
+    childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER}};
 
     nextSymbol_ = null;
     nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};

@@ -3,29 +3,36 @@ package main.utilities.grammars;
 import java.util.List;
 import java.util.ArrayList;
 
+import main.utilities.grammars.Symbol.SymbolClass;
 import main.utilities.traces.TraceGroup;
 
-public class Variable extends Symbol{
+public class Letter extends Symbol{
 
-  public Variable(Variable.Types type, TraceGroup traceGroup){
-    super(traceGroup);
+  public Letter(Letter.Types type, TraceGroup traceGroup){
+    super(traceGroup, SymbolClass.LETTER);
 
     type_ = type;
 
-    passiveArguments_ = new ArrayList<List<Symbol>>();
-    passiveArguments_.add(new ArrayList<Symbol>());
-    passiveArguments_.add(new ArrayList<Symbol>());
-    passiveArguments_.add(new ArrayList<Symbol>());
-    passiveArguments_.add(new ArrayList<Symbol>());
+    parent_ = null;
 
-    positionOfPassiveArguments_ = new ArgumentPosition[] {ArgumentPosition.LEFT, ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT, ArgumentPosition.RIGHT};
+    switch(type){
+      case LOWER_X:
+      case LOWER_Y:
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+        children_.add(new ArrayList<Symbol>());
+        childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER}, {SymbolClass.NUMBER, SymbolClass.LETTER}};
+        break;
+    }
 
-    positionOfActiveArguments_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
-  }
+    nextSymbol_ = null;
+    nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
+ }
 
   public enum Types{
-    X(ArgumentPosition.LEFT + "x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}" + ArgumentPosition.RIGHT),
-    Y(ArgumentPosition.LEFT + "y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}" + ArgumentPosition.RIGHT);
+    LOWER_X("x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"),
+    LOWER_Y("y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;
