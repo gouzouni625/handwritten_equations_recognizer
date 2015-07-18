@@ -4,7 +4,7 @@ public class GeometricalGrammar extends Grammar{
 
   public void parse(Symbol primary, Symbol secondary){
     // Find the relative position of the two symbols.
-    Symbol.ArgumentPosition relativePosition = this.relativePosition(primary, secondary);
+    Symbol.ArgumentPosition relativePosition = primary.relativePosition(secondary);
 
     /* ===== Logs ===== */
     if(!silent_){
@@ -26,7 +26,7 @@ public class GeometricalGrammar extends Grammar{
           // The relative position should be found such, so that secondary becomes the child of
           // primary's parent. That is because, secondary is the next symbol of primary and thus
           // they have the same parent(if any).
-          relativePosition = this.relativePosition(primary.parent_, secondary);
+          relativePosition = primary.parent_.relativePosition(secondary);
           primary.parent_.setArgument(relativePosition, secondary);
           secondary.setParent(primary.parent_);
         }
@@ -35,7 +35,7 @@ public class GeometricalGrammar extends Grammar{
         // If this while loop goes to the last parent, and no relation is found between the parent
         // and secondary, then, the input is unrecognizable and the result produced is garbage.
         while(primary.parent_ != null){
-          relativePosition = this.relativePosition(primary.parent_, secondary);
+          relativePosition = primary.parent_.relativePosition(secondary);
 
           /* ===== Logs ===== */
           if(!silent_){
@@ -62,83 +62,6 @@ public class GeometricalGrammar extends Grammar{
         break;
       default:
         break;
-    }
-  }
-
-  public Symbol.ArgumentPosition relativePosition(Symbol primary, Symbol secondary){
-    primary.traceGroup_.calculateCorners();
-    secondary.traceGroup_.calculateCorners();
-
-    int yPosition;
-    if(secondary.traceGroup_.getBottomRightCorner().y_ >= primary.traceGroup_.getBottomRightCorner().y_ + primary.traceGroup_.getHeight() / 2){
-      yPosition = 1;
-    }
-    else if(secondary.traceGroup_.getBottomRightCorner().y_ <= primary.traceGroup_.getBottomRightCorner().y_ + primary.traceGroup_.getHeight() / 2 &&
-            secondary.traceGroup_.getTopLeftCorner().y_ >= primary.traceGroup_.getBottomRightCorner().y_ + primary.traceGroup_.getHeight() / 2){
-      yPosition = 0;
-    }
-    else{
-      yPosition = -1;
-    }
-
-    int xPosition;
-    if(secondary.traceGroup_.getTopLeftCorner().x_ >= primary.traceGroup_.getTopLeftCorner().x_ + primary.traceGroup_.getWidth() / 2){
-      xPosition = 1;
-    }
-    else if(secondary.traceGroup_.getTopLeftCorner().x_ <= primary.traceGroup_.getTopLeftCorner().x_ + primary.traceGroup_.getWidth() / 2 &&
-            secondary.traceGroup_.getBottomRightCorner().x_ >= primary.traceGroup_.getTopLeftCorner().x_ + primary.traceGroup_.getWidth() / 2){
-      xPosition = 0;
-    }
-    else{
-      xPosition = -1;
-    }
-
-    /* ===== Logs ===== */
-    if(!silent_){
-      System.out.println("Log: yPosition and xPosition... ===== Start =====");
-
-      System.out.println("yPosition: " + yPosition);
-      System.out.println("xPosition: " + xPosition);
-
-      System.out.println("Log: yPosition and xPosition... ===== End =======");
-    }
-    /* ===== Logs ===== */
-
-    if(yPosition == 1){
-
-      if(xPosition == -1){
-        return null; //Symbol.ArgumentPosition.ABOVE_LEFT;
-      }
-      else if(xPosition == 0){
-        return Symbol.ArgumentPosition.ABOVE;
-      }
-      else{
-        return Symbol.ArgumentPosition.ABOVE_RIGHT;
-      }
-
-    }
-    else if(yPosition == 0){
-
-      if(xPosition == -1){
-        return null; //Symbol.ArgumentPosition.LEFT;
-      }
-      else{
-        return Symbol.ArgumentPosition.RIGHT;
-      }
-
-    }
-    else{
-
-      if(xPosition == -1){
-        return null; //Symbol.ArgumentPosition.BELOW_LEFT;
-      }
-      else if(xPosition == 0){
-        return Symbol.ArgumentPosition.BELOW;
-      }
-      else{
-        return Symbol.ArgumentPosition.BELOW_RIGHT;
-      }
-
     }
   }
 

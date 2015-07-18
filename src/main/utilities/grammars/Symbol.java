@@ -120,6 +120,74 @@ public abstract class Symbol{
 
   }
 
+  // TODO
+  // relativePosition should be embedded into setArgument.
+  public ArgumentPosition relativePosition(Symbol symbol){
+    traceGroup_.calculateCorners();
+
+    int yPosition;
+    if(symbol.traceGroup_.getCenterOfMass().y_ < traceGroup_.getBottomRightCorner().y_){
+      yPosition = -1;
+    }
+    else if(symbol.traceGroup_.getCenterOfMass().y_ <= traceGroup_.getTopLeftCorner().y_){
+      yPosition = 0;
+    }
+    else{
+      yPosition = 1;
+    }
+
+    int xPosition;
+    if(symbol.traceGroup_.getCenterOfMass().x_ < traceGroup_.getTopLeftCorner().x_){
+      xPosition = -1;
+    }
+    else if(symbol.traceGroup_.getCenterOfMass().x_ <= traceGroup_.getBottomRightCorner().x_){
+      xPosition = 0;
+    }
+    else{
+      xPosition = 1;
+    }
+
+    if(yPosition == 1){
+
+      if(xPosition == -1){
+        return ArgumentPosition.ABOVE_LEFT;
+      }
+      else if(xPosition == 0){
+        return ArgumentPosition.ABOVE;
+      }
+      else{
+        return ArgumentPosition.ABOVE_RIGHT;
+      }
+
+    }
+    else if(yPosition == 0){
+
+      if(xPosition == -1){
+        return ArgumentPosition.LEFT;
+      }
+      /*else if(xPosition == 0){
+        return Symbol.ArgumentPosition.INSIDE;
+      }*/
+      else{
+        return ArgumentPosition.RIGHT;
+      }
+
+    }
+    else{
+
+      if(xPosition == -1){
+        return ArgumentPosition.BELOW_LEFT;
+      }
+      else if(xPosition == 0){
+        return ArgumentPosition.BELOW;
+      }
+      else{
+        return ArgumentPosition.BELOW_RIGHT;
+      }
+
+    }
+  }
+
   public void reEvaluate(){}
 
   public final SymbolClass symbolClass_;
