@@ -10,6 +10,7 @@ public class UnrecognizedSymbol extends Symbol{
   // Moreover, they should have totally different children places. That is, a position that
   // accepts a child should be assign to only one of the possible symbols.
   // Moreover, if there are N possible symbols, then then N-1 should accept at least 1 child.
+  // Moreover, all the possibleSymbols should have the same implementation of relative position.
   public UnrecognizedSymbol(UnrecognizedSymbol.Types type, TraceGroup traceGroup){
     super(traceGroup, SymbolClass.UNRECOGNIZED);
 
@@ -97,6 +98,13 @@ public class UnrecognizedSymbol extends Symbol{
     this.childrenPositions_ = symbol.childrenPositions_;
     this.nextSymbol_ = symbol.nextSymbol_;
     this.nextSymbolPositions_ = symbol.nextSymbolPositions_;
+  }
+
+  @Override
+  public ArgumentPosition relativePosition(Symbol symbol){
+    // Given that all the possible symbols have the same implementation
+    // for relativePosition method, use the first possible symbol.
+    return (possibleSymbols_[0].relativePosition(symbol));
   }
 
   Symbol[] possibleSymbols_;
