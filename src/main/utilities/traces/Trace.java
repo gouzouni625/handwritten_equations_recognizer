@@ -124,6 +124,17 @@ public class Trace{
     return (new Point(centroidX, centroidY));
   }
 
+  public Point getCenterOfMass(){
+    Point centerOfMass = new Point(0, 0);
+
+    for(Point point : points_){
+      centerOfMass.add(point);
+    }
+    centerOfMass.divideBy(this.size());
+
+    return centerOfMass;
+  }
+
   public static boolean areOverlapped(Trace trace1, Trace trace2){
     trace1.calculateCorners();
     trace2.calculateCorners();

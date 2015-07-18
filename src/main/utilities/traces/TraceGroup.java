@@ -206,6 +206,20 @@ public class TraceGroup{
     return (new Point(centroidX, centroidY));
   }
 
+  public Point getCenterOfMass(){
+    Point centerOfMass = new Point(0, 0);
+
+    int numberOfPoints = 0;
+    for(Trace trace : traces_){
+      centerOfMass.add(trace.getCenterOfMass().multiplyBy(trace.size()));
+
+      numberOfPoints += trace.size();
+    }
+    centerOfMass.divideBy(numberOfPoints);
+
+    return centerOfMass;
+  }
+
   private ArrayList<Trace> traces_;
 
   private Point topLeftCorner_;
