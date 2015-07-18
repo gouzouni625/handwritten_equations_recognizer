@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 import main.utilities.grammars.Grammar;
 import main.utilities.grammars.Symbol;
+import main.utilities.grammars.Symbol.SymbolClass;
 import main.utilities.grammars.SymbolFactory;
 import main.utilities.traces.TraceGroup;
 
@@ -74,6 +75,12 @@ public abstract class GrammarParser extends Parser{
     // Check symbols one by one to find their position in the equation.
     for(int i = 0;i < symbols_.length - 1;i++){
       grammar_.parse(symbols_[i], symbols_[i + 1]);
+    }
+
+    for(Symbol symbol : symbols_){
+      if(symbol.symbolClass_ == Symbol.SymbolClass.UNRECOGNIZED){
+        symbol.reEvaluate();
+      }
     }
 
   }
