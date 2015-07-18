@@ -24,11 +24,22 @@ public class Point{
     y_ = point.y_;
   }
 
+  public Point add(Point point){
+    x_ += point.x_;
+    y_ += point.y_;
+
+    return this;
+  }
+
   public Point multiplyBy(double factor){
     x_ *= factor;
     y_ *= factor;
 
     return this;
+  }
+
+  public Point divideBy(double factor){
+    return (this.multiplyBy(1 / factor));
   }
 
   public Point subtract(Point point){
