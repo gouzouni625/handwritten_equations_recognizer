@@ -390,10 +390,10 @@ public abstract class MSTPartitioner extends Partitioner{
       return -1;
     }
 
-    Point centroid1 = trace1.getCentroid();
-    Point centroid2 = trace2.getCentroid();
+    Point centerOfMass1 = trace1.getCenterOfMass(); //trace1.getCentroid();
+    Point centerOfMass2 = trace2.getCenterOfMass(); //trace2.getCentroid();
 
-    return (Point.distance(centroid1, centroid2));
+    return (Point.distance(centerOfMass1, centerOfMass2));
   }
 
   public void setSilent(boolean silent){
