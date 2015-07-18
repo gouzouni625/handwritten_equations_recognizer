@@ -14,8 +14,6 @@ public abstract class Symbol{
     symbolClass_ = symbolClass;
   }
 
-  // TODO
-  // Should check if the argument is compatible with the childrenClass.
   public ArgumentType setArgument(ArgumentPosition relativePosition, Symbol symbol){
     if(Arrays.asList(childrenPositions_).contains(relativePosition)){
       int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
@@ -75,10 +73,9 @@ public abstract class Symbol{
   public enum SymbolClass{
     NUMBER,
     OPERATOR,
-    LETTER;
+    LETTER,
+    UNRECOGNIZED;
   }
-
-  public final SymbolClass symbolClass_;
 
   public enum ArgumentType{
     NONE,
@@ -122,6 +119,10 @@ public abstract class Symbol{
     }
 
   }
+
+  public void reEvaluate(){}
+
+  public final SymbolClass symbolClass_;
 
   public TraceGroup traceGroup_;
 

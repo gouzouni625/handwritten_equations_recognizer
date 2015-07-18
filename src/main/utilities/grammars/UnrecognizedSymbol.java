@@ -4,18 +4,27 @@ import main.utilities.traces.TraceGroup;
 
 public class UnrecognizedSymbol extends Symbol{
 
+  // The possible symbols of an unrecognized symbol should all have the same
+  // nextSymbol places. If setArgument returns nextSymbol for one of the possibleSymbols.
+  // Then it should return nextSymbol for every other one.
+  // Moreover, they should have totally different children places. That is, a position that
+  // accepts a child should be assign to only one of the possible symbols.
+  // Moreover, if there are N possible symbols, then then N-1 should accept at least 1 child.
   public UnrecognizedSymbol(UnrecognizedSymbol.Types type, TraceGroup traceGroup){
-    super(traceGroup);
+    super(traceGroup, SymbolClass.UNRECOGNIZED);
 
     type_ = type;
 
-    chosenSymbol_ = null;
+    parent_ = null;
+    children_ = null;
+    childrenPositions_ = null;
+    nextSymbol_ = null;
+    nextSymbolPositions_ = null;
 
     switch(type){
       case HORIZONTAL_LINE:
-        possibleSymbols_ = new Symbol[2];
-        possibleSymbols_[0] = SymbolFactory.createByType(Operator.Types.MINUS, traceGroup);
-        possibleSymbols_[1] = SymbolFactory.createByType(Operator.Types.FRACTION_LINE, traceGroup);
+        possibleSymbols_ = new Symbol[] {SymbolFactory.createByType(Operator.Types.MINUS, traceGroup), SymbolFactory.createByType(Operator.Types.FRACTION_LINE, traceGroup)};
+        chosenSymbol_ = null;
         break;
     }
   }
@@ -25,58 +34,69 @@ public class UnrecognizedSymbol extends Symbol{
   }
 
   @Override
+  public ArgumentType setArgument(Symbol.ArgumentPosition relativePosition, Symbol symbol){
+    if(chosenSymbol_ != null){
+      return (chosenSymbol_.setArgument(relativePosition, symbol));
+    }
+
+    ArgumentType argumentType;
+    boolean nextArgumentFlag = false;
+    for(Symbol symbolIterator : possibleSymbols_){
+      argumentType = symbolIterator.setArgument(relativePosition, symbol);
+
+      if(argumentType == ArgumentType.CHILD){
+        this.choose(symbolIterator);
+        return (ArgumentType.CHILD);
+      }
+      nextArgumentFlag = (argumentType == ArgumentType.NEXT_SYMBOL);
+    }
+
+    if(nextArgumentFlag){
+      return ArgumentType.NEXT_SYMBOL;
+    }
+    else{
+      return ArgumentType.NONE;
+    }
+  }
+
+  @Override
   public String toString(){
     if(chosenSymbol_ != null){
       return (chosenSymbol_.toString());
     }
     else{
-      return "";
-    }
-  }
-
-  @Override
-  public String printPassive(ArgumentPosition[] argumentPosition, String... argument){
-    if(chosenSymbol_ != null){
-      return (chosenSymbol_.printPassive(argumentPosition, argument));
-    }
-    else{
-      return "";
-    }
-  }
-
-  @Override
-  public void setArgument(Symbol.ArgumentPosition argumentPosition, Symbol symbol){
-    for(int i = 0;i < possibleSymbols_.length;i++){
-      possibleSymbols_[i].setArgument(argumentPosition, symbol);
+      return (SymbolClass.UNRECOGNIZED.toString());
     }
   }
 
   @Override
   public void reEvaluate(){
-    // Find the symbol of the possible symbols that has the most passive arguments filled.
-    int[] foundArguments = new int[possibleSymbols_.length];
-    for(int i = 0;i < foundArguments.length;i++){
-      foundArguments[i] = 0;
+    if(chosenSymbol_ != null){
+      return;
     }
 
-    for(int i = 0;i < possibleSymbols_.length;i++){
-      for(int j = 0;j < possibleSymbols_[i].passiveArguments_.size();j++){
-        if(possibleSymbols_[i].passiveArguments_.get(j).size() != 0){
-          foundArguments[i]++;
-        }
+    // Came here means that no child has been assigned to any of the possible symbols.
+    // That is because, if at least 1 child had been assigned in setArgument method,
+    // then the symbol accepting the child would have became the chosen symbol. So, now,
+    // choose the symbol that accepts no children.
+    for(Symbol symbol : possibleSymbols_){
+      if(symbol.childrenPositions_.length == 0){
+        this.choose(symbol);
+        return;
       }
     }
+  }
 
-    int max = foundArguments[0];
-    int maxIndex = 0;
-    for(int i = 1;i < foundArguments.length;i++){
-      if(foundArguments[i] > max){
-        max = foundArguments[i];
-        maxIndex = i;
-      }
-    }
+  public void choose(Symbol symbol){
+    chosenSymbol_ = symbol;
 
-    chosenSymbol_ = possibleSymbols_[maxIndex];
+    this.type_ = symbol.type_;
+
+    this.parent_ = symbol.parent_;
+    this.children_ = symbol.children_;
+    this.childrenPositions_ = symbol.childrenPositions_;
+    this.nextSymbol_ = symbol.nextSymbol_;
+    this.nextSymbolPositions_ = symbol.nextSymbolPositions_;
   }
 
   Symbol[] possibleSymbols_;
