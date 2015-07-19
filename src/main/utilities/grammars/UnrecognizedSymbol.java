@@ -1,5 +1,8 @@
 package main.utilities.grammars;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.utilities.traces.TraceGroup;
 
 public class UnrecognizedSymbol extends Symbol{
@@ -17,10 +20,12 @@ public class UnrecognizedSymbol extends Symbol{
     type_ = type;
 
     parent_ = null;
-    children_ = null;
-    childrenPositions_ = null;
+
+    children_ = new ArrayList<List<Symbol>>();
+    childrenPositions_ = new ArgumentPosition[] {};
+    childrenClass_ = new SymbolClass[][] {};
     nextSymbol_ = null;
-    nextSymbolPositions_ = null;
+    nextSymbolPositions_ = new ArgumentPosition[] {};
 
     switch(type){
       case HORIZONTAL_LINE:
@@ -37,7 +42,11 @@ public class UnrecognizedSymbol extends Symbol{
   @Override
   public ArgumentType setArgument(Symbol.ArgumentPosition relativePosition, Symbol symbol){
     if(chosenSymbol_ != null){
-      return (chosenSymbol_.setArgument(relativePosition, symbol));
+      ArgumentType argumentType = chosenSymbol_.setArgument(relativePosition, symbol);
+
+      copy();
+
+      return argumentType;
     }
 
     ArgumentType argumentType;
@@ -47,6 +56,7 @@ public class UnrecognizedSymbol extends Symbol{
 
       if(argumentType == ArgumentType.CHILD){
         this.choose(symbolIterator);
+
         return (ArgumentType.CHILD);
       }
       nextArgumentFlag = (argumentType == ArgumentType.NEXT_SYMBOL);
@@ -91,13 +101,17 @@ public class UnrecognizedSymbol extends Symbol{
   public void choose(Symbol symbol){
     chosenSymbol_ = symbol;
 
-    this.type_ = symbol.type_;
+    copy();
+  }
 
-    this.parent_ = symbol.parent_;
-    this.children_ = symbol.children_;
-    this.childrenPositions_ = symbol.childrenPositions_;
-    this.nextSymbol_ = symbol.nextSymbol_;
-    this.nextSymbolPositions_ = symbol.nextSymbolPositions_;
+  private void copy(){
+    type_ = chosenSymbol_.type_;
+    parent_ = chosenSymbol_.parent_;
+    children_ = chosenSymbol_.children_;
+    childrenPositions_ = chosenSymbol_.childrenPositions_;
+    nextSymbol_ = chosenSymbol_.nextSymbol_;
+    nextSymbolPositions_ = chosenSymbol_.nextSymbolPositions_;
+
   }
 
   @Override
@@ -107,7 +121,7 @@ public class UnrecognizedSymbol extends Symbol{
     return (possibleSymbols_[0].relativePosition(symbol));
   }
 
-  Symbol[] possibleSymbols_;
-  Symbol chosenSymbol_;
+  public Symbol[] possibleSymbols_;
+  public Symbol chosenSymbol_;
 
 }
