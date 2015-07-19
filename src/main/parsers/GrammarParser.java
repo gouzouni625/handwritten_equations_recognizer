@@ -9,8 +9,10 @@ import main.utilities.Utilities;
 import main.utilities.grammars.Grammar;
 import main.utilities.grammars.Symbol;
 import main.utilities.grammars.SymbolFactory;
+import main.utilities.grammars.UnrecognizedSymbol;
 import main.utilities.math.MinimumSpanningTree;
 import main.utilities.traces.Point;
+import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
 
 public abstract class GrammarParser extends Parser{
@@ -314,7 +316,29 @@ public abstract class GrammarParser extends Parser{
   }
 
   private double distanceOfSymbols(Symbol symbol1, Symbol symbol2){
-    return (Point.distance(symbol1.traceGroup_.getCenterOfMass(), symbol2.traceGroup_.getCenterOfMass()));
+    TraceGroup traceGroup1 = symbol1.traceGroup_;
+    TraceGroup traceGroup2 = symbol2.traceGroup_;
+
+    if(traceGroup1.size() == 0 || traceGroup2.size() == 0){
+      return -1;
+    }
+
+    int size1 = traceGroup1.size();
+    int size2 = traceGroup2.size();
+
+    double minDistance = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
+
+    for(int i = 0;i < size1;i++){
+      for(int j = 0;j < size2;j++){
+        double distance = Trace.minimumDistance(traceGroup1.get(i), traceGroup2.get(j));
+
+        if(distance < minDistance){
+          minDistance = distance;
+        }
+      }
+    }
+
+    return minDistance;
   }
 
   public boolean isGrammarSilent(){
