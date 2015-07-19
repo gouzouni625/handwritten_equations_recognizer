@@ -18,6 +18,8 @@ public class Number extends Symbol{
     children_ = new ArrayList<List<Symbol>>();
     children_.add(new ArrayList<Symbol>());
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
+    // TODO
+    // Should also accept Operator and Unrecognized symbols as children.
     childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER}};
 
     nextSymbol_ = null;

@@ -39,25 +39,26 @@ public class GeometricalGrammar extends Grammar{
       case NONE:
         // If this while loop goes to the last parent, and no relation is found between the parent
         // and secondary, then, the input is unrecognizable and the result produced is garbage.
-        while(primary.parent_ != null){
-          relativePosition = primary.parent_.relativePosition(secondary);
+        Symbol primaryAncestor = primary.parent_;
+        while(primaryAncestor != null){
+          relativePosition = primaryAncestor.relativePosition(secondary);
 
           /* ===== Logs ===== */
           if(!silent_){
             System.out.println("Log: parent relative position... ===== Start =====");
 
-            System.out.println("Relative position between: " + primary.parent_ + ", " + secondary + " : " + relativePosition);
+            System.out.println("Relative position between: " + primaryAncestor + ", " + secondary + " : " + relativePosition);
 
             System.out.println("Log: parent relative position... ===== End =======");
           }
           /* ===== Logs ===== */
 
-          argumentType = primary.parent_.setArgument(relativePosition, secondary);
+          argumentType = primaryAncestor.setArgument(relativePosition, secondary);
           if(argumentType == Symbol.ArgumentType.NONE){
-            primary = primary.parent_;
+            primaryAncestor = primaryAncestor.parent_;
           }
           else if(argumentType == Symbol.ArgumentType.CHILD){
-            secondary.setParent(primary.parent_);
+            secondary.setParent(primaryAncestor);
             break;
           }
           else{

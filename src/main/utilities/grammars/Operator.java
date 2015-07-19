@@ -30,6 +30,8 @@ public class Operator extends Symbol{
         children_.add(new ArrayList<Symbol>());
         children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
+        // TODO
+        // Should also accept Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}};
         break;
     }

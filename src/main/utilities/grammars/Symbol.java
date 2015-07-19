@@ -82,8 +82,8 @@ public abstract class Symbol{
 
   public enum SymbolClass{
     NUMBER,
-    OPERATOR,
     LETTER,
+    OPERATOR,
     UNRECOGNIZED;
   }
 

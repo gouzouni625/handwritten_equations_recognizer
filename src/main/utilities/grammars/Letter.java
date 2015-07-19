@@ -3,6 +3,7 @@ package main.utilities.grammars;
 import java.util.List;
 import java.util.ArrayList;
 
+import main.utilities.grammars.Symbol.ArgumentPosition;
 import main.utilities.grammars.Symbol.SymbolClass;
 import main.utilities.traces.TraceGroup;
 
@@ -22,6 +23,7 @@ public class Letter extends Symbol{
         children_.add(new ArrayList<Symbol>());
         children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
+        // Should also accept Operator and Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER}, {SymbolClass.NUMBER, SymbolClass.LETTER}};
         break;
     }
