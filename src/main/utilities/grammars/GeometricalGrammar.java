@@ -30,6 +30,11 @@ public class GeometricalGrammar extends Grammar{
           primary.parent_.setArgument(relativePosition, secondary);
           secondary.setParent(primary.parent_);
         }
+        if(secondary.parent_ != null){
+          relativePosition = secondary.parent_.relativePosition(primary);
+          secondary.parent_.setArgument(relativePosition, primary);
+          primary.setParent(secondary.parent_);
+        }
         break;
       case NONE:
         // If this while loop goes to the last parent, and no relation is found between the parent
