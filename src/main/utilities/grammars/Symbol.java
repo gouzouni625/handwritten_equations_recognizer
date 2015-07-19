@@ -19,7 +19,10 @@ public abstract class Symbol{
       int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
 
       if(Arrays.asList(childrenClass_[index]).contains(symbol.symbolClass_)){
-        children_.get(index).add(symbol);
+        if(!children_.get(index).contains(symbol)){
+          children_.get(index).add(symbol);
+        }
+
         return ArgumentType.CHILD;
       }
       else{
@@ -50,7 +53,14 @@ public abstract class Symbol{
       String childrenValue = children_.get(i).get(0).toString();
 
       for(int j = 0;j < children_.get(i).size() - 1;j++){
-        childrenValue += children_.get(i).get(j).nextSymbol_.toString();
+        if(children_.get(i).get(j).nextSymbol_ != null){
+          childrenValue += children_.get(i).get(j).nextSymbol_.toString();
+        }
+        else{
+          if(j <= children_.get(i).size() - 2){
+            childrenValue += children_.get(i).get(j + 1).toString();
+          }
+        }
       }
 
       stringValue = stringValue.replaceAll(childrenPositions_[i].toString(), childrenValue);
