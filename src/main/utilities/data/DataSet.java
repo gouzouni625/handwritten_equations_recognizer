@@ -160,6 +160,20 @@ public class DataSet{
     Collections.shuffle(samples_);
   }
 
+  public static DataSet add(DataSet dataSet1, DataSet dataSet2){
+    DataSet result = new DataSet();
+
+    for(int i = 0;i < dataSet1.size();i++){
+      result.add(dataSet1.get(i));
+    }
+
+    for(int i = 0;i < dataSet2.size();i++){
+      result.add(dataSet2.get(i));
+    }
+
+    return result;
+  }
+
   private ArrayList<DataSample> samples_;
 
   public static final int DATA_MAGIC_NUMBER = 0x00000803;
