@@ -101,9 +101,9 @@ public abstract class Symbol{
     BELOW,
     BELOW_LEFT,
     LEFT,
-    ABOVE_LEFT;
-    //INSIDE,
-    //OUTSIDE,
+    ABOVE_LEFT,
+    INSIDE,
+    OUTSIDE;
 
     public static ArgumentPosition oppositePosition(ArgumentPosition position){
       switch(position){
@@ -123,6 +123,10 @@ public abstract class Symbol{
           return ArgumentPosition.RIGHT;
         case ABOVE_LEFT:
           return ArgumentPosition.BELOW_RIGHT;
+        case INSIDE:
+          return ArgumentPosition.OUTSIDE;
+        case OUTSIDE:
+          return ArgumentPosition.INSIDE;
         default:
           return position;
       }
@@ -175,9 +179,14 @@ public abstract class Symbol{
       if(xPosition == -1){
         return ArgumentPosition.LEFT;
       }
-      /*else if(xPosition == 0){
-        return Symbol.ArgumentPosition.INSIDE;
-      }*/
+      else if(xPosition == 0){
+        if(symbol.traceGroup_.getArea() > traceGroup_.getArea()){
+          return Symbol.ArgumentPosition.OUTSIDE;
+        }
+        else{
+          return Symbol.ArgumentPosition.INSIDE;
+        }
+      }
       else{
         return ArgumentPosition.RIGHT;
       }
