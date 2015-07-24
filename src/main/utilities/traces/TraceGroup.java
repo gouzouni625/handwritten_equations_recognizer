@@ -220,6 +220,10 @@ public class TraceGroup{
     return centerOfMass;
   }
 
+  public double getArea(){
+    return (this.getWidth() * this.getHeight());
+  }
+
   private ArrayList<Trace> traces_;
 
   private Point topLeftCorner_;
