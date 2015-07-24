@@ -136,12 +136,35 @@ public class Trace{
   }
 
   public static boolean areOverlapped(Trace trace1, Trace trace2){
-    trace1.calculateCorners();
-    trace2.calculateCorners();
+    for(int i = 0;i < trace1.size() - 1;i++){
+      for(int j = 0;j < trace2.size() - 1;j++){
+        Point p1 = trace1.get(i);
+        Point p2 = trace1.get(i + 1);
 
-    if(trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_){
-      if(trace2.getTopLeftCorner().y_ >= trace1.getBottomRightCorner().y_ && trace2.getBottomRightCorner().y_ <= trace1.getTopLeftCorner().y_){
-        return true;
+        Point p3 = trace2.get(j);
+        Point p4 = trace2.get(j + 1);
+
+        // TODO
+        // What if x1 == x2 or x3 == x4?
+        double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
+        double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
+
+        if(l12 == l34){
+          // The two lines are parallel so they do not overlap.
+          continue;
+        }
+
+        Point intersection = new Point(0, 0);
+        intersection.x_ = ((p4.y_ - l34 * p4.x_) - (p2.y_ - l12 * p2.x_)) / (l12 - l34);
+        intersection.y_ = p2.y_ + l12 * (intersection.x_ - p2.x_);
+
+        // If the intersection point belongs to both lines, the then lines overlap.
+        if(Math.min(p1.x_, p2.x_) <= intersection.x_ && intersection.x_ <= Math.max(p1.x_, p2.x_) &&
+           Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
+           Math.min(p3.x_, p4.x_) <= intersection.x_ && intersection.x_ <= Math.max(p3.x_, p4.x_) &&
+           Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
+          return true;
+        }
       }
     }
 
