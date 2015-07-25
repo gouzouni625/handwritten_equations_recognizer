@@ -376,6 +376,9 @@ public abstract class MSTPartitioner extends Partitioner{
   }
 
   private boolean areEqualsSymbol(Trace trace1, Trace trace2){
+    trace1.calculateCorners();
+    trace2.calculateCorners();
+
     if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
         (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
         (trace2.getHeight() <= 0.40 * trace2.getWidth())){
