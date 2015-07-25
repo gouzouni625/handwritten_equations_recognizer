@@ -144,26 +144,76 @@ public class Trace{
         Point p3 = trace2.get(j);
         Point p4 = trace2.get(j + 1);
 
-        // TODO
-        // What if x1 == x2 or x3 == x4?
-        double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
-        double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
+        if(Math.abs(p2.x_ - p1.x_) < COMPARISON_THREASHOLD){
+          // Line 1 is vertical.
 
-        if(l12 == l34){
-          // The two lines are parallel so they do not overlap.
-          continue;
+          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THREASHOLD){
+            // Line 1 and line 2 are vertical.
+
+            if((Math.abs(p4.x_ - p2.x_) + Math.abs(p3.x_ - p1.x_)) / 2 < COMPARISON_THREASHOLD){
+              return true;
+            }
+            else{
+              continue;
+            }
+          }
+          else{
+            // Line 1 is vertical but line 2 is not.
+            // This means that there will definitely be an intersection point.
+            double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
+
+            Point intersection = new Point(0, 0);
+            intersection.x_ = p1.x_;
+            intersection.y_ = p4.y_ + l34 * (intersection.x_ - p4.x_);
+
+            if(Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
+               Math.min(p3.x_, p4.x_) <= intersection.x_ && intersection.x_ <= Math.max(p3.x_, p4.x_) &&
+               Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
+              return true;
+             }
+          }
         }
+        else{
+          // Line 1 is not vertical
 
-        Point intersection = new Point(0, 0);
-        intersection.x_ = ((p4.y_ - l34 * p4.x_) - (p2.y_ - l12 * p2.x_)) / (l12 - l34);
-        intersection.y_ = p2.y_ + l12 * (intersection.x_ - p2.x_);
+          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THREASHOLD){
+            // Line 1 is not vertical but line 2 is.
 
-        // If the intersection point belongs to both lines, the then lines overlap.
-        if(Math.min(p1.x_, p2.x_) <= intersection.x_ && intersection.x_ <= Math.max(p1.x_, p2.x_) &&
-           Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
-           Math.min(p3.x_, p4.x_) <= intersection.x_ && intersection.x_ <= Math.max(p3.x_, p4.x_) &&
-           Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
-          return true;
+            double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
+
+            Point intersection = new Point(0, 0);
+            intersection.x_ = p3.x_;
+            intersection.y_ = p2.y_ + l12 * (intersection.x_ - p2.x_);
+
+            if(Math.min(p1.x_, p2.x_) <= intersection.x_ && intersection.x_ <= Math.max(p1.x_, p2.x_) &&
+               Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
+               Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
+              return true;
+             }
+          }
+          else{
+            // Neither of line 1 or line 2 is vertical.
+
+            double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
+            double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
+
+            if(Math.abs(l12 - l34) < COMPARISON_THREASHOLD){
+              // The two lines are parallel so they do not overlap.
+              continue;
+            }
+
+            Point intersection = new Point(0, 0);
+            intersection.x_ = ((p4.y_ - l34 * p4.x_) - (p2.y_ - l12 * p2.x_)) / (l12 - l34);
+            intersection.y_ = p2.y_ + l12 * (intersection.x_ - p2.x_);
+
+            // If the intersection point belongs to both lines, the then lines overlap.
+            if(Math.min(p1.x_, p2.x_) <= intersection.x_ && intersection.x_ <= Math.max(p1.x_, p2.x_) &&
+               Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
+               Math.min(p3.x_, p4.x_) <= intersection.x_ && intersection.x_ <= Math.max(p3.x_, p4.x_) &&
+               Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
+              return true;
+            }
+          }
         }
       }
     }
@@ -197,4 +247,5 @@ public class Trace{
   private Point topLeftCorner_;
   private Point bottomRightCorner_;
 
+  public static double COMPARISON_THREASHOLD = 1e-03;
 }
