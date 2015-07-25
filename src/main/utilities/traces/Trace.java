@@ -144,13 +144,13 @@ public class Trace{
         Point p3 = trace2.get(j);
         Point p4 = trace2.get(j + 1);
 
-        if(Math.abs(p2.x_ - p1.x_) < COMPARISON_THREASHOLD){
+        if(Math.abs(p2.x_ - p1.x_) < COMPARISON_THRESHOLD){
           // Line 1 is vertical.
 
-          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THREASHOLD){
+          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THRESHOLD){
             // Line 1 and line 2 are vertical.
 
-            if((Math.abs(p4.x_ - p2.x_) + Math.abs(p3.x_ - p1.x_)) / 2 < COMPARISON_THREASHOLD){
+            if((Math.abs(p4.x_ - p2.x_) + Math.abs(p3.x_ - p1.x_)) / 2 < COMPARISON_THRESHOLD){
               return true;
             }
             else{
@@ -176,7 +176,7 @@ public class Trace{
         else{
           // Line 1 is not vertical
 
-          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THREASHOLD){
+          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THRESHOLD){
             // Line 1 is not vertical but line 2 is.
 
             double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
@@ -197,7 +197,7 @@ public class Trace{
             double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
             double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
 
-            if(Math.abs(l12 - l34) < COMPARISON_THREASHOLD){
+            if(Math.abs(l12 - l34) < COMPARISON_THRESHOLD){
               // The two lines are parallel so they do not overlap.
               continue;
             }
@@ -247,5 +247,5 @@ public class Trace{
   private Point topLeftCorner_;
   private Point bottomRightCorner_;
 
-  public static double COMPARISON_THREASHOLD = 1e-03;
+  public static double COMPARISON_THRESHOLD = 0.5;
 }
