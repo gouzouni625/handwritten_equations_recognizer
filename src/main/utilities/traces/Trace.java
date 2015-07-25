@@ -242,6 +242,20 @@ public class Trace{
     return min;
   }
 
+  public String toInkMLFormat(){
+    String inkMLRepresentation = new String("<trace>");
+
+    for(Point point : points_){
+      inkMLRepresentation += point.x_ + " " + point.y_ + ", ";
+    }
+    // Remove last comma and the following space.
+    inkMLRepresentation = inkMLRepresentation.substring(0, inkMLRepresentation.length() - 2);
+
+    inkMLRepresentation += "</trace>";
+
+    return inkMLRepresentation;
+  }
+
   private ArrayList<Point> points_;
 
   private Point topLeftCorner_;
