@@ -120,6 +120,14 @@ public class TraceGroup{
     return (new Point(bottomRightCorner_));
   }
 
+  public Point getBottomLeftCorner(){
+    return (new Point(topLeftCorner_.x_, bottomRightCorner_.y_));
+  }
+
+  public Point getTopRightCorner(){
+    return (new Point(bottomRightCorner_.x_, topLeftCorner_.y_));
+  }
+
   public double getWidth(){
     return (bottomRightCorner_.x_ - topLeftCorner_.x_);
   }
