@@ -37,6 +37,12 @@ public class SymbolFactory{
         return SymbolFactory.createByType(Operator.Types.EQUALS, traceGroup);
       case SymbolFactory.LABEL_HORIZONTAL_LINE:
         return (new UnrecognizedSymbol(UnrecognizedSymbol.Types.HORIZONTAL_LINE, traceGroup));
+      case SymbolFactory.LABEL_SQRT:
+        return SymbolFactory.createByType(Operator.Types.SQRT, traceGroup);
+      case SymbolFactory.LABEL_LEFT_PARENTHESIS:
+        return SymbolFactory.createByType(Operator.Types.LEFT_PARENTHESIS, traceGroup);
+      case SymbolFactory.LABEL_RIGHT_PARENTHESIS:
+        return SymbolFactory.createByType(Operator.Types.RIGHT_PARENTHESIS, traceGroup);
       default:
         return null;
     }
@@ -91,6 +97,15 @@ public class SymbolFactory{
     else if(type == Operator.Types.FRACTION_LINE){
       return (new Operator(Operator.Types.FRACTION_LINE, traceGroup));
     }
+    else if(type == Operator.Types.SQRT){
+      return (new Operator(Operator.Types.SQRT, traceGroup));
+    }
+    else if(type == Operator.Types.LEFT_PARENTHESIS){
+      return (new Operator(Operator.Types.LEFT_PARENTHESIS, traceGroup));
+    }
+    else if(type == Operator.Types.RIGHT_PARENTHESIS){
+      return (new Operator(Operator.Types.RIGHT_PARENTHESIS, traceGroup));
+    }
     else{
       return null;
     }
@@ -112,5 +127,9 @@ public class SymbolFactory{
   public static final int LABEL_LOWER_X = 12;
   public static final int LABEL_LOWER_Y = 13;
   public static final int LABEL_HORIZONTAL_LINE = 14;
+  public static final int LABEL_SQRT = 15;
+  public static final int LABEL_LEFT_PARENTHESIS = 16;
+  public static final int LABEL_RIGHT_PARENTHESIS = 17;
+  public static final int LABEL_GARBAGE = 18;
 
 }
