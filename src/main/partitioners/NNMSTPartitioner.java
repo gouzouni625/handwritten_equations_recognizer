@@ -24,6 +24,9 @@ public class NNMSTPartitioner extends MSTPartitioner{
     ((NeuralNetworkClassifier)(classifier_)).loadNeuralNetwork(path);
 
     ((NeuralNetworkClassifier)(classifier_)).setImageDistorter(imageDistorter);
+
+    ((NeuralNetworkClassifier)(classifier_)).setImageNumberOfRows(imageDistorter.getSampleRows());
+    ((NeuralNetworkClassifier)(classifier_)).setImageNumberOfColumns(imageDistorter.getSampleColumns());
   }
 
 }

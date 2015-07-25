@@ -35,7 +35,7 @@ public class NeuralNetworkClassifier extends Classifier{
       return Classifier.MINIMUM_RATE;
     }
 
-    double[] neuralNetworkOutput = this.feedForward(this.imageToVector(symbol.print(new Size(28, 28)), -1, 1));
+    double[] neuralNetworkOutput = this.feedForward(this.imageToVector(symbol.print(new Size(imageNumberOfRows_, imageNumberOfColumns_)), -1, 1));
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
@@ -75,7 +75,7 @@ public class NeuralNetworkClassifier extends Classifier{
       for(int i = 0;i < numberOfSubPaths;i++){
         subSymbol = new TraceGroup(symbol.subTraceGroup(symbolSubPaths[i]));
 
-        neuralNetworkOutput = this.feedForward(this.imageToVector(subSymbol.print(new Size(28, 28)), -1, 1));
+        neuralNetworkOutput = this.feedForward(this.imageToVector(subSymbol.print(new Size(imageNumberOfRows_, imageNumberOfColumns_)), -1, 1));
 
         double rate = Utilities.maxValue(neuralNetworkOutput);
 
@@ -135,7 +135,7 @@ public class NeuralNetworkClassifier extends Classifier{
         symbolWithContext = new TraceGroup(symbol);
         symbolWithContext.add(context.subTraceGroup(contextPaths[i]));
 
-        neuralNetworkOutput = this.feedForward(this.imageToVector(symbolWithContext.print(new Size(28, 28)), -1, 1));
+        neuralNetworkOutput = this.feedForward(this.imageToVector(symbolWithContext.print(new Size(imageNumberOfRows_, imageNumberOfColumns_)), -1, 1));
 
         double rate = Utilities.maxValue(neuralNetworkOutput);
 
@@ -234,6 +234,22 @@ public class NeuralNetworkClassifier extends Classifier{
     imageDistorter_ = imageDistorter;
   }
 
+  public void setImageNumberOfRows(int imageNumberOfRows){
+    imageNumberOfRows_ = imageNumberOfRows;
+  }
+
+  public int getImageNumberOfRows(){
+    return imageNumberOfRows_;
+  }
+
+  public void setImageNumberOfColumns(int imageNumberOfColumns){
+    imageNumberOfColumns_ = imageNumberOfColumns;
+  }
+
+  public int getImageNumberOfColumns(){
+    return imageNumberOfColumns_;
+  }
+
   public ImageDistorter getImageDistorter(){
     return imageDistorter_;
   }
@@ -245,5 +261,8 @@ public class NeuralNetworkClassifier extends Classifier{
   private boolean silent_ = true;
 
   private ImageDistorter imageDistorter_ = null;
+
+  private int imageNumberOfRows_;
+  private int imageNumberOfColumns_;
 
 }
