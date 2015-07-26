@@ -137,10 +137,10 @@ public class Trace{
 
   public static boolean areOverlapped(Trace trace1, Trace trace2){
     for(int i = 0;i < trace1.size() - 1;i++){
-      for(int j = 0;j < trace2.size() - 1;j++){
-        Point p1 = trace1.get(i);
-        Point p2 = trace1.get(i + 1);
+      Point p1 = trace1.get(i);
+      Point p2 = trace1.get(i + 1);
 
+      for(int j = 0;j < trace2.size() - 1;j++){
         Point p3 = trace2.get(j);
         Point p4 = trace2.get(j + 1);
 
@@ -150,7 +150,9 @@ public class Trace{
           if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THRESHOLD){
             // Line 1 and line 2 are vertical.
 
-            if((Math.abs(p4.x_ - p2.x_) + Math.abs(p3.x_ - p1.x_)) / 2 < COMPARISON_THRESHOLD){
+            if(Math.abs((p1.x_ + p2.x_) / 2 - (p3.x_ + p4.x_) / 2) < COMPARISON_THRESHOLD &&
+               ((Math.max(p1.y_, p2.y_) <= Math.max(p3.y_, p4.y_) && Math.max(p1.y_, p2.y_) >= Math.min(p3.y_, p4.y_)) ||
+                (Math.max(p3.y_, p4.y_) <= Math.max(p1.y_, p2.y_) && Math.max(p3.y_, p4.y_) >= Math.min(p1.y_, p2.y_)))){
               return true;
             }
             else{
