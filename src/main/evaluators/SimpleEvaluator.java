@@ -5,12 +5,13 @@ import java.io.IOException;
 import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
+import main.distorters.ImageDistorter;
 import main.partitioners.NNMSTPartitioner;
 import main.parsers.GGParser;
 
 public class SimpleEvaluator{
 
-  public SimpleEvaluator(String inkML, String neuralNetworkPath) throws IOException{
+  public SimpleEvaluator(String inkML, String neuralNetworkPath, int[] sizesOfLayers, ImageDistorter imageDistorter) throws IOException{
     expression_ = new TraceGroup();
 
     int startOfTrace = inkML.indexOf("<trace>");
@@ -33,7 +34,7 @@ public class SimpleEvaluator{
       endOfTrace = inkML.indexOf("</trace>");
     }
 
-    partitioner_ = new NNMSTPartitioner(new int[] {784, 100, 15}, neuralNetworkPath);
+    partitioner_ = new NNMSTPartitioner(sizesOfLayers, neuralNetworkPath, imageDistorter);
 
     parser_ = new GGParser();
   }
