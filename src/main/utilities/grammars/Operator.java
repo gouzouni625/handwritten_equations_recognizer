@@ -49,8 +49,9 @@ public class Operator extends Symbol{
         break;
       case RIGHT_PARENTHESIS:
         children_ = new ArrayList<List<Symbol>>();
-        childrenPositions_ = new ArgumentPosition[] {};
-        childrenClass_ = new SymbolClass[][] {};
+        children_.add(new ArrayList<Symbol>());
+        childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER}};
         break;
     }
 
@@ -65,7 +66,7 @@ public class Operator extends Symbol{
     FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}"),
     SQRT("\\sqrt{" + ArgumentPosition.INSIDE + "}"),
     LEFT_PARENTHESIS("("),
-    RIGHT_PARENTHESIS(")");
+    RIGHT_PARENTHESIS(")^{" + ArgumentPosition.ABOVE_RIGHT + "}");
 
     private Types(String stringValue){
       stringValue_ = stringValue;
