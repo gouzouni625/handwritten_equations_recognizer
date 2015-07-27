@@ -63,7 +63,7 @@ public class Operator extends Symbol{
     EQUALS("="),
     MINUS("-"),
     FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}"),
-    SQRT("\\sqrt[2]{" + ArgumentPosition.INSIDE + "}"),
+    SQRT("\\sqrt{" + ArgumentPosition.INSIDE + "}"),
     LEFT_PARENTHESIS("("),
     RIGHT_PARENTHESIS(")");
 
