@@ -338,7 +338,11 @@ public abstract class GrammarParser extends Parser{
       }
     }
 
-    return minDistance;
+    Point centerOfMass1 = traceGroup1.getCenterOfMass();
+    Point centerOfMass2 = traceGroup2.getCenterOfMass();
+    double distanceOfCenterOfMass = Point.distance(centerOfMass1, centerOfMass2);
+
+    return (0.5 * minDistance + 0.5 * distanceOfCenterOfMass);
   }
 
   public boolean isGrammarSilent(){
