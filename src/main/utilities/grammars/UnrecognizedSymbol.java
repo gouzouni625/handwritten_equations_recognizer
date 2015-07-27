@@ -3,6 +3,7 @@ package main.utilities.grammars;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.utilities.grammars.Symbol.ChildAcceptanceCriterion;
 import main.utilities.traces.TraceGroup;
 
 public class UnrecognizedSymbol extends Symbol{
@@ -26,6 +27,7 @@ public class UnrecognizedSymbol extends Symbol{
     childrenClass_ = new SymbolClass[][] {};
     nextSymbol_ = null;
     nextSymbolPositions_ = new ArgumentPosition[] {};
+    childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
 
     switch(type){
       case HORIZONTAL_LINE:
@@ -111,7 +113,7 @@ public class UnrecognizedSymbol extends Symbol{
     childrenPositions_ = chosenSymbol_.childrenPositions_;
     nextSymbol_ = chosenSymbol_.nextSymbol_;
     nextSymbolPositions_ = chosenSymbol_.nextSymbolPositions_;
-
+    childrenAcceptanceCriteria_ = chosenSymbol_.childrenAcceptanceCriteria_;
   }
 
   @Override

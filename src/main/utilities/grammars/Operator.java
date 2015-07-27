@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import main.utilities.grammars.Symbol;
 import main.utilities.grammars.Symbol.ArgumentPosition;
+import main.utilities.grammars.Symbol.ChildAcceptanceCriterion;
 import main.utilities.grammars.Symbol.SymbolClass;
 import main.utilities.traces.TraceGroup;
 
@@ -24,6 +25,7 @@ public class Operator extends Symbol{
         children_ = new ArrayList<List<Symbol>>();
         childrenPositions_ = new ArgumentPosition[] {};
         childrenClass_ = new SymbolClass[][] {};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
         break;
       case FRACTION_LINE:
         children_ = new ArrayList<List<Symbol>>();
@@ -33,6 +35,8 @@ public class Operator extends Symbol{
         // TODO
         // Should also accept Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion},
+                                                                        {allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion}};
         break;
       case SQRT:
         children_ = new ArrayList<List<Symbol>>();
@@ -41,17 +45,20 @@ public class Operator extends Symbol{
         // TODO
         // Should also accept Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
         break;
       case LEFT_PARENTHESIS:
         children_ = new ArrayList<List<Symbol>>();
         childrenPositions_ = new ArgumentPosition[] {};
         childrenClass_ = new SymbolClass[][] {};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
         break;
       case RIGHT_PARENTHESIS:
         children_ = new ArrayList<List<Symbol>>();
         children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
-        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER}};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER, SymbolClass.OPERATOR, SymbolClass.UNRECOGNIZED}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion}};
         break;
     }
 

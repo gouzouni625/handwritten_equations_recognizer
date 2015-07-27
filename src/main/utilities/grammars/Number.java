@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.utilities.grammars.Symbol;
+import main.utilities.grammars.Symbol.ChildAcceptanceCriterion;
 import main.utilities.traces.TraceGroup;
 
 public class Number extends Symbol{
@@ -18,9 +19,9 @@ public class Number extends Symbol{
     children_ = new ArrayList<List<Symbol>>();
     children_.add(new ArrayList<Symbol>());
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
-    // TODO
-    // Should also accept Operator and Unrecognized symbols as children.
-    childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER}};
+    childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER, SymbolClass.OPERATOR, SymbolClass.UNRECOGNIZED}};
+    childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion,
+                                                                     sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
 
     nextSymbol_ = null;
     nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};

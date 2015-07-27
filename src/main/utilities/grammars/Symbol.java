@@ -19,11 +19,18 @@ public abstract class Symbol{
       int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
 
       if(Arrays.asList(childrenClass_[index]).contains(symbol.symbolClass_)){
-        if(!children_.get(index).contains(symbol)){
-          children_.get(index).add(symbol);
-        }
+        int index2 = Arrays.asList(childrenClass_[index]).indexOf(symbol.symbolClass_);
 
-        return ArgumentType.CHILD;
+        if(childrenAcceptanceCriteria_[index][index2].accept(this, symbol, relativePosition)){
+          if(!children_.get(index).contains(symbol)){
+            children_.get(index).add(symbol);
+          }
+
+          return ArgumentType.CHILD;
+        }
+        else{
+          return ArgumentType.NONE;
+        }
       }
       else{
         return ArgumentType.NONE;
@@ -209,6 +216,26 @@ public abstract class Symbol{
 
   public void reEvaluate(){}
 
+  public interface ChildAcceptanceCriterion{
+    public boolean accept(Symbol symbol, Symbol argument, ArgumentPosition relativePosition);
+  };
+
+  public ChildAcceptanceCriterion sizeChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
+
+    @Override
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
+      return (symbol.traceGroup_.getArea() > child.traceGroup_.getArea());
+    }
+  };
+
+  public ChildAcceptanceCriterion allChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
+
+    @Override
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
+      return (true);
+    }
+  };
+
   public final SymbolClass symbolClass_;
 
   public TraceGroup traceGroup_;
@@ -218,6 +245,7 @@ public abstract class Symbol{
   public List<List<Symbol>> children_;
   public ArgumentPosition[] childrenPositions_;
   public SymbolClass[][] childrenClass_;
+  public ChildAcceptanceCriterion[][] childrenAcceptanceCriteria_;
 
   public Symbol nextSymbol_;
   public ArgumentPosition[] nextSymbolPositions_;
