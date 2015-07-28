@@ -29,14 +29,18 @@ public class TraceGroup{
     }
   }
 
-  public void add(Trace trace){
+  public TraceGroup add(Trace trace){
     traces_.add(new Trace(trace));
+
+    return this;
   }
 
-  public void add(TraceGroup traceGroup){
+  public TraceGroup add(TraceGroup traceGroup){
     for(int i = 0;i < traceGroup.size();i++){
       this.add(traceGroup.get(i));
     }
+
+    return this;
   }
 
   public Trace get(int index){
