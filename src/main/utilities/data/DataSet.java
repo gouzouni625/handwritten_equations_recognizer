@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.nio.ByteBuffer;
 
 import main.utilities.Utilities;
@@ -22,6 +23,7 @@ public class DataSet{
       this.add(dataSet.get(i));
     }
   }
+
 
 
   public void add(DataSample dataSample){
@@ -172,6 +174,17 @@ public class DataSet{
     }
 
     return result;
+  }
+
+  public DataSet subDataSet(int start, int end){
+    List<DataSample> samples = samples_.subList(start, end);
+
+    DataSet dataSet = new DataSet();
+    for(DataSample sample : samples){
+      dataSet.add(sample);
+    }
+
+    return dataSet;
   }
 
   private ArrayList<DataSample> samples_;
