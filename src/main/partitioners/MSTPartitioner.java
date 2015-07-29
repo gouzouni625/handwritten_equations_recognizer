@@ -381,7 +381,9 @@ public abstract class MSTPartitioner extends Partitioner{
 
     if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
         (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
-        (trace2.getHeight() <= 0.40 * trace2.getWidth())){
+        (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
+        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) &&
+        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){
       return true;
     }
 
