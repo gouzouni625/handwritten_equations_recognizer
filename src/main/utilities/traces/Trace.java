@@ -93,6 +93,40 @@ public class Trace{
     return (new Point(bottomRightCorner_));
   }
 
+  public Point getBottomLeftCorner(){
+    return (new Point(topLeftCorner_.x_, bottomRightCorner_.y_));
+  }
+
+  public Point getTopRightCorner(){
+    return (new Point(bottomRightCorner_.x_, topLeftCorner_.y_));
+  }
+
+  public Point getOutterLeftPoint(){
+    double minX = points_.get(0).x_;
+    int index = 0;
+    for(int i = 0;i < points_.size();i++){
+      if(points_.get(i).x_ < minX){
+        minX = points_.get(i).x_;
+        index = i;
+      }
+    }
+
+    return (new Point(points_.get(index)));
+  }
+
+  public Point getOutterRightPoint(){
+    double maxX = points_.get(0).x_;
+    int index = 0;
+    for(int i = 0;i < points_.size();i++){
+      if(points_.get(i).x_ > maxX){
+        maxX = points_.get(i).x_;
+        index = i;
+      }
+    }
+
+    return (new Point(points_.get(index)));
+  }
+
   public double getWidth(){
     return (bottomRightCorner_.x_ - topLeftCorner_.x_);
   }
