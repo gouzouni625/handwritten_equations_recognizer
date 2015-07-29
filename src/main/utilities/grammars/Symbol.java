@@ -45,7 +45,31 @@ public abstract class Symbol{
     return ArgumentType.NONE;
   }
 
+  public void removeChild(Symbol symbol){
+    for(List<Symbol> childrenList : children_){
+      for(int child = 0;child < childrenList.size();child++){
+        if(childrenList.get(child) == symbol){
+          childrenList.remove(symbol);
+
+          if(child > 0 && childrenList.get(child - 1).nextSymbol_ == symbol){
+            childrenList.get(child - 1).nextSymbol_ = null;
+          }
+
+          break;
+        }
+      }
+    }
+
+  }
+
   public void setParent(Symbol symbol){
+    // If I already have a parent, and my current parent is different from
+    // my upcoming parent(meaning that I am changing a parent) then, my current
+    // parent should remove me from being his child.
+    if(parent_ != null && parent_ != symbol){
+      parent_.removeChild(this);
+    }
+
     parent_ = symbol;
   }
 
