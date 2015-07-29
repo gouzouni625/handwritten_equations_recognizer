@@ -34,9 +34,9 @@ public class Operator extends Symbol{
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
         // TODO
         // Should also accept Unrecognized symbols as children.
-        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion},
-                                                                        {allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion}};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion},
+                                                                        {allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion}};
         break;
       case SQRT:
         children_ = new ArrayList<List<Symbol>>();
@@ -44,8 +44,8 @@ public class Operator extends Symbol{
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.INSIDE};
         // TODO
         // Should also accept Unrecognized symbols as children.
-        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
         break;
       case LEFT_PARENTHESIS:
         children_ = new ArrayList<List<Symbol>>();
