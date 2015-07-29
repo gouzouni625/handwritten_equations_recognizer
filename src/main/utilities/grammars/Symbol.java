@@ -248,7 +248,7 @@ public abstract class Symbol{
 
     @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
-      return (symbol.traceGroup_.getArea() > child.traceGroup_.getArea());
+      return (symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea());
     }
   };
 
