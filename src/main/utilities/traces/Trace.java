@@ -136,6 +136,9 @@ public class Trace{
   }
 
   public static boolean areOverlapped(Trace trace1, Trace trace2){
+    trace1 = new Trace(trace1).multiplyBy(Math.pow(10, NUMBER_OF_DECIMAL_DIGITS));
+    trace2 = new Trace(trace2).multiplyBy(Math.pow(10, NUMBER_OF_DECIMAL_DIGITS));
+
     for(int i = 0;i < trace1.size() - 1;i++){
       Point p1 = trace1.get(i);
       Point p2 = trace1.get(i + 1);
@@ -264,4 +267,6 @@ public class Trace{
   private Point bottomRightCorner_;
 
   public static double COMPARISON_THRESHOLD = 0.5;
+
+  public static int NUMBER_OF_DECIMAL_DIGITS = 2;
 }
