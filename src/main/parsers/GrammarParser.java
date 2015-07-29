@@ -272,7 +272,12 @@ public abstract class GrammarParser extends Parser{
 
         samePositionChildrenList.clear();
         for(int i = 0;i < samePositionChildrenArray.length;i++){
-          samePositionChildrenList.add(samePositionChildrenArray[i]);
+          // If symbol is still the parent of samePositionChildrenArray[i], then add it.
+          // If not, it will be some other symbol in samePositionChildrenArray so it should
+          // not be added to symbol's children.
+          if(samePositionChildrenArray[i].parent_ == symbol){
+            samePositionChildrenList.add(samePositionChildrenArray[i]);
+          }
         }
       }
     }
