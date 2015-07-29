@@ -379,11 +379,14 @@ public abstract class MSTPartitioner extends Partitioner{
     trace1.calculateCorners();
     trace2.calculateCorners();
 
-    if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
-        (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
-        (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
-        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) &&
-        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){
+    double trace1Slope = Math.atan((trace1.getOutterRightPoint().y_ - trace1.getOutterLeftPoint().y_) / (trace1.getOutterRightPoint().x_ - trace1.getOutterLeftPoint().x_));
+    double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) / (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
+
+    if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
+        (trace1Slope >= -Math.PI / 4 && trace1Slope <= Math.PI / 4 ) && // About the slope of the line.
+        (trace2Slope >= -Math.PI / 4 && trace2Slope <= Math.PI / 4 ) && // About the slope of the line.
+        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) && // About the distances between the two lines.
+        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){ // About the length of the two lines.
       return true;
     }
 
