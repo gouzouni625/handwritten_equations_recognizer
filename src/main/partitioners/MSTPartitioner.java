@@ -383,10 +383,12 @@ public abstract class MSTPartitioner extends Partitioner{
     double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) / (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
 
     if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
-        (trace1Slope >= -Math.PI / 4 && trace1Slope <= Math.PI / 4 ) && // About the slope of the line.
-        (trace2Slope >= -Math.PI / 4 && trace2Slope <= Math.PI / 4 ) && // About the slope of the line.
-        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) && // About the distances between the two lines.
-        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){ // About the length of the two lines.
+       (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
+       (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
+       (trace1Slope >= -Math.PI / 4 && trace1Slope <= Math.PI / 4 ) && // About the slope of the line.
+       (trace2Slope >= -Math.PI / 4 && trace2Slope <= Math.PI / 4 ) && // About the slope of the line.
+       (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) && // About the distances between the two lines.
+       (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()) / 2)){ // About the length of the two lines.s
       return true;
     }
 
