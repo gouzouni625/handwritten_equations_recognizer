@@ -388,7 +388,7 @@ public abstract class MSTPartitioner extends Partitioner{
        (trace1Slope >= -Math.PI / 4 && trace1Slope <= Math.PI / 4 ) && // About the slope of the line.
        (trace2Slope >= -Math.PI / 4 && trace2Slope <= Math.PI / 4 ) && // About the slope of the line.
        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) && // About the distances between the two lines.
-       (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()) / 2)){ // About the length of the two lines.s
+       (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){ // About the length of the two lines.s
       return true;
     }
 
@@ -400,8 +400,8 @@ public abstract class MSTPartitioner extends Partitioner{
       return -1;
     }
 
-    Point centerOfMass1 = trace1.getCenterOfMass(); //trace1.getCentroid();
-    Point centerOfMass2 = trace2.getCenterOfMass(); //trace2.getCentroid();
+    Point centerOfMass1 = trace1.getCenterOfMass();
+    Point centerOfMass2 = trace2.getCenterOfMass();
 
     return (Point.distance(centerOfMass1, centerOfMass2));
   }
