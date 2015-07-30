@@ -3,8 +3,10 @@ package main.utilities.traces;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 
 /**
  * Class that implements a trace as a list of two dimensional points.
@@ -170,89 +172,40 @@ public class Trace{
   }
 
   public static boolean areOverlapped(Trace trace1, Trace trace2){
-    trace1 = new Trace(trace1).multiplyBy(Math.pow(10, NUMBER_OF_DECIMAL_DIGITS));
-    trace2 = new Trace(trace2).multiplyBy(Math.pow(10, NUMBER_OF_DECIMAL_DIGITS));
+    Trace trace1Copy = new Trace(trace1);
+    Trace trace2Copy = new Trace(trace2);
+    trace1Copy.multiplyBy(100).calculateCorners();
+    trace2Copy.multiplyBy(100).calculateCorners();
 
-    for(int i = 0;i < trace1.size() - 1;i++){
-      Point p1 = trace1.get(i);
-      Point p2 = trace1.get(i + 1);
+    TraceGroup traceGroup = new TraceGroup();
+    traceGroup.add(trace1Copy);
+    traceGroup.add(trace2Copy);
+    traceGroup.calculateCorners();
 
-      for(int j = 0;j < trace2.size() - 1;j++){
-        Point p3 = trace2.get(j);
-        Point p4 = trace2.get(j + 1);
+    trace1Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
+    trace2Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
+    traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
 
-        if(Math.abs(p2.x_ - p1.x_) < COMPARISON_THRESHOLD){
-          // Line 1 is vertical.
+    double width = traceGroup.getWidth();
+    if(width < 100){
+      width = 100;
+    }
+    double height = traceGroup.getHeight();
+    if(height < 100){
+      height = 100;
+    }
 
-          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THRESHOLD){
-            // Line 1 and line 2 are vertical.
+    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    Mat image1 = Mat.zeros(new Size(width, height), CvType.CV_32F);
+    Mat image2 = Mat.zeros(new Size(width, height), CvType.CV_32F);
 
-            if(Math.abs((p1.x_ + p2.x_) / 2 - (p3.x_ + p4.x_) / 2) < COMPARISON_THRESHOLD &&
-               ((Math.max(p1.y_, p2.y_) <= Math.max(p3.y_, p4.y_) && Math.max(p1.y_, p2.y_) >= Math.min(p3.y_, p4.y_)) ||
-                (Math.max(p3.y_, p4.y_) <= Math.max(p1.y_, p2.y_) && Math.max(p3.y_, p4.y_) >= Math.min(p1.y_, p2.y_)))){
-              return true;
-            }
-            else{
-              continue;
-            }
-          }
-          else{
-            // Line 1 is vertical but line 2 is not.
-            // This means that there will definitely be an intersection point.
-            double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
+    trace1Copy.print(image1, 1);
+    trace2Copy.print(image2, 1);
 
-            Point intersection = new Point(0, 0);
-            intersection.x_ = p1.x_;
-            intersection.y_ = p4.y_ + l34 * (intersection.x_ - p4.x_);
-
-            if(Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
-               Math.min(p3.x_, p4.x_) <= intersection.x_ && intersection.x_ <= Math.max(p3.x_, p4.x_) &&
-               Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
-              return true;
-             }
-          }
-        }
-        else{
-          // Line 1 is not vertical
-
-          if(Math.abs(p4.x_ - p3.x_) < COMPARISON_THRESHOLD){
-            // Line 1 is not vertical but line 2 is.
-
-            double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
-
-            Point intersection = new Point(0, 0);
-            intersection.x_ = p3.x_;
-            intersection.y_ = p2.y_ + l12 * (intersection.x_ - p2.x_);
-
-            if(Math.min(p1.x_, p2.x_) <= intersection.x_ && intersection.x_ <= Math.max(p1.x_, p2.x_) &&
-               Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
-               Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
-              return true;
-             }
-          }
-          else{
-            // Neither of line 1 or line 2 is vertical.
-
-            double l12 = (p2.y_ - p1.y_) / (p2.x_ - p1.x_);
-            double l34 = (p4.y_ - p3.y_) / (p4.x_ - p3.x_);
-
-            if(Math.abs(l12 - l34) < COMPARISON_THRESHOLD){
-              // The two lines are parallel so they do not overlap.
-              continue;
-            }
-
-            Point intersection = new Point(0, 0);
-            intersection.x_ = ((p4.y_ - l34 * p4.x_) - (p2.y_ - l12 * p2.x_)) / (l12 - l34);
-            intersection.y_ = p2.y_ + l12 * (intersection.x_ - p2.x_);
-
-            // If the intersection point belongs to both lines, the then lines overlap.
-            if(Math.min(p1.x_, p2.x_) <= intersection.x_ && intersection.x_ <= Math.max(p1.x_, p2.x_) &&
-               Math.min(p1.y_, p2.y_) <= intersection.y_ && intersection.y_ <= Math.max(p1.y_, p2.y_) &&
-               Math.min(p3.x_, p4.x_) <= intersection.x_ && intersection.x_ <= Math.max(p3.x_, p4.x_) &&
-               Math.min(p3.y_, p4.y_) <= intersection.y_ && intersection.y_ <= Math.max(p3.y_, p4.y_)){
-              return true;
-            }
-          }
+    for(int i = 0;i < image1.rows();i++){
+      for(int j = 0;j < image1.cols();j++){
+        if(image1.get(i, j)[0] > 0 && image2.get(i, j)[0] > 0){
+          return true;
         }
       }
     }
@@ -303,4 +256,5 @@ public class Trace{
   public static double COMPARISON_THRESHOLD = 0.5;
 
   public static int NUMBER_OF_DECIMAL_DIGITS = 2;
+
 }
