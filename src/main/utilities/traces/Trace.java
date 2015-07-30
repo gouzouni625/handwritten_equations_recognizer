@@ -202,9 +202,20 @@ public class Trace{
     trace1Copy.print(image1, 1);
     trace2Copy.print(image2, 1);
 
-    for(int i = 0;i < image1.rows();i++){
-      for(int j = 0;j < image1.cols();j++){
-        if(image1.get(i, j)[0] > 0 && image2.get(i, j)[0] > 0){
+    int numberOfRows = image1.rows();
+    int numberOfColumns = image1.cols();
+
+    for(int i = 0;i < numberOfRows;i++){
+      for(int j = 0;j < numberOfColumns;j++){
+        if(image1.get(i, j)[0] > 0 && ((i - 1 >= 0 &&           j - 1 >= 0              && image2.get(i - 1, j - 1)[0] > 0) ||
+                                       (i - 1 >= 0 &&                                      image2.get(i - 1, j    )[0] > 0) ||
+                                       (i - 1 >= 0 &&           j + 1 < numberOfColumns && image2.get(i - 1, j + 1)[0] > 0) ||
+                                       (                        j - 1 >= 0              && image2.get(i    , j - 1)[0] > 0) ||
+                                       (                                                   image2.get(i    , j    )[0] > 0) ||
+                                       (                        j + 1 < numberOfColumns && image2.get(i    , j + 1)[0] > 0) ||
+                                       (i + 1 < numberOfRows && j - 1 >= 0              && image2.get(i + 1, j - 1)[0] > 0) ||
+                                       (i + 1 < numberOfRows &&                            image2.get(i + 1, j    )[0] > 0) ||
+                                       (i + 1 < numberOfRows && j + 1 < numberOfColumns && image2.get(i + 1, j + 1)[0] > 0))){
           return true;
         }
       }
