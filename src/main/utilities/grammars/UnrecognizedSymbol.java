@@ -117,6 +117,21 @@ public class UnrecognizedSymbol extends Symbol{
   }
 
   @Override
+  public void setParent(Symbol symbol){
+    if(chosenSymbol_ != null){
+      chosenSymbol_.setParent(symbol);
+
+      copy();
+
+      return;
+    }
+
+    for(Symbol symbolIterator : possibleSymbols_){
+      symbolIterator.setParent(symbol);
+    }
+  }
+
+  @Override
   public ArgumentPosition relativePosition(Symbol symbol){
     // Given that all the possible symbols have the same implementation
     // for relativePosition method, use the first possible symbol.
