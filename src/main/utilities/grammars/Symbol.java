@@ -241,7 +241,7 @@ public abstract class Symbol{
   public void reEvaluate(){}
 
   public interface ChildAcceptanceCriterion{
-    public boolean accept(Symbol symbol, Symbol argument, ArgumentPosition relativePosition);
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition);
   };
 
   public ChildAcceptanceCriterion sizeChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
@@ -249,6 +249,15 @@ public abstract class Symbol{
     @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
       return (symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea());
+    }
+  };
+
+  public ChildAcceptanceCriterion sizeWidthChildAcceptanceCriterion = new ChildAcceptanceCriterion() {
+
+    @Override
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
+      return ((symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea()) &&
+              (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth()));
     }
   };
 

@@ -20,8 +20,9 @@ public class Number extends Symbol{
     children_.add(new ArrayList<Symbol>());
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
     childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER, SymbolClass.OPERATOR, SymbolClass.UNRECOGNIZED}};
+    /* use width along with are to avoid the situation \frac{x}{3}=y where = gets to be the exponent of 3.  */
     childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion,
-                                                                     sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
+                                                                     sizeWidthChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
 
     nextSymbol_ = null;
     nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
