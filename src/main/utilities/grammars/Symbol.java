@@ -261,6 +261,14 @@ public abstract class Symbol{
     }
   };
 
+  public ChildAcceptanceCriterion widthChildAcceptanceCriterion = new ChildAcceptanceCriterion() {
+
+    @Override
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
+      return (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth());
+    }
+  };
+
   public ChildAcceptanceCriterion allChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
 
     @Override

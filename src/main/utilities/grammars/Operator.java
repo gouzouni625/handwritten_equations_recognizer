@@ -35,8 +35,8 @@ public class Operator extends Symbol{
         // TODO
         // Should also accept Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion},
-                                                                        {allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion},
+                                                                        {widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion}};
         break;
       case SQRT:
         children_ = new ArrayList<List<Symbol>>();
@@ -268,9 +268,23 @@ public class Operator extends Symbol{
 
         }
       case SQRT:
-      case LEFT_PARENTHESIS:
-      case RIGHT_PARENTHESIS:
         return super.relativePosition(symbol);
+        // Parenthesis don't support inside position, so translate it to right if we have a left parenthesis
+        // or left if we have a right parenthesis.
+      case LEFT_PARENTHESIS:
+        ArgumentPosition relativePosition = super.relativePosition(symbol);
+        if(relativePosition == ArgumentPosition.INSIDE){
+          relativePosition = ArgumentPosition.RIGHT;
+        }
+
+        return relativePosition;
+      case RIGHT_PARENTHESIS:
+        relativePosition = super.relativePosition(symbol);
+        if(relativePosition == ArgumentPosition.INSIDE){
+          relativePosition = ArgumentPosition.LEFT;
+        }
+
+        return relativePosition;
       default:
         return null;
     }
