@@ -7,7 +7,7 @@ import main.utilities.math.MinimumSpanningTree;
 import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
-import main.utilities.Callable;
+import main.utilities.PathExtentionCheck;
 
 /* MST = Minimum Spanning Tree.*/
 public abstract class MSTPartitioner extends Partitioner{
@@ -433,14 +433,14 @@ public abstract class MSTPartitioner extends Partitioner{
 
   private int[] labels_;
 
-  private class PartitionCheck implements Callable{
+  private class PartitionCheck implements PathExtentionCheck{
 
     public PartitionCheck(int[][] paths, int numberOfTraces){
       paths_ = paths;
       numberOfTraces_ = numberOfTraces;
     }
 
-    public boolean call(ArrayList<Integer> list){
+    public boolean check(ArrayList<Integer> list){
       int[] tracesOccurenceCounter = new int[numberOfTraces_];
       for(int i = 0;i < numberOfTraces_;i++){
         tracesOccurenceCounter[i] = 0;
