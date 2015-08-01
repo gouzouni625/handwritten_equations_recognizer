@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import org.opencv.core.Mat;
 
-import main.utilities.Callable;
+import main.utilities.PathExtentionCheck;
 
 /**
  * Class that contains some methods used in many different places of the
@@ -99,7 +99,7 @@ public class Utilities{
   }
 
   @SuppressWarnings("unchecked")
-  public static int[][] findUniquePaths(boolean[][] connections, int maxPathLength, Callable... checks){
+  public static int[][] findUniquePaths(boolean[][] connections, int maxPathLength, PathExtentionCheck... checks){
     Hashtable<Integer, ArrayList<Integer> > hashTable = new Hashtable<Integer, ArrayList<Integer> >();
     int hashTableOldSize = hashTable.size();
 
@@ -128,7 +128,7 @@ public class Utilities{
 
             boolean checksPassed = true;
             for(int check = 0;check < checks.length;check++){
-              if(!checks[check].call(currentPathClone)){
+              if(!checks[check].check(currentPathClone)){
                 checksPassed = false;
                 break;
               }
