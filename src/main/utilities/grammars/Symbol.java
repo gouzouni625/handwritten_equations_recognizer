@@ -94,7 +94,7 @@ public abstract class Symbol{
         }
       }
 
-      stringValue = stringValue.replaceAll(childrenPositions_[i].toString(), childrenValue);
+      stringValue = stringValue.replace(childrenPositions_[i].toString(), childrenValue);
     }
 
     return (this.clearString(stringValue));
