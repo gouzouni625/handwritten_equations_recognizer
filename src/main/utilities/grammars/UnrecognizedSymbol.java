@@ -139,6 +139,10 @@ public class UnrecognizedSymbol extends Symbol{
 
   @Override
   public ArgumentPosition relativePosition(Symbol symbol){
+    if(chosenSymbol_ != -1){
+      return possibleSymbols_[chosenSymbol_].relativePosition(symbol);
+    }
+
     return (super.relativePosition(symbol));
   }
 

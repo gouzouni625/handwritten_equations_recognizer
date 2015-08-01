@@ -232,7 +232,7 @@ public class Operator extends Symbol{
             return ArgumentPosition.ABOVE;
           }
           else{
-            return ArgumentPosition.ABOVE_RIGHT;
+            return ArgumentPosition.RIGHT; // MINUS and FRACTION_LINE can't accept ABOVE_RIGHT arguments. ArgumentPosition.ABOVE_RIGHT;
           }
 
         }
