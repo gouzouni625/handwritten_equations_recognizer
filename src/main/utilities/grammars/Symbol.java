@@ -277,7 +277,7 @@ public abstract class Symbol{
     }
   };
 
-  public final SymbolClass symbolClass_;
+  public SymbolClass symbolClass_;
 
   public TraceGroup traceGroup_;
 

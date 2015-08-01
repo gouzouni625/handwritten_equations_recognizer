@@ -3,7 +3,6 @@ package main.utilities.grammars;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.utilities.grammars.Symbol.ChildAcceptanceCriterion;
 import main.utilities.traces.TraceGroup;
 
 public class UnrecognizedSymbol extends Symbol{
@@ -17,6 +16,8 @@ public class UnrecognizedSymbol extends Symbol{
   // Moreover, all the possibleSymbols should have the same implementation of relative position.
   public UnrecognizedSymbol(UnrecognizedSymbol.Types type, TraceGroup traceGroup){
     super(traceGroup, SymbolClass.UNRECOGNIZED);
+
+    symbolClass_ = SymbolClass.UNRECOGNIZED;
 
     type_ = type;
 
@@ -32,7 +33,6 @@ public class UnrecognizedSymbol extends Symbol{
     switch(type){
       case HORIZONTAL_LINE:
         possibleSymbols_ = new Symbol[] {SymbolFactory.createByType(Operator.Types.MINUS, traceGroup), SymbolFactory.createByType(Operator.Types.FRACTION_LINE, traceGroup)};
-        chosenSymbol_ = null;
         break;
     }
   }
@@ -43,24 +43,21 @@ public class UnrecognizedSymbol extends Symbol{
 
   @Override
   public ArgumentType setArgument(Symbol.ArgumentPosition relativePosition, Symbol symbol){
-    if(chosenSymbol_ != null){
-      ArgumentType argumentType = chosenSymbol_.setArgument(relativePosition, symbol);
-
-      copy();
-
-      return argumentType;
+    if(chosenSymbol_ != -1){
+      return super.setArgument(relativePosition, symbol);
     }
 
     ArgumentType argumentType;
     boolean nextArgumentFlag = false;
-    for(Symbol symbolIterator : possibleSymbols_){
-      argumentType = symbolIterator.setArgument(relativePosition, symbol);
+    for(int i = 0;i < possibleSymbols_.length;i++){
+      argumentType = possibleSymbols_[i].setArgument(relativePosition, symbol);
 
       if(argumentType == ArgumentType.CHILD){
-        this.choose(symbolIterator);
+        this.choose(i);
 
         return (ArgumentType.CHILD);
       }
+
       nextArgumentFlag = (argumentType == ArgumentType.NEXT_SYMBOL);
     }
 
@@ -74,10 +71,8 @@ public class UnrecognizedSymbol extends Symbol{
 
   @Override
   public void removeChild(Symbol symbol){
-    if(chosenSymbol_ != null){
-      chosenSymbol_.removeChild(symbol);
-
-      copy();
+    if(chosenSymbol_ != -1){
+      super.removeChild(symbol);
 
       return;
     }
@@ -89,10 +84,8 @@ public class UnrecognizedSymbol extends Symbol{
 
   @Override
   public void setParent(Symbol symbol){
-    if(chosenSymbol_ != null){
-      chosenSymbol_.setParent(symbol);
-
-      copy();
+    if(chosenSymbol_ != -1){
+      super.setParent(symbol);
 
       return;
     }
@@ -104,8 +97,8 @@ public class UnrecognizedSymbol extends Symbol{
 
   @Override
   public String toString(){
-    if(chosenSymbol_ != null){
-      return (chosenSymbol_.toString());
+    if(chosenSymbol_ != -1){
+      return (super.toString());
     }
     else{
       return (SymbolClass.UNRECOGNIZED.toString());
@@ -114,7 +107,7 @@ public class UnrecognizedSymbol extends Symbol{
 
   @Override
   public void reEvaluate(){
-    if(chosenSymbol_ != null){
+    if(chosenSymbol_ != -1){
       return;
     }
 
@@ -122,38 +115,34 @@ public class UnrecognizedSymbol extends Symbol{
     // That is because, if at least 1 child had been assigned in setArgument method,
     // then the symbol accepting the child would have became the chosen symbol. So, now,
     // choose the symbol that accepts no children.
-    for(Symbol symbol : possibleSymbols_){
-      if(symbol.childrenPositions_.length == 0){
-        this.choose(symbol);
+    for(int i = 0;i < possibleSymbols_.length;i++){
+      if(possibleSymbols_[i].childrenPositions_.length == 0){
+        this.choose(i);
         return;
       }
     }
   }
 
-  public void choose(Symbol symbol){
+  public void choose(int symbol){
     chosenSymbol_ = symbol;
 
-    copy();
-  }
-
-  private void copy(){
-    type_ = chosenSymbol_.type_;
-    parent_ = chosenSymbol_.parent_;
-    children_ = chosenSymbol_.children_;
-    childrenPositions_ = chosenSymbol_.childrenPositions_;
-    nextSymbol_ = chosenSymbol_.nextSymbol_;
-    nextSymbolPositions_ = chosenSymbol_.nextSymbolPositions_;
-    childrenAcceptanceCriteria_ = chosenSymbol_.childrenAcceptanceCriteria_;
+    type_ = possibleSymbols_[chosenSymbol_].type_;
+    symbolClass_ = possibleSymbols_[chosenSymbol_].symbolClass_;
+    parent_ = possibleSymbols_[chosenSymbol_].parent_;
+    children_ = possibleSymbols_[chosenSymbol_].children_;
+    childrenPositions_ = possibleSymbols_[chosenSymbol_].childrenPositions_;
+    childrenClass_ = possibleSymbols_[chosenSymbol_].childrenClass_;
+    nextSymbol_ = possibleSymbols_[chosenSymbol_].nextSymbol_;
+    nextSymbolPositions_ = possibleSymbols_[chosenSymbol_].nextSymbolPositions_;
+    childrenAcceptanceCriteria_ = possibleSymbols_[chosenSymbol_].childrenAcceptanceCriteria_;
   }
 
   @Override
   public ArgumentPosition relativePosition(Symbol symbol){
-    // Given that all the possible symbols have the same implementation
-    // for relativePosition method, use the first possible symbol.
-    return (possibleSymbols_[0].relativePosition(symbol));
+    return (super.relativePosition(symbol));
   }
 
   public Symbol[] possibleSymbols_;
-  public Symbol chosenSymbol_;
+  public int chosenSymbol_ = -1;
 
 }
