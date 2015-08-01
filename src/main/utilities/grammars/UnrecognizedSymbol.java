@@ -73,6 +73,36 @@ public class UnrecognizedSymbol extends Symbol{
   }
 
   @Override
+  public void removeChild(Symbol symbol){
+    if(chosenSymbol_ != null){
+      chosenSymbol_.removeChild(symbol);
+
+      copy();
+
+      return;
+    }
+
+    for(Symbol symbolIterator : possibleSymbols_){
+      symbolIterator.removeChild(symbol);
+    }
+  }
+
+  @Override
+  public void setParent(Symbol symbol){
+    if(chosenSymbol_ != null){
+      chosenSymbol_.setParent(symbol);
+
+      copy();
+
+      return;
+    }
+
+    for(Symbol symbolIterator : possibleSymbols_){
+      symbolIterator.setParent(symbol);
+    }
+  }
+
+  @Override
   public String toString(){
     if(chosenSymbol_ != null){
       return (chosenSymbol_.toString());
@@ -114,21 +144,6 @@ public class UnrecognizedSymbol extends Symbol{
     nextSymbol_ = chosenSymbol_.nextSymbol_;
     nextSymbolPositions_ = chosenSymbol_.nextSymbolPositions_;
     childrenAcceptanceCriteria_ = chosenSymbol_.childrenAcceptanceCriteria_;
-  }
-
-  @Override
-  public void setParent(Symbol symbol){
-    if(chosenSymbol_ != null){
-      chosenSymbol_.setParent(symbol);
-
-      copy();
-
-      return;
-    }
-
-    for(Symbol symbolIterator : possibleSymbols_){
-      symbolIterator.setParent(symbol);
-    }
   }
 
   @Override
