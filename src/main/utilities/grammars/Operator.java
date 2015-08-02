@@ -35,8 +35,8 @@ public class Operator extends Symbol{
         // TODO
         // Should also accept Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion},
-                                                                        {widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{widthChildAcceptanceCriterion, widthExceptSQRT, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion},
+                                                                        {widthChildAcceptanceCriterion, widthExceptSQRT, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion}};
         break;
       case SQRT:
         children_ = new ArrayList<List<Symbol>>();
@@ -65,6 +65,19 @@ public class Operator extends Symbol{
     nextSymbol_ = null;
     nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
   }
+
+  public ChildAcceptanceCriterion widthExceptSQRT = new ChildAcceptanceCriterion(){
+
+    @Override
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
+      if(child.type_ == Operator.Types.SQRT){
+        return true;
+      }
+      else{
+        return (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth());
+      }
+    }
+  };
 
   public enum Types{
     PLUS("+"),
