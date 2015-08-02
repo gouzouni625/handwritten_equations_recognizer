@@ -255,6 +255,21 @@ public class Trace{
     return (new Point[] {trace1.get(index1), trace2.get(index2)});
   }
 
+  public Point closestPoint(Point point){
+    double minDistance = Point.distance(points_.get(0), point);
+    int minIndex = 0;
+    for(int i = 0;i < points_.size();i++){
+      double distance = Point.distance(points_.get(i), point);
+
+      if(distance < minDistance){
+        minDistance = distance;
+        minIndex = i;
+      }
+    }
+
+    return (points_.get(minIndex));
+  }
+
   public String toInkMLFormat(){
     String inkMLRepresentation = new String("<trace>");
 
