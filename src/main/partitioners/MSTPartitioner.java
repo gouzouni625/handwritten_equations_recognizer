@@ -13,6 +13,8 @@ import main.utilities.PathExtentionCheck;
 public abstract class MSTPartitioner extends Partitioner{
 
   public TraceGroup[] partition(TraceGroup expression){
+    expression_ = expression;
+
     int numberOfTraces = expression.size();
 
     if(numberOfTraces == 1){
@@ -389,6 +391,31 @@ public abstract class MSTPartitioner extends Partitioner{
        (trace2Slope >= -Math.PI / 4 && trace2Slope <= Math.PI / 4 ) && // About the slope of the line.
        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) && // About the distances between the two lines.
        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){ // About the length of the two lines.s
+
+      // Check that between these 2 lines there is no other symbol.
+      Trace smaller;
+      Trace bigger;
+      if(trace1.getWidth() > trace2.getWidth()){
+        smaller = trace2;
+        bigger = trace1;
+      }
+      else{
+        smaller = trace1;
+        bigger = trace2;
+      }
+
+      for(int i = 0;i < smaller.size();i++){
+        Trace connectionLine = new Trace();
+        connectionLine.add(new Point(smaller.get(i)));
+        connectionLine.add(new Point(bigger.closestPoint(smaller.get(i))));
+
+        for(int j = 0;j < expression_.size();j++){
+          if(Trace.areOverlapped(connectionLine, expression_.get(j))){
+            return false;
+          }
+        }
+      }
+
       return true;
     }
 
@@ -465,4 +492,5 @@ public abstract class MSTPartitioner extends Partitioner{
     private int numberOfTraces_;
   }
 
+  private TraceGroup expression_;
 }
