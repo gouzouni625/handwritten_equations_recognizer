@@ -227,7 +227,15 @@ public class Trace{
   // TODO
   // write tests.
   public static double minimumDistance(Trace trace1, Trace trace2){
+    Point[] closestPoints = Trace.closestPoints(trace1, trace2);
+
+    return (Point.distance(closestPoints[0], closestPoints[1]));
+  }
+
+  public static Point[] closestPoints(Trace trace1, Trace trace2){
     double min = Point.distance(trace1.get(0), trace2.get(0));
+    int index1 = 0;
+    int index2 = 0;
 
     int size1 = trace1.size();
     int size2 = trace2.size();
@@ -238,11 +246,13 @@ public class Trace{
 
         if(distance < min){
           min = distance;
+          index1 = i;
+          index2 = j;
         }
       }
     }
 
-    return min;
+    return (new Point[] {trace1.get(index1), trace2.get(index2)});
   }
 
   public String toInkMLFormat(){
