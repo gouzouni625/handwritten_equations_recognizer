@@ -273,14 +273,14 @@ public class Operator extends Symbol{
         // or left if we have a right parenthesis.
       case LEFT_PARENTHESIS:
         ArgumentPosition relativePosition = super.relativePosition(symbol);
-        if(relativePosition == ArgumentPosition.INSIDE){
+        if(relativePosition == ArgumentPosition.INSIDE || relativePosition == ArgumentPosition.ABOVE_RIGHT || relativePosition == ArgumentPosition.BELOW_RIGHT){
           relativePosition = ArgumentPosition.RIGHT;
         }
 
         return relativePosition;
       case RIGHT_PARENTHESIS:
         relativePosition = super.relativePosition(symbol);
-        if(relativePosition == ArgumentPosition.INSIDE){
+        if(relativePosition == ArgumentPosition.INSIDE || relativePosition == ArgumentPosition.BELOW_RIGHT){
           relativePosition = ArgumentPosition.LEFT;
         }
 
