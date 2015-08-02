@@ -236,6 +236,40 @@ public class TraceGroup{
     return (this.getWidth() * this.getHeight());
   }
 
+  public static double minimumDinstance(TraceGroup traceGroup1, TraceGroup traceGroup2){
+    Point[] closestPoints = TraceGroup.closestPoints(traceGroup1, traceGroup2);
+
+    return (Point.distance(closestPoints[0], closestPoints[1]));
+  }
+
+  public static Trace[] closestTraces(TraceGroup traceGroup1, TraceGroup traceGroup2){
+    double minimumDinstance = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
+    int index1 = 0;
+    int index2 = 0;
+
+    int size1 = traceGroup1.size();
+    int size2 = traceGroup2.size();
+    for(int i = 0;i < size1;i++){
+      for(int j = 0;j < size2;j++){
+        double distance = Trace.minimumDistance(traceGroup1.get(i), traceGroup2.get(j));
+
+        if(distance < minimumDinstance){
+          minimumDinstance = distance;
+          index1 = i;
+          index2 = j;
+        }
+      }
+    }
+
+    return (new Trace[] {traceGroup1.get(index1), traceGroup2.get(index2)});
+  }
+
+  public static Point[] closestPoints(TraceGroup traceGroup1, TraceGroup traceGroup2){
+    Trace[] closestTraces = TraceGroup.closestTraces(traceGroup1, traceGroup2);
+
+    return (Trace.closestPoints(closestTraces[0], closestTraces[1]));
+  }
+
   private ArrayList<Trace> traces_;
 
   private Point topLeftCorner_;
