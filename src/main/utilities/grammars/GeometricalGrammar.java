@@ -28,6 +28,7 @@ public class GeometricalGrammar extends Grammar{
 
           switch(argumentType){
             case CHILD:
+              secondary.setParent(primary.parent_);
             case NONE:
               break;
             case NEXT_SYMBOL:
