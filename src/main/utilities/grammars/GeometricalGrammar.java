@@ -23,17 +23,17 @@ public class GeometricalGrammar extends Grammar{
         break;
       case NEXT_SYMBOL:
         if(primary.parent_ != null){
-          // The relative position should be found such, so that secondary becomes the child of
-          // primary's parent. That is because, secondary is the next symbol of primary and thus
-          // they have the same parent(if any).
           relativePosition = primary.parent_.relativePosition(secondary);
-          primary.parent_.setArgument(relativePosition, secondary);
-          secondary.setParent(primary.parent_);
-        }
-        if(secondary.parent_ != null){
-          relativePosition = secondary.parent_.relativePosition(primary);
-          secondary.parent_.setArgument(relativePosition, primary);
-          primary.setParent(secondary.parent_);
+          argumentType = primary.parent_.setArgument(relativePosition, secondary);
+
+          switch(argumentType){
+            case CHILD:
+            case NONE:
+              break;
+            case NEXT_SYMBOL:
+              primary.nextSymbol_ = null;
+              break;
+          }
         }
         break;
       case NONE:
