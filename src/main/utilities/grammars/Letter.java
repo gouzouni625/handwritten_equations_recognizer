@@ -50,4 +50,18 @@ public class Letter extends Symbol{
     private String stringValue_;
   }
 
+  @Override
+  public ArgumentPosition relativePosition(Symbol symbol){
+    ArgumentPosition relativePosition = super.relativePosition(symbol);
+
+    if(relativePosition == ArgumentPosition.ABOVE){
+      relativePosition = ArgumentPosition.ABOVE_RIGHT;
+    }
+    else if(relativePosition == ArgumentPosition.BELOW){
+      relativePosition = ArgumentPosition.BELOW_RIGHT;
+    }
+
+    return relativePosition;
+  }
+
 }
