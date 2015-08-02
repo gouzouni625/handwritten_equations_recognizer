@@ -1,12 +1,17 @@
 package main.parsers;
 
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import main.utilities.Utilities;
 import main.utilities.grammars.Grammar;
 import main.utilities.grammars.Symbol;
 import main.utilities.grammars.SymbolFactory;
+import main.utilities.traces.Point;
+import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
 
 public abstract class GrammarParser extends Parser{
@@ -82,10 +87,84 @@ public abstract class GrammarParser extends Parser{
     }
     /* ===== Logs ===== */
 
+    // Preprocess symbols to find better symbol combinations.
+    Hashtable<Integer, int[]> pathsTable = new Hashtable<Integer, int[]>();
+    for(int i = 0;i < numberOfSymbols - 1;i++){
+      int[][] paths = this.processPath(symbols, symbols[i], i, symbols[i + 1], i + 1);
+
+      for(int path = 0;path < paths.length;path++){
+        pathsTable.put(Utilities.pathHashKey(paths[path]), paths[path]);
+      }
+    }
+
+    // Transform hash table to array.
+    int numberOfPaths = pathsTable.size();
+    int[][] paths = new int[numberOfPaths][2];
+    Iterator<int[]> iterator = pathsTable.values().iterator();
+    int index = 0;
+    while(iterator.hasNext()){
+      paths[index] = iterator.next();
+      index++;
+    }
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: paths... ===== Start =====");
+
+      for(int i = 0;i < numberOfPaths;i++){
+        System.out.println("Symbol path " + i + ": " + paths[i][0] + ", " + paths[i][1]);
+      }
+
+      System.out.println("Log: paths... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
+    // Sort paths by first symbol and then by second. Note that, since symbols are sorted by abscissa then paths will
+    // also be sorted by abscissa if they are sorted by symbols.
+    Arrays.sort(paths, new Comparator<int[]>(){
+      @Override
+      public int compare(int[] path1, int[] path2){
+        if(path1[0] > path2[0]){
+          return 1;
+        }
+        else if(path1[0] == path2[0]){
+          if(path1[1] > path2[1]){
+            return 1;
+          }
+          else if(path1[1] == path2[1]){
+            return 0;
+          }
+          else{
+            return -1;
+          }
+        }
+        else{
+          return -1;
+        }
+      }
+    });
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: paths after sorting them... ===== Start =====");
+
+      for(int i = 0;i < numberOfPaths;i++){
+        System.out.print("path " + i + " = ");
+        for(int j = 0;j < paths[i].length;j++){
+          System.out.print(paths[i][j] + ", ");
+        }
+
+       System.out.println();
+      }
+
+      System.out.println("Log: paths after sorting them... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
     // Check symbols one by one to find their position in the equation.
     // Find the relationship between the symbols in each pair.
-    for(int i = 0;i < numberOfSymbols - 1;i++){
-      grammar_.parse(symbols[i], symbols[i + 1]);
+    for(int i = 0;i < numberOfPaths;i++){
+      grammar_.parse(symbols[paths[i][0]], symbols[paths[i][1]]);
     }
 
     for(Symbol symbol : symbols){
@@ -99,8 +178,8 @@ public abstract class GrammarParser extends Parser{
     String previousState;
     do{
       previousState = this.toString();
-      for(int i = 0;i < numberOfSymbols - 1;i++){
-        grammar_.parse(symbols[i], symbols[i + 1]);
+      for(int i = 0;i < numberOfPaths;i++){
+        grammar_.parse(symbols[paths[i][0]], symbols[paths[i][1]]);
       }
     }while(!previousState.equals(this.toString()));
 
@@ -124,6 +203,29 @@ public abstract class GrammarParser extends Parser{
         }
       }
     }
+  }
+
+  public int[][] processPath(Symbol[] symbols, Symbol symbol1, int index1, Symbol symbol2, int index2){
+    Trace connectionLine = new Trace();
+    Point[] closestPoints = TraceGroup.closestPoints(symbol1.traceGroup_, symbol2.traceGroup_);
+    connectionLine.add(new Point(closestPoints[0]));
+    connectionLine.add(new Point(closestPoints[1]));
+
+    for(int i = 0;i < symbols.length;i++){
+      if(i == index1 || i == index2){
+        continue;
+      }
+
+      for(int j = 0;j < symbols[i].traceGroup_.size();j++){
+        if(Trace.areOverlapped(connectionLine, symbols[i].traceGroup_.get(j))){
+          int[] path1 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol1.traceGroup_.getTopLeftCorner().x_ ? new int[] {i, index1} : new int[] {index1, i};
+          int[] path2 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol2.traceGroup_.getTopLeftCorner().x_ ? new int[] {i, index2} : new int[] {index2, i};
+          return (new int[][] {path1, path2});
+        }
+      }
+    }
+
+    return (new int[][] {{index1, index2}});
   }
 
   public String toString(){
