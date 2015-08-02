@@ -277,6 +277,20 @@ public abstract class Symbol{
     }
   };
 
+  public ChildAcceptanceCriterion widthSizeExceptSQRTFractionLine = new ChildAcceptanceCriterion(){
+
+    @Override
+    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
+      if(child.type_ == Operator.Types.SQRT || child.type_ == Operator.Types.FRACTION_LINE){
+        return true;
+      }
+      else{
+        return ((symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea()) &&
+                (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth()));
+      }
+    }
+  };
+
   public SymbolClass symbolClass_;
 
   public TraceGroup traceGroup_;

@@ -25,7 +25,7 @@ public class Letter extends Symbol{
         children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER, SymbolClass.OPERATOR, SymbolClass.UNRECOGNIZED}, {SymbolClass.NUMBER, SymbolClass.LETTER}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeWidthChildAcceptanceCriterion, sizeChildAcceptanceCriterion},
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, widthSizeExceptSQRTFractionLine, sizeChildAcceptanceCriterion},
                                                                         {sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
         break;
     }
