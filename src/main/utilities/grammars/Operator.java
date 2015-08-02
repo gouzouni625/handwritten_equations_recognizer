@@ -32,20 +32,18 @@ public class Operator extends Symbol{
         children_.add(new ArrayList<Symbol>());
         children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
-        // TODO
-        // Should also accept Unrecognized symbols as children.
         childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{widthChildAcceptanceCriterion, widthExceptSQRT, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion},
-                                                                        {widthChildAcceptanceCriterion, widthExceptSQRT, widthChildAcceptanceCriterion, widthChildAcceptanceCriterion}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion},
+                                                                        {allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion, allChildAcceptanceCriterion}};
         break;
       case SQRT:
         children_ = new ArrayList<List<Symbol>>();
         children_.add(new ArrayList<Symbol>());
-        childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.INSIDE};
-        // TODO
-        // Should also accept Unrecognized symbols as children.
-        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
+        children_.add(new ArrayList<Symbol>());
+        childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.INSIDE, ArgumentPosition.ABOVE_RIGHT};
+        childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}, {SymbolClass.NUMBER, SymbolClass.OPERATOR, SymbolClass.LETTER, SymbolClass.UNRECOGNIZED}};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion},
+                                                                        {sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion, sizeChildAcceptanceCriterion}};
         break;
       case LEFT_PARENTHESIS:
         children_ = new ArrayList<List<Symbol>>();
@@ -66,25 +64,12 @@ public class Operator extends Symbol{
     nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
   }
 
-  public ChildAcceptanceCriterion widthExceptSQRT = new ChildAcceptanceCriterion(){
-
-    @Override
-    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
-      if(child.type_ == Operator.Types.SQRT){
-        return true;
-      }
-      else{
-        return (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth());
-      }
-    }
-  };
-
   public enum Types{
     PLUS("+"),
     EQUALS("="),
     MINUS("-"),
     FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}"),
-    SQRT("\\sqrt{" + ArgumentPosition.INSIDE + "}"),
+    SQRT("\\sqrt{" + ArgumentPosition.INSIDE + "}^{" + ArgumentPosition.ABOVE_RIGHT + "}"),
     LEFT_PARENTHESIS("("),
     RIGHT_PARENTHESIS(")^{" + ArgumentPosition.ABOVE_RIGHT + "}");
 
@@ -104,7 +89,13 @@ public class Operator extends Symbol{
   public ArgumentPosition relativePosition(Symbol symbol){
     switch((Types)type_){
       case PLUS:
-        return super.relativePosition(symbol);
+        ArgumentPosition relativePosition = super.relativePosition(symbol);
+
+        if(relativePosition == ArgumentPosition.ABOVE_RIGHT || relativePosition == ArgumentPosition.BELOW_RIGHT){
+          relativePosition = ArgumentPosition.RIGHT;
+        }
+
+        return relativePosition;
       case EQUALS:
         traceGroup_.calculateCorners();
 
@@ -158,7 +149,7 @@ public class Operator extends Symbol{
             return ArgumentPosition.ABOVE;
           }
           else{
-            return ArgumentPosition.ABOVE_RIGHT;
+            return ArgumentPosition.RIGHT; //ArgumentPosition.ABOVE_RIGHT; EQUALS symbol can't accept ABOVE_RIGHT argument.
           }
 
         }
@@ -189,7 +180,7 @@ public class Operator extends Symbol{
             return ArgumentPosition.BELOW;
           }
           else{
-            return ArgumentPosition.BELOW_RIGHT;
+            return ArgumentPosition.RIGHT; //ArgumentPosition.BELOW_RIGHT; EQUALS symbol can't accept BELOW_RIGHT argument.
           }
 
         }
@@ -276,16 +267,19 @@ public class Operator extends Symbol{
             return ArgumentPosition.BELOW;
           }
           else{
-            return ArgumentPosition.BELOW_RIGHT;
+            return ArgumentPosition.RIGHT; //ArgumentPosition.BELOW_RIGHT; MINUS and FRACTION_LINE symbols can't accept BELOW_RIGHT arguments.
           }
 
         }
       case SQRT:
-        return super.relativePosition(symbol);
-        // Parenthesis don't support inside position, so translate it to right if we have a left parenthesis
-        // or left if we have a right parenthesis.
+        relativePosition = super.relativePosition(symbol);
+        if(relativePosition == ArgumentPosition.BELOW_RIGHT){
+          relativePosition = ArgumentPosition.RIGHT;
+        }
+
+        return relativePosition;
       case LEFT_PARENTHESIS:
-        ArgumentPosition relativePosition = super.relativePosition(symbol);
+        relativePosition = super.relativePosition(symbol);
         if(relativePosition == ArgumentPosition.INSIDE || relativePosition == ArgumentPosition.ABOVE_RIGHT || relativePosition == ArgumentPosition.BELOW_RIGHT){
           relativePosition = ArgumentPosition.RIGHT;
         }
