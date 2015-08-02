@@ -410,6 +410,10 @@ public abstract class MSTPartitioner extends Partitioner{
         connectionLine.add(new Point(bigger.closestPoint(smaller.get(i))));
 
         for(int j = 0;j < expression_.size();j++){
+          if(expression_.get(j) == trace1 || expression_.get(j) == trace2){
+            continue;
+          }
+
           if(Trace.areOverlapped(connectionLine, expression_.get(j))){
             return false;
           }
