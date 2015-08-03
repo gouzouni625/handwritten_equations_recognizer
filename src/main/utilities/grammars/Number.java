@@ -61,6 +61,9 @@ public class Number extends Symbol{
     if(relativePosition == ArgumentPosition.ABOVE){
       relativePosition = ArgumentPosition.ABOVE_RIGHT;
     }
+    else if(relativePosition == ArgumentPosition.BELOW_RIGHT){
+      relativePosition = ArgumentPosition.RIGHT;
+    }
 
     return relativePosition;
   }
