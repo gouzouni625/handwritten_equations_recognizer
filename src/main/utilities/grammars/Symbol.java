@@ -106,6 +106,8 @@ public abstract class Symbol{
     for(ArgumentPosition argumentPosition : childrenPositions_){
       result = result.replaceAll(Pattern.quote("^{") + argumentPosition + Pattern.quote("}"), "");
       result = result.replaceAll(Pattern.quote("_{") + argumentPosition + Pattern.quote("}"), "");
+      result = result.replaceAll(Pattern.quote("{") + argumentPosition + Pattern.quote("}"), "");
+      result = result.replaceAll(Pattern.quote("{") + argumentPosition + Pattern.quote("}"), "");
     }
 
     return result;
