@@ -6,7 +6,7 @@ import main.distorters.ImageDistorter;
 import main.evaluators.SimpleEvaluator;
 import main.partitioners.NNMSTPartitioner;
 
-public class Demo{
+public class HandWrittenEquationRecognizer{
 
   public static void main(String[] args) throws IOException{
     ImageDistorter imageDistorter = new ImageDistorter();
