@@ -50,6 +50,30 @@ public class SimpleEvaluator{
     return parser_.toString();
   }
 
+  public boolean isPartitionerSilent(){
+    return (partitioner_.isSilent());
+  }
+
+  public void setPartitionerSilent(boolean silent){
+    partitioner_.setSilent(silent);
+  }
+
+  public boolean isParserSilent(){
+    return (parser_.isSilent());
+  }
+
+  public void setParserSilent(boolean silent){
+    parser_.setSilent(silent);
+  }
+
+  public boolean isGrammarSilent(){
+    return (parser_.isGrammarSilent());
+  }
+
+  public void setGrammarSilent(boolean silent){
+    parser_.setGrammarSilent(silent);
+  }
+
   private TraceGroup expression_;
 
   private NNMSTPartitioner partitioner_;

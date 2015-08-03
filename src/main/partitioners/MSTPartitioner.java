@@ -441,7 +441,7 @@ public abstract class MSTPartitioner extends Partitioner{
     silent_ = silent;
   }
 
-  public boolean getSilent(){
+  public boolean isSilent(){
     return silent_;
   }
 
