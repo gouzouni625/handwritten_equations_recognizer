@@ -1,4 +1,4 @@
-package main.utilities.io;
+package main.utilities.inkml;
 
 import java.io.File;
 import java.io.FileNotFoundException;
