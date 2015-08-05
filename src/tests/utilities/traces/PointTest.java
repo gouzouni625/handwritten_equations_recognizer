@@ -6,50 +6,64 @@ import org.junit.Test;
 
 import main.utilities.traces.Point;
 
+/** @class PointTest
+ *
+ *  @brief Class that contains tests for Point class.
+ *
+ */
 public class PointTest{
 
+  /**
+   *  @brief Tests the constructors of Point class.
+   */
   @Test
   public void testPoint(){
     // Test the default constructor.
     Point point = new Point();
-
     assertEquals(0, point.x_, 0);
     assertEquals(0, point.y_, 0);
 
     // Test the constructor the takes two doubles as input.
-    point = new Point(5, 6);
-
-    assertEquals(5, point.x_, 0);
-    assertEquals(6, point.y_, 0);
+    double x = Math.random() * 100;
+    double y = Math.random() * 100;
+    point = new Point(x, y);
+    assertEquals(x, point.x_, 0);
+    assertEquals(y, point.y_, 0);
 
     // Test the constructor that takes another point as input.
     Point point2 = new Point(point);
-
     assertEquals(point.x_, point2.x_, 0);
     assertEquals(point.y_, point2.y_, 0);
 
+    // Change the data of point2 and check that the data of point do not change.
     point2.x_++;
     point2.y_++;
-
-    assertEquals(5, point.x_, 0);
-    assertEquals(6, point.y_, 0);
-    assertEquals(6, point2.x_, 0);
-    assertEquals(7, point2.y_, 0);
+    assertEquals(x, point.x_, 0);
+    assertEquals(y, point.y_, 0);
+    assertEquals(x + 1, point2.x_, 0);
+    assertEquals(y + 1, point2.y_, 0);
   }
 
+  /**
+   *  @brief Tests MultiplyBy method of Point class.
+   */
   @Test
   public void testMultiplyBy(){
-    Point point = new Point(5, 6);
+    double x = Math.random() * 100;
+    double y = Math.random() * 100;
+    double factor = Math.random() * 100;
 
-    point.multiplyBy(5);
+    Point point = new Point(x, y);
 
-    assertEquals(25, point.x_, 0);
-    assertEquals(30, point.y_, 0);
+    point.multiplyBy(factor);
+
+    assertEquals(x * factor, point.x_, 0);
+    assertEquals(y * factor, point.y_, 0);
 
     point.multiplyBy(-1);
 
-    assertEquals(-25, point.x_, 0);
-    assertEquals(-30, point.y_, 0);
+    assertEquals(-(x * factor), point.x_, 0);
+    assertEquals(-(y * factor), point.y_, 0);
 
     point.multiplyBy(0);
 
@@ -57,48 +71,104 @@ public class PointTest{
     assertEquals(0, point.y_, 0);
   }
 
+  /**
+   *  @brief Tests divideBy method of Point class.
+   */
+  @Test
+  public void testDivideBy(){
+    double x = Math.random() * 100;
+    double y = Math.random() * 100;
+    double factor = Math.random() * 100 + 1; // Make sure factor is not equal to zero.
+
+    Point point = new Point(x, y);
+
+    point.divideBy(factor);
+
+    assertEquals(x / factor, point.x_, 0);
+    assertEquals(y / factor, point.y_, 0);
+
+    point.divideBy(-1);
+
+    assertEquals(-(x / factor), point.x_, 0);
+    assertEquals(-(y / factor), point.y_, 0);
+  }
+
+  /**
+   *  @brief Tests divideBy method of Point class.
+   *
+   *  Concretely, tests if the right exception is thrown in case factor == 0.
+   */
+  @Test(expected = ArithmeticException.class)
+  public void testDivideByException(){
+    double x = Math.random() * 100;
+    double y = Math.random() * 100;
+    double factor = 0;
+
+    Point point = new Point(x, y);
+
+    point.divideBy(factor);
+  }
+
+  /**
+   *  @brief Tests subtract method of Point class.
+   */
   @Test
   public void testSubtract(){
-    Point point = new Point(5, 6);
-    Point point2 = new Point(4, 2);
-    point.subtract(point2);
+    double x1 = Math.random() * 100;
+    double y1 = Math.random() * 100;
+    double x2 = Math.random() * 100;
+    double y2 = Math.random() * 100;
 
-    assertEquals(1, point.x_, 0);
-    assertEquals(4, point.y_, 0);
+    Point point1 = new Point(x1, y1);
+    Point point2 = new Point(x2, y2);
 
-    point.subtract((new Point(point)).multiplyBy(2));
+    point1.subtract(point2);
 
-    assertEquals(-1, point.x_, 0);
-    assertEquals(-4, point.y_, 0);
+    assertEquals(x1 - x2, point1.x_, 0);
+    assertEquals(y1 - y2, point1.y_, 0);
 
-    point.subtract(point);
+    point1.subtract(point1);
 
-    assertEquals(0, point.x_, 0);
-    assertEquals(0, point.y_, 0);
+    assertEquals(0, point1.x_, 0);
+    assertEquals(0, point1.y_, 0);
   }
 
+  /**
+   *  @brief Tests distance method of Point class.
+   */
   @Test
   public void testDistance(){
-    Point point1 = new Point(5, 6);
-    Point point2 = new Point(8, 10);
+    double x1 = Math.random() * 100;
+    double y1 = Math.random() * 100;
+    double x2 = Math.random() * 100;
+    double y2 = Math.random() * 100;
+    double distance = Math.pow((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2), (double)1/ 2);
 
-    assertEquals(5, Point.distance(point1, point2), 0);
+    Point point1 = new Point(x1, y1);
+    Point point2 = new Point(x2, y2);
+
+    assertEquals(distance, Point.distance(point1, point2), 0);
     assertEquals(0, Point.distance(point1, point1), 0);
-
-    Point point3 = new Point(3, 4);
-    Point zero = new Point();
-
-    assertEquals(5, Point.distance(point3, zero), 0);
   }
 
+  /**
+   *  @brief Tests chain operations with Point objects.
+   */
   @Test
   public void testChainOperations(){
-    Point point = new Point(10, 15);
+    double x1 = Math.random() * 100;
+    double y1 = Math.random() * 100;
+    double x2 = Math.random() * 100;
+    double y2 = Math.random() * 100;
+    double factor = Math.random() * 100;
 
-    point = point.multiplyBy(2).subtract(new Point(1, 1));
+    Point point1 = new Point(x1, y1);
+    Point point2 = new Point(x2, y2);
 
-    assertEquals(19, point.x_, 0);
-    assertEquals(29, point.y_, 0);
+    Point point3 = point1.multiplyBy(factor).subtract(point2);
+
+    assertEquals(x1 * factor - x2, point3.x_, 0);
+    assertEquals(y1 * factor - y2, point3.y_, 0);
   }
 
 }
