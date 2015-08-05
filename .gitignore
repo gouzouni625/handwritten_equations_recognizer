@@ -1,11 +1,16 @@
-/bin/
-
+# Eclipse files
 .classpath
 .project
 
-data
+# Binary files
+bin/
 
+# Doxygen generated files
+html/
+latex/
+
+# Other
+src/main/executables/
+data
 todo
 dump
-
-src/main/executables/
