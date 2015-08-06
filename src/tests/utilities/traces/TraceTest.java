@@ -14,7 +14,6 @@ import main.utilities.traces.Trace;
 /** @class TraceTest
  *
  *  @brief Class that contains tests for Trace class.
- *
  */
 public class TraceTest{
 

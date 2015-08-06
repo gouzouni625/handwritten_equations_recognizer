@@ -5,7 +5,6 @@ package main.utilities.traces;
  *  @brief Implements a two dimensional Point.
  *
  *  Along with the Point's data, some useful methods are implemented.
- *
  */
 public class Point{
   /**

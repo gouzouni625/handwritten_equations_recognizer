@@ -14,7 +14,6 @@ import org.opencv.core.Size;
  *
  *  A Trace of Ink is a sequence of Point objects. They represent the places where a pen has contacted the drawing
  *  surface.
- *
  */
 public class Trace{
   /**
@@ -25,7 +24,7 @@ public class Trace{
   }
 
   /**
-   *  @brief Constructor
+   *  @brief Constructor.
    *
    *  This constructor is used to create an identical copy of a Trace.
    *
@@ -46,18 +45,22 @@ public class Trace{
    *  inside the Trace will not change.
    *
    *  @param point The Point to be added to this Trace.
+   *
+   *  @return Returns this Trace in order for chain commands to be possible(e.g. tr.add(p1).add(p2);).
    */
-  public void add(Point point){
+  public Trace add(Point point){
     points_.add(new Point(point));
+
+    return this;
   }
 
   /**
-   *  @brief Gets a specific Point from this Trace and returns it.
+   *  @brief Returns the Point at a specific position in this Trace.
    *
    *  The Point returned is the actual Point that exists inside this Trace. That is, if the returned Point changes, then,
    *  the Point inside the Trace will also change.
    *
-   *  @param index The index of the Point to be returned.
+   *  @param index The position of the Point to be returned.
    *
    *  @return Returns the Point at the specified position in this Trace.
    */
@@ -66,9 +69,9 @@ public class Trace{
   }
 
   /**
-   *  @brief Returns the number of Points in this Trace.
+   *  @brief Returns the number of Point objects in this Trace.
    *
-   *  @return Returns the number of Points in this Trace.
+   *  @return Returns the number of Point objects in this Trace.
    */
   public int size(){
     return points_.size();
@@ -367,15 +370,16 @@ public class Trace{
 
     for(int i = 0;i < numberOfRows;i++){
       for(int j = 0;j < numberOfColumns;j++){
-        if(image1.get(i, j)[0] > 0 && ((i - 1 >= 0 &&           j - 1 >= 0              && image2.get(i - 1, j - 1)[0] > 0) ||
-                                       (i - 1 >= 0 &&                                      image2.get(i - 1, j    )[0] > 0) ||
-                                       (i - 1 >= 0 &&           j + 1 < numberOfColumns && image2.get(i - 1, j + 1)[0] > 0) ||
-                                       (                        j - 1 >= 0              && image2.get(i    , j - 1)[0] > 0) ||
-                                       (                                                   image2.get(i    , j    )[0] > 0) ||
-                                       (                        j + 1 < numberOfColumns && image2.get(i    , j + 1)[0] > 0) ||
-                                       (i + 1 < numberOfRows && j - 1 >= 0              && image2.get(i + 1, j - 1)[0] > 0) ||
-                                       (i + 1 < numberOfRows &&                            image2.get(i + 1, j    )[0] > 0) ||
-                                       (i + 1 < numberOfRows && j + 1 < numberOfColumns && image2.get(i + 1, j + 1)[0] > 0))){
+        if(image1.get(i, j)[0] > 0 &&
+           ((i - 1 >= 0 &&           j - 1 >= 0              && image2.get(i - 1, j - 1)[0] > 0) ||
+            (i - 1 >= 0 &&                                      image2.get(i - 1, j    )[0] > 0) ||
+            (i - 1 >= 0 &&           j + 1 < numberOfColumns && image2.get(i - 1, j + 1)[0] > 0) ||
+            (                        j - 1 >= 0              && image2.get(i    , j - 1)[0] > 0) ||
+            (                                                   image2.get(i    , j    )[0] > 0) ||
+            (                        j + 1 < numberOfColumns && image2.get(i    , j + 1)[0] > 0) ||
+            (i + 1 < numberOfRows && j - 1 >= 0              && image2.get(i + 1, j - 1)[0] > 0) ||
+            (i + 1 < numberOfRows &&                            image2.get(i + 1, j    )[0] > 0) ||
+            (i + 1 < numberOfRows && j + 1 < numberOfColumns && image2.get(i + 1, j + 1)[0] > 0))){
           return true;
         }
       }
@@ -403,6 +407,9 @@ public class Trace{
 
   /**
    *  @brief Calculates and returns the two closest Point objects from these two Trace objects.
+   *
+   *  The Point objects returned are the actual Point objects that are inside the Trace objects. That is, if the returned
+   *  Point objects are changed, then, the actual Point objects will also be changed.
    *
    *  @param trace1 The first Trace.
    *  @param trace2 The second Trace.
