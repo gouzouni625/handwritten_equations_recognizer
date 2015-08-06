@@ -1,183 +1,282 @@
 package tests.utilities.traces;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.junit.Test;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.highgui.Highgui;
 
 import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 
+/** @class TraceTest
+ *
+ *  @brief Class that contains tests for Trace class.
+ *
+ */
 public class TraceTest{
 
-  // Also tests method size.
+  /**
+   *  @brief Tests the constructors of Trace class.
+   */
   @Test
   public void testTrace(){
     // Test default constructor.
-    Trace trace = new Trace();
+    Trace trace1 = new Trace();
+    Trace trace2 = new Trace(trace1);
 
-    assertEquals(0, trace.size(), 0);
+    assertFalse(trace1 == trace2);
   }
 
+  /**
+   *  @brief Tests add and size methods of Trace class.
+   */
   @Test
-  public void testAdd(){
+  public void testAddSize(){
+    double x = Math.random() * 100;
+    double y = Math.random() * 100;
+
     Trace trace = new Trace();
-    trace.add(new Point(5, 6));
+    trace.add(new Point(x, y));
 
     assertEquals(1, trace.size(), 0);
   }
 
+  /**
+   *  @brief Tests get method of Trace class.
+   */
   @Test
   public void testGet(){
+    double x = Math.random() * 100;
+    double y = Math.random() * 100;
+
     Trace trace = new Trace();
-    trace.add(new Point(5, 6));
+    trace.add(new Point(x, y));
 
-    assertEquals(5, trace.get(0).x_, 0);
-    assertEquals(6, trace.get(0).y_, 0);
+    assertEquals(x, trace.get(0).x_, 0);
+    assertEquals(y, trace.get(0).y_, 0);
+
+    // Check that get returns the actual Point and not a copy.
+    Point point = trace.get(0);
+
+    point.x_++;
+    point.y_++;
+
+    assertEquals(x + 1, trace.get(0).x_, 0);
+    assertEquals(y + 1, trace.get(0).y_, 0);
   }
 
-  @Test
-  public void testTrace2(){
-    Trace trace1 = new Trace();
-    trace1.add(new Point(1, 2));
-    trace1.add(new Point(3, 4));
-
-    Trace trace2 = new Trace(trace1);
-
-    assertEquals(1, trace2.get(0).x_, 0);
-    assertEquals(2, trace2.get(0).y_, 0);
-    assertEquals(3, trace2.get(1).x_, 0);
-    assertEquals(4, trace2.get(1).y_, 0);
-
-    trace2.get(0).x_++;
-    trace2.get(1).x_++;
-
-    assertEquals(1, trace1.get(0).x_, 0);
-    assertEquals(2, trace2.get(0).x_, 0);
-    assertEquals(3, trace1.get(1).x_, 0);
-    assertEquals(4, trace2.get(1).x_, 0);
-  }
-
+  /**
+   *  @brief Tests multiplyBy method of Trace class.
+   */
   @Test
   public void testMultiplyBy(){
+    double x1 = Math.random() * 100;
+    double y1 = Math.random() * 100;
+    double x2 = Math.random() * 100;
+    double y2 = Math.random() * 100;
+    double factor = Math.random() * 100;
+
     Trace trace = new Trace();
+    trace.add(new Point(x1, y1));
+    trace.add(new Point(x2, y2));
 
-    int numberOfPoints = 10;
-    double multiplicationFactor = 10;
-    for(int i = 0;i < numberOfPoints;i++){
-      trace.add(new Point(i, i + 10));
-    }
+    trace.multiplyBy(factor);
 
-    trace.multiplyBy(multiplicationFactor);
-
-    for(int i = 0;i < numberOfPoints;i++){
-      assertEquals(i * multiplicationFactor, trace.get(i).x_, 0);
-      assertEquals((i + 10) * multiplicationFactor, trace.get(i).y_, 0);
-    }
+    assertEquals(x1 * factor, trace.get(0).x_, 0);
+    assertEquals(y1 * factor, trace.get(0).y_, 0);
+    assertEquals(x2 * factor, trace.get(1).x_, 0);
+    assertEquals(y2 * factor, trace.get(1).y_, 0);
   }
 
+  /**
+   *  @brief Tests subtract method of Trace class.
+   */
   @Test
   public void testSubtract(){
+    double x1 = Math.random() * 100;
+    double y1 = Math.random() * 100;
+    double x2 = Math.random() * 100;
+    double y2 = Math.random() * 100;
+    double x3 = Math.random() * 100;
+    double y3 = Math.random() * 100;
+
     Trace trace = new Trace();
+    trace.add(new Point(x1, y1));
+    trace.add(new Point(x2, y2));
 
-    int numberOfPoints = 10;
-    Point point2 = new Point(2, 3);
-    for(int i = 0;i < numberOfPoints;i++){
-      trace.add(new Point(i, i + 10));
-    }
+    trace.subtract(new Point(x3, y3));
 
-    trace.subtract(point2);
-
-    for(int i = 0;i < numberOfPoints;i++){
-      assertEquals(i - point2.x_, trace.get(i).x_, 0);
-      assertEquals(i + 10 - point2.y_, trace.get(i).y_, 0);
-    }
+    assertEquals(x1 - x3, trace.get(0).x_, 0);
+    assertEquals(y1 - y3, trace.get(0).y_, 0);
+    assertEquals(x2 - x3, trace.get(1).x_, 0);
+    assertEquals(y2 - y3, trace.get(1).y_, 0);
   }
 
-  // Also tests getWidth, getHeight, getTopLeftCorner, getBottomRightCorner.
+  /**
+   *  @brief Tests calculateCorners, getTopLeftCorner, getBottomRightCorner, getBottomLeftCorner, getTopRightCorner,
+   *  getWidth and getHeight methods of Trace class.
+   */
   @Test
   public void testCalculateCorners(){
-    Trace trace = new Trace();
-
     int numberOfPoints = 10;
-    for(int i = 0;i < numberOfPoints;i++){
-      trace.add(new Point(i, i + 10));
-    }
+    ArrayList<Double> xList = new ArrayList<Double>();
+    ArrayList<Double> yList = new ArrayList<Double>();
 
-    trace.calculateCorners();
-
-    assertEquals(0, trace.getTopLeftCorner().x_, 0);
-    assertEquals(numberOfPoints - 1 + 10, trace.getTopLeftCorner().y_, 0);
-    assertEquals(numberOfPoints - 1, trace.getBottomRightCorner().x_, 0);
-    assertEquals(10, trace.getBottomRightCorner().y_, 0);
-    assertEquals(numberOfPoints - 1, trace.getWidth(), 0);
-    assertEquals(numberOfPoints - 1, trace.getHeight(), 0);
-  }
-
-  @Test
-  public void testPrint(){
     Trace trace = new Trace();
 
-    int numberOfPoints = 100;
-    int thickness = 10;
     for(int i = 0;i < numberOfPoints;i++){
-      trace.add(new Point(i, 2 * i + 3));
+      double x = Math.random() * 100;
+      double y = Math.random() * 100;
+
+      xList.add(x);
+      yList.add(y);
+
+      trace.add(new Point(x, y));
     }
+
+    double minX = Collections.min(xList);
+    double maxX = Collections.max(xList);
+    double minY = Collections.min(yList);
+    double maxY = Collections.max(yList);
 
     trace.calculateCorners();
 
-    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-    Mat image = Mat.zeros(new Size(trace.getWidth(), trace.getHeight()), CvType.CV_32F);
-    trace.print(image, thickness);
+    Point topLeftCorner = trace.getTopLeftCorner();
+    Point bottomRightCorner = trace.getBottomRightCorner();
+    Point bottomLeftCorner = trace.getBottomLeftCorner();
+    Point topRightCorner = trace.getTopRightCorner();
 
-    // The image saved by the following command should be a line with positive slope.
-    //Highgui.imwrite("data/tests/utilities/traces/Trace/testPrint_image.tiff", image);
+    assertEquals(minX, topLeftCorner.x_, 0);
+    assertEquals(maxY, topLeftCorner.y_, 0);
+
+    assertEquals(maxX, bottomRightCorner.x_, 0);
+    assertEquals(minY, bottomRightCorner.y_, 0);
+
+    assertEquals(minX, bottomLeftCorner.x_, 0);
+    assertEquals(minY, bottomLeftCorner.y_, 0);
+
+    assertEquals(maxX, topRightCorner.x_, 0);
+    assertEquals(maxY, topRightCorner.y_, 0);
+
+    assertEquals(maxX - minX, trace.getWidth(), 0);
+    assertEquals(maxY - minY, trace.getHeight(), 0);
   }
 
+  /**
+   *  @brief Tests getCentroid method of Trace class.
+   */
   @Test
   public void testGetCentroid(){
     Trace trace = new Trace();
-
-    int numberOfPoints = 100;
-    for(int i = 0;i < numberOfPoints;i++){
-      trace.add(new Point(i, 2 * i + 3));
-    }
+    trace.add(new Point(0, 0));
+    trace.add(new Point(0, 1));
+    trace.add(new Point(1, 0));
+    trace.add(new Point(1, 1));
 
     Point centroid = trace.getCentroid();
 
-    assertEquals(49.5, centroid.x_, 0);
-    assertEquals(102, centroid.y_, 0);
+    assertEquals(0.5, centroid.x_, 0);
+    assertEquals(0.5, centroid.y_, 0);
   }
 
+  /**
+   *  @brief Tests getCenterOfMass method of Trace class.
+   */
   @Test
-  public void testAreOverlapped(){
-    int numberOfPoints = 100;
+  public void testGetCenterOfMass(){
+    Trace trace = new Trace();
+    trace.add(new Point(0, 0));
+    trace.add(new Point(0, 1));
+    trace.add(new Point(1, 0));
+    trace.add(new Point(1, 1));
 
-    Trace trace1 = new Trace();
-    Trace trace2 = new Trace();
+    Point centerOfMass = trace.getCenterOfMass();
 
-    for(int i = 0;i < numberOfPoints;i++){
-      trace1.add(new Point(i, 2 * i + 3));
-      trace2.add(new Point(i, -0.5 * i - 10));
-    }
-
-    assertFalse(Trace.areOverlapped(trace1, trace2));
-
-    trace1 = new Trace();
-    trace2 = new Trace();
-
-    for(int i = 0;i < numberOfPoints;i++){
-      trace1.add(new Point(i, 2 * i + 3));
-      trace2.add(new Point(i - numberOfPoints / 2, -0.5 * i + 6));
-    }
-
-    assertTrue(Trace.areOverlapped(trace1, trace2));
+    assertEquals(0.5, centerOfMass.x_, 0);
+    assertEquals(0.5, centerOfMass.y_, 0);
   }
 
+  /**
+   *  @brief Tests minimumDistance method of Trace class.
+   */
+  @Test
+  public void testMinimumDistance(){
+    Trace trace1 = new Trace();
+    trace1.add(new Point(0, 0));
+    trace1.add(new Point(0, 1));
+
+    Trace trace2 = new Trace();
+    trace2.add(new Point(1, 0));
+    trace2.add(new Point(1, 1));
+
+    assertEquals(1, Trace.minimumDistance(trace1, trace2), 0);
+
+    trace2.add(new Point(0, 1));
+
+    assertEquals(0, Trace.minimumDistance(trace1, trace2), 0);
+  }
+
+  /**
+   *  @brief Tests closestPoints method of Trace class.
+   */
+  @Test
+  public void testClosestPoints(){
+    Trace trace1 = new Trace();
+    trace1.add(new Point(0, 0));
+    trace1.add(new Point(0, 1));
+
+    Trace trace2 = new Trace();
+    trace2.add(new Point(2, 2));
+    trace2.add(new Point(1, 0));
+
+    Point[] closestPoints = Trace.closestPoints(trace1, trace2);
+
+    assertEquals(trace1.get(0), closestPoints[0]);
+    assertEquals(trace2.get(1), closestPoints[1]);
+  }
+
+  /**
+   *  @brief Tests closestPoint method of Trace class.
+   */
+  @Test
+  public void testClosestPoint(){
+    Trace trace = new Trace();
+    trace.add(new Point(0, 0));
+    trace.add(new Point(0, 1));
+
+    Point point = new Point(1, 0);
+
+    Point closestPoint = trace.closestPoint(point);
+
+    assertEquals(trace.get(0), closestPoint);
+  }
+
+  /**
+   *  @brief Tests toInkMLFormat method of Trace class.
+   */
+  @Test
+  public void testToInkMLFormat(){
+    int numberOfPoints = 10;
+    Point[] points = new Point[numberOfPoints];
+    Trace trace = new Trace();
+
+    String inkML = new String("<trace>");
+    for(int i = 0;i < numberOfPoints;i++){
+      double x = Math.random() * 100;
+      double y = Math.random() * 100;
+
+      points[i] = new Point(x, y);
+
+      trace.add(new Point(x, y));
+
+      inkML += x + " " + y + ", ";
+    }
+    inkML = inkML.substring(0, inkML.length() - 2);
+    inkML += "</trace>";
+
+    assertEquals(inkML, trace.toInkMLFormat());
+  }
 }
