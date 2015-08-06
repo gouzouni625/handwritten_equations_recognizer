@@ -45,6 +45,24 @@ public class PointTest{
   }
 
   /**
+   *  @brief Tests add method of Point class.
+   */
+  @Test
+  public void testAdd(){
+    double x1 = Math.random() * 100;
+    double y1 = Math.random() * 100;
+    double x2 = Math.random() * 100;
+    double y2 = Math.random() * 100;
+
+    Point point1 = new Point(x1, y1);
+    Point point2 = new Point(x2, y2);
+    point1.add(point2);
+
+    assertEquals(x1 + x2, point1.x_, 0);
+    assertEquals(y1 + y2, point1.y_, 0);
+  }
+
+  /**
    *  @brief Tests MultiplyBy method of Point class.
    */
   @Test
