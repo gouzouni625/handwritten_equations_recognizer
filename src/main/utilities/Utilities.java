@@ -11,18 +11,24 @@ import org.opencv.core.Mat;
 
 import main.utilities.PathExtentionCheck;
 
-/**
- * Class that contains some methods used in many different places of the
- * project.
- *
- * @author Georgios Ouzounis
- *
- * TODO
- * Many of these methods can be templates(very low priority).
- *
- */
+/** @class Utilities
+*
+*  @brief Contains general methods for Arrays, ArrayList and data.
+*
+*  @todo Many of these methods could be templates. It will be done with very low priority.
+*/
 public class Utilities{
-
+  /**
+   *  @brief Sorts an array and returns the sorted indices.
+   *
+   *  Sorts a copy of the given array and returns an array with the sorted indices. That is, if the i-th value of the
+   *  returned array is j, then, the object that was in the i-th position before sorting, should be in the j-th
+   *  position for the array to be sorted. The sorting is ascending.
+   *
+   *  @param array The array to be sorted.
+   *
+   *  @return Returns the sorted indices for the given array.
+   */
   public static int[] sortArray(double[] array){
     int length = array.length;
     double[] arrayClone = array.clone();
@@ -32,6 +38,7 @@ public class Utilities{
       indices[i] = i;
     }
 
+    // TODO Maybe use something faster that Bubble Sort.
     for(int i = 0;i < length;i++){
       for(int j = 1;j < length - i;j++){
         if(arrayClone[j - 1] > arrayClone[j]){
@@ -49,6 +56,14 @@ public class Utilities{
     return indices;
   }
 
+  /**
+   *  @brief Checks if an array contains a specific value.
+   *
+   *  @param array The array.
+   *  @param value The value to be search within the array.
+   *
+   *  @return Returns true if the array contains the specified value.
+   */
   public static boolean arrayContains(int[] array, int value){
     for(int i = 0;i < array.length;i++){
       if(array[i] == value){
@@ -59,6 +74,29 @@ public class Utilities{
     return false;
   }
 
+  /**
+   *  @brief Given an array of vertices and the connections between them, find the context of these vertices.
+   *
+   *  A graph is composed by vertices and edges. Edges connect vertices. Given the connections of a graph and an array
+   *  of vertices, this function will return the vertices that are connected to the given vertices on this graph. Each
+   *  one of the returned vertices will be connected to, at least, one of the given vertices. A usage example would be:
+   *  @code
+   *  boolean[][] connections = new boolean[][] {{true , false, false, true },
+   *                                             {false, true , true , false},
+   *                                             {false, true , true , false},
+   *                                             {true , false, false, true }};
+   *  int[] vertices = new int[] {0, 1};
+   *
+   *  int[] context = Utilities.getContext(vertices, connections);
+   *  @endcode
+   *  In the above example there are four(4) indices. Index 0 is connected with index 3 only and index 1 is connected
+   *  with index 2 only. The context of vertices 0, 1 is 2, 3.
+   *
+   *  @param vertices The vertices the context of which should be found.
+   *  @param connections The connections between the vertices.
+   *
+   *  @return Returns the context indices of the given indices.
+   */
   public static int[] getContext(int[] vertices, boolean[][] connections){
     // Use a hash set to avoid including the same vertex twice.
     // For example, if an existing path contains 5,3 and they both
@@ -66,6 +104,7 @@ public class Utilities{
     HashSet<Integer> uniqueContext = new HashSet<Integer>();
     for(int i = 0;i < vertices.length;i++){
       for(int j = 0;j < connections.length;j++){
+        // Don't add the given vertices to context.
         if(Utilities.arrayContains(vertices, j)){
           continue;
         }
@@ -87,6 +126,16 @@ public class Utilities{
     return context;
   }
 
+  /**
+   *  @brief Given an array list of vertices and the connections between them, find the context of these vertices.
+   *
+   *  @param vertices The vertices the context of which should be found.
+   *  @param connections The connections between the vertices.
+   *
+   *  @return Returns the context indices of the given indices.
+   *
+   *  @sa getContext
+   */
   public static int[] getContext(ArrayList<Integer> vertices, boolean[][] connections){
     int length = vertices.size();
     int[] verticesInt = new int[length];
@@ -98,11 +147,22 @@ public class Utilities{
     return (Utilities.getContext(verticesInt, connections));
   }
 
+  /**
+   *  @brief Finds unique paths of given length, on a graph. These paths should comply with some checks.
+   *
+   *  @param connections The connections of the indices of the graph.
+   *  @param maxPathLength The maximum length of the paths.
+   *  @param checks The checks that every path must comply with in order to be chosen.
+   *
+   *  @return Returns the paths found upon the graph.
+   */
   @SuppressWarnings("unchecked")
   public static int[][] findUniquePaths(boolean[][] connections, int maxPathLength, PathExtentionCheck... checks){
+    // The hash table that will hold the paths. Use a hash table so that the same path is not included twice.
     Hashtable<Integer, ArrayList<Integer> > hashTable = new Hashtable<Integer, ArrayList<Integer> >();
     int hashTableOldSize = hashTable.size();
 
+    // Add every single vertex to the hash table.
     for(int vertex = 0;vertex < connections.length;vertex++){
       ArrayList<Integer> path = new ArrayList<Integer>();
       path.add(vertex);
@@ -170,6 +230,32 @@ public class Utilities{
     return uniquePaths;
   }
 
+  /**
+   *  @brief Computes and returns a unique hash key for a path.
+   *
+   *  @param path The path.
+   *
+   *  @return Returns the unique hash key of the path.
+   */
+  public static int pathHashKey(int[] path){
+    int key = 0;
+
+    for(int i = 0;i < path.length;i++){
+      key ^= (int)(Math.pow(2, path[i]));
+    }
+
+    return key;
+  }
+
+  /**
+   *  @brief Computes and returns a unique hash key for a path.
+   *
+   *  @param path The path.
+   *
+   *  @return Returns the unique hash key of the path.
+   *
+   *  @sa pathHashKey
+   */
   public static int pathHashKey(ArrayList<Integer> path){
     int numberOfVertices = path.size();
 
@@ -181,16 +267,13 @@ public class Utilities{
     return pathHashKey(array);
   }
 
-  public static int pathHashKey(int[] path){
-    int key = 0;
-
-    for(int i = 0;i < path.length;i++){
-      key ^= (int)(Math.pow(2, path[i]));
-    }
-
-    return key;
-  }
-
+  /**
+   *  @brief Finds the position of the maximum value inside an array.
+   *
+   *  @param array The array.
+   *
+   *  @return Returns the position of the maximum value inside the given array.
+   */
   public static int indexOfMax(double[] array){
     if(array.length == 0){
       return -1;
@@ -208,10 +291,26 @@ public class Utilities{
     return maxValueIndex;
   }
 
+  /**
+   *  @brief Finds the maximum value of an array.
+   *
+   *  @param array The array.
+   *
+   *  @return Returns the maximum value of the given array.
+   */
   public static double maxValue(double[] array){
     return (array[Utilities.indexOfMax(array)]);
   }
 
+  /**
+   *  @brief Converts an image to an array o bytes.
+   *
+   *  The image is an OpenCV Mat object and contains values from 0 to 255.
+   *
+   *  @param image The image to be converted to a byte array.
+   *
+   *  @return Returns the byte array conversion of the image.
+   */
   public static byte[] imageToByteArray(Mat image){
     int numberOfRows = image.rows();
     int numberOfColumns = image.cols();
@@ -230,7 +329,18 @@ public class Utilities{
     return array;
   }
 
-  public static double[] relativeValues(double[] array){
+  /**
+   *  @brief Normalizes the values of an array.
+   *
+   *  The values of the given array are mapped to [0, 100]. Each value is divided by the sum of the initial values and
+   *  multiplied by 100. The initial values should be positive. The given array is not changed. The returned array is
+   *  a new array not bound to the given one.
+   *
+   *  @param array The array to be normalized.
+   *
+   *  @return Returns an array with the normalized values of the given array.
+   */
+  public static double[] normalizeArray(double[] array){
     int length = array.length;
 
     double sum = 0;
@@ -238,15 +348,33 @@ public class Utilities{
       sum += array[i];
     }
 
-    double[] relativeValuesArray = new double[length];
+    double[] normalizedArray = new double[length];
     for(int i = 0;i < length;i++){
-      relativeValuesArray[i] = array[i] / sum * 100;
+      normalizedArray[i] = array[i] / sum * 100;
     }
 
-    return relativeValuesArray;
+    return normalizedArray;
   }
 
-  public static int[] vectorIndexToUpperTriangularIndeces(int numberOfRows, int index){
+  /**
+   *  @brief Transforms an index to its corresponding upper triangular indices.
+   *
+   *  Let A = {{11, 12, 13, 14},
+   *           {21, 22, 23, 24},
+   *           {31, 32, 33, 34},
+   *           {41, 42, 43, 44}}
+   *
+   *  be an array and b = {12, 13, 14, 23, 24, 34} be the row-major representation of the upper triangular part of A,
+   *  excluding the main diagonal. This method will translate indices on vector b, to indices on matrix A.
+   *
+   *  @param numberOfRows The numberOfRows of the matrix.
+   *  @param index The index on the row-major vector.
+   *
+   *  @return Returns the corresponding row and column indices on the matrix.
+   *
+   *  @sa upperTriangularIndicesToVectorIndex
+   */
+  public static int[] vectorIndexToUpperTriangularIndices(int numberOfRows, int index){
     int rowIndex = 0;
     int columnIndex = 0;
 
@@ -259,7 +387,26 @@ public class Utilities{
     return (new int[] {rowIndex, columnIndex});
   }
 
-  public static int upperTriangularIndecesToVectorIndex(int numberOfRows, int row, int column){
+  /**
+   *  @brief Transforms upper triangular indices to their corresponding row-major index.
+   *
+   *  Let A = {{11, 12, 13, 14},
+   *           {21, 22, 23, 24},
+   *           {31, 32, 33, 34},
+   *           {41, 42, 43, 44}}
+   *
+   *  be an array and b = {12, 13, 14, 23, 24, 34} be the row-major representation of the upper triangular part of A,
+   *  excluding the main diagonal. This method will translate indices on matrix A, to indices on vector b.
+   *
+   *  @param numberOfRows The numberOfRows of the matrix.
+   *  @param row The row index on the upper triangular matrix.
+   *  @param column The column index on the upper triangular matrix.
+   *
+   *  @return Returns the corresponding index on the row-major vector.
+   *
+   *  @sa vectorIndexToUpperTriangularIndices
+   */
+  public static int upperTriangularIndicesToVectorIndex(int numberOfRows, int row, int column){
     int index = 0;
     for(int i = 0;i < row;i++){
       index += numberOfRows - 1 - i;
@@ -269,6 +416,13 @@ public class Utilities{
     return index;
   }
 
+  /**
+   *  @brief Checks of all the values of an array are true.
+   *
+   *  @param array The array.
+   *
+   *  @return Returns true if all the values of the given array are true.
+   */
   public static boolean areAllTrue(boolean[][] array){
     for(int i = 0;i < array.length;i++){
       for(int j = 0;j < array[i].length;j++){
@@ -281,6 +435,17 @@ public class Utilities{
     return true;
   }
 
+  /**
+   *  @brief Concatenates two arrays.
+   *
+   *  The second array is appended to the end of the first. The given arrays are not changed. The returned array is a new
+   *  array.
+   *
+   *  @param array1 The first array.
+   *  @param array2 The array to be appended.
+   *
+   *  @return Returns the concatenated array.
+   */
   public static int[][] concatenateArrays(int[][] array1, int[][] array2){
     int[][] array = new int[array1.length + array2.length][];
 
@@ -295,6 +460,16 @@ public class Utilities{
     return array;
   }
 
+  /**
+   *  @brief Removes specified rows from an array.
+   *
+   *  The given array is not changed. The array returned is a copy of the given array.
+   *
+   *  @param array The array.
+   *  @param rowsIndices The rows to be removed.
+   *
+   *  @return Returns the array with the specified rows removed.
+   */
   public static int[][] removeRows(int[][] array, ArrayList<Integer> rowsIndices){
     int newLength = array.length - rowsIndices.size();
     int[][] newArray = new int[newLength][];
@@ -316,6 +491,17 @@ public class Utilities{
     return newArray;
   }
 
+  /**
+   *  @brief Checks if a row exists inside an array.
+   *
+   *  The objects of the row might not have the same sequence.
+   *
+   *  @param array The array.
+   *  @param row The row.
+   *  @param maintainSequence Flag to determine whether the order of the objects in the row should matter.
+   *
+   *  @return Returns true of the row exists inside the array.
+   */
   public static boolean rowInArray(int[][] array, int[] row, boolean maintainSequence){
     int numberOfRows = array.length;
 

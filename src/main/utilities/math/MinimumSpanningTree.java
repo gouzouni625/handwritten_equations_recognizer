@@ -50,7 +50,7 @@ public class MinimumSpanningTree{
     canReach = updateCanReach(canReach, vertices[0], vertices[1]);
 
     for(int i = 1;i < sortedIndices.length;i++){
-      vertices = Utilities.vectorIndexToUpperTriangularIndeces(connections.length, sortedIndices[i]);
+      vertices = Utilities.vectorIndexToUpperTriangularIndices(connections.length, sortedIndices[i]);
       if(!canReach[vertices[0]][vertices[1]]){
         MinimumSpanningTree.addConnection(connections, sortedIndices[i]);
         canReach = updateCanReach(canReach, vertices[0], vertices[1]);
@@ -116,7 +116,7 @@ public class MinimumSpanningTree{
   }
 
   private static int[] addConnection(boolean[][] connections, int index){
-    int[] matrixIndices = Utilities.vectorIndexToUpperTriangularIndeces(connections.length, index);
+    int[] matrixIndices = Utilities.vectorIndexToUpperTriangularIndices(connections.length, index);
 
     MinimumSpanningTree.connect(connections, matrixIndices[0], matrixIndices[1]);
 

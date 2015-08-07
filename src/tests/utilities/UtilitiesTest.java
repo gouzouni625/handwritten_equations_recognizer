@@ -1,6 +1,7 @@
 package tests.utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
@@ -15,13 +16,14 @@ import org.opencv.core.Size;
 
 import main.utilities.Utilities;
 
-/**
+/** @class UtilitiesTest
  *
- * @author Georgios Ouzounis
- *
+ *  @brief Class that contains tests for Utilities class.
  */
 public class UtilitiesTest{
-
+  /**
+   *  @brief Tests sortArray method of Utilities class.
+   */
   @Test
   public void testSortArray(){
     double[] array = new double[] {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
@@ -33,6 +35,9 @@ public class UtilitiesTest{
     }
   }
 
+  /**
+   *  @brief Tests arrayContains method of Utilities class.
+   */
   @Test
   public void testArrayContains(){
     int[] array = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -46,54 +51,64 @@ public class UtilitiesTest{
     }
   }
 
+  /**
+   *  @brief Tests getContext methods of Utilities class.
+   */
   @Test
   public void testGetContext(){
-    int numberOfVertices = (int)(Math.random());
-    int[] vertices = new int[numberOfVertices];
-    for(int i = 0;i < numberOfVertices;i++){
-      vertices[i] = (int)(Math.random());
-    }
+    int numberOfVertices = 10;
+    int[] vertices = new int[] {0, 2, 6, 7};
 
+    // Check the context when there are no connections between the vertices.
     boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        connections[i][j] = (i == j);
+        connections[i][j] = false;
       }
     }
 
     int[] context = Utilities.getContext(vertices, connections);
     assertEquals(0, context.length, 0);
 
+    // Check the context when every vertex is connected with all other vertices.
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        connections[i][j] = !(i == j);
+        connections[i][j] = true;
       }
     }
 
     context = Utilities.getContext(vertices, connections);
-    assertEquals(0, context.length, 0);
+    assertEquals(numberOfVertices - vertices.length, context.length, 0);
 
-    numberOfVertices = 5;
-    vertices = new int[] {2, 4};
-
-    connections = new boolean[numberOfVertices][numberOfVertices];
-    for(int i = 0;i < numberOfVertices;i++){
-      for(int j = 0;j < numberOfVertices;j++){
-        connections[i][j] = !(i == j);
-      }
-    }
+    connections = new boolean[][] {{true , false, false, true },
+                                   {false, true , true , false},
+                                   {false, true , true , false},
+                                   {true , false, false, true }};
+    vertices = new int[] {0, 1};
 
     context = Utilities.getContext(vertices, connections);
-    assertEquals(3, context.length, 0);
-    int correctCounter = 0;
-    for(int i = 0;i < context.length;i++){
-      if(context[i] == 0 || context[i] == 1 || context[i] == 3){
-        correctCounter++;
-      }
-    }
-    assertEquals(3, correctCounter, 0);
+
+    assertEquals(2, context.length, 0);
+
+    assertEquals(2, context[0], 0);
+    assertEquals(3, context[1], 0);
+
+    ArrayList<Integer> verticesList = new ArrayList<Integer>();
+    verticesList.add(0);
+    verticesList.add(1);
+
+    context = Utilities.getContext(verticesList, connections);
+
+    assertEquals(2, context.length, 0);
+
+    assertEquals(2, context[0], 0);
+    assertEquals(3, context[1], 0);
+
   }
 
+  /**
+   *  @brief Tests findUniquePaths method of Utilities class.
+   */
   @Test
   public void testFindUniquePaths(){
     int numberOfVertices = 10;
@@ -132,6 +147,9 @@ public class UtilitiesTest{
     assertEquals(5, uniquePaths.length, 0);
   }
 
+  /**
+   *  @brief Tests pathHashKey method of Utilities class.
+   */
   @Test
   public void pathHashKey(){
     assertEquals(1, Utilities.pathHashKey(new int[] {0}), 0);
@@ -176,6 +194,9 @@ public class UtilitiesTest{
     assertEquals(3073, Utilities.pathHashKey(list), 0);
   }
 
+  /**
+   *  @brief Tests indexOfMax method of Utilities class.
+   */
   @Test
   public void testIndexOfMax(){
     double[] array = new double[] {9, 8, 7, 6, 5, 4, 3, 2, 1};
@@ -183,6 +204,9 @@ public class UtilitiesTest{
     assertEquals(0, Utilities.indexOfMax(array));
   }
 
+  /**
+   *  @brief Tests maxValue method of Utilities class.
+   */
   @Test
   public void testMaxValue(){
     double[] array = new double[] {9, 8, 7, 6, 5, 4, 3, 2, 1};
@@ -190,6 +214,9 @@ public class UtilitiesTest{
     assertEquals(9, Utilities.maxValue(array), 0);
   }
 
+  /**
+   *  @brief Tests imageToByteArray method of Utilities class.
+   */
   @Test
   public void testImageToByteArray(){
     System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -207,44 +234,56 @@ public class UtilitiesTest{
     }
   }
 
+  /**
+   *  @brief Tests normalizeArray method of Utilities class.
+   */
   @Test
-  public void testRelativeValues(){
+  public void testNormalizeArray(){
     double[] array = new double[] {0.5, 0.3, 0.2};
 
-    array = Utilities.relativeValues(array);
+    array = Utilities.normalizeArray(array);
 
     assertEquals(50, array[0], 0);
     assertEquals(30, array[1], 0);
     assertEquals(20, array[2], 0);
   }
 
+  /**
+   *  @brief Tests vectorIndexToUpperTriangularIndeces method of Utilities class.
+   */
   @Test
   public void testVectorIndexToUpperTriangularIndeces(){
     int[] indices;
 
-    indices = Utilities.vectorIndexToUpperTriangularIndeces(5,  3);
+    indices = Utilities.vectorIndexToUpperTriangularIndices(5,  3);
     assertEquals(0, indices[0], 0);
     assertEquals(4, indices[1], 0);
 
-    indices = Utilities.vectorIndexToUpperTriangularIndeces(4, 4);
+    indices = Utilities.vectorIndexToUpperTriangularIndices(4, 4);
     assertEquals(1, indices[0], 0);
     assertEquals(3, indices[1], 0);
   }
 
+  /**
+   *  @brief Tests upperTriangularIndicesToVectorIndex method of Utilities class.
+   */
   @Test
   public void testUpperTriangularIndecesToVectorIndex(){
     int index;
 
-    index = Utilities.upperTriangularIndecesToVectorIndex(5, 0, 3);
+    index = Utilities.upperTriangularIndicesToVectorIndex(5, 0, 3);
     assertEquals(3, index, 0);
 
-    index = Utilities.upperTriangularIndecesToVectorIndex(5, 1, 2);
+    index = Utilities.upperTriangularIndicesToVectorIndex(5, 1, 2);
     assertEquals(6, index, 0);
 
-    index = Utilities.upperTriangularIndecesToVectorIndex(5, 2, 2);
+    index = Utilities.upperTriangularIndicesToVectorIndex(5, 2, 2);
     assertEquals(9, index, 0);
   }
 
+  /**
+   *  @brief Tests areAllTrue method of Utilities class.
+   */
   @Test
   public void testAreAllTrue(){
     int numberOfRows = 10;
@@ -267,6 +306,9 @@ public class UtilitiesTest{
     assertTrue(Utilities.areAllTrue(connections));
   }
 
+  /**
+   *  @brief Tests concatenateArrays method of Utilities class.
+   */
   @Test
   public void testConcatenateArrays(){
     int size = 10;
@@ -296,6 +338,9 @@ public class UtilitiesTest{
     }
   }
 
+  /**
+   *  @brief Tests removeRows method of Utilities class.
+   */
   @Test
   public void testRemoveRows(){
     int size = 10;
@@ -334,6 +379,9 @@ public class UtilitiesTest{
     }
   }
 
+  /**
+   *  @brief Tests rowInArray method of Utilities class.
+   */
   @Test
   public void testRowInArray(){
     int numberOfRows = 100;
