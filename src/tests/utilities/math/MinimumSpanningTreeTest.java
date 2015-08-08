@@ -11,53 +11,52 @@ import java.lang.reflect.Method;
 
 import main.utilities.math.MinimumSpanningTree;
 
+/** @class MinimumSpanningTreeTest
+ *
+ *  @brief Class that contains tests for MinimumSpanningTree class.
+ */
 public class MinimumSpanningTreeTest{
 
-  /** \brief also tests areConnected and numberOfVertices.
-   *
-   */
+/**
+ *  @brief Tests the constructor of MinimumSpanningTree class.
+ */
   @Test
   public void testMinimumSpanningTree(){
-    int numberOfVertices = 5;
-    MinimumSpanningTree minimumSpanningTree =
-                                      new MinimumSpanningTree(numberOfVertices);
-    assertEquals(numberOfVertices, minimumSpanningTree.numberOfVertices(), 0);
-
-    for(int i = 0;i < numberOfVertices;i++){
-      for(int j = 0;j < numberOfVertices;j++){
-        if(i == j){
-          assertTrue(minimumSpanningTree.areConnected(i, j));
-        }
-        else{
-          assertFalse(minimumSpanningTree.areConnected(i, j));
-        }
-      }
-    }
-
+    int numberOfVertices = 10;
     boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        connections[i][j] = !(i == j);
+        connections[i][j] = (i == j);
       }
     }
 
-    minimumSpanningTree = new MinimumSpanningTree(connections);
+    MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(connections);
 
-    assertEquals(numberOfVertices, minimumSpanningTree.numberOfVertices(), 0);
+    assertEquals(numberOfVertices, minimumSpanningTree.connections_.length, 0);
 
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        if(i == j){
-          assertFalse(minimumSpanningTree.areConnected(i, j));
-        }
-        else{
-          assertTrue(minimumSpanningTree.areConnected(i, j));
-        }
+        assertEquals(i == j, minimumSpanningTree.connections_[i][j]);
       }
     }
 
+    // Assert that the connections of the minimumSpanningTree are different objects than the ones provided as input.
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        connections[i][j] = (i != j);
+      }
+    }
+
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        assertEquals(i == j, minimumSpanningTree.connections_[i][j]);
+      }
+    }
   }
 
+  /**
+   *  @brief Tests kruskal method of MinimumSpanningTree class.
+   */
   @Test
   public void testKruskal(){
     double[] edgeWeights = new double[] {12, 100, 16, 100, 100, 100, 13,
@@ -96,7 +95,7 @@ public class MinimumSpanningTreeTest{
       }
     }
 
-    assertEquals(0, MinimumSpanningTree.kruskal(null, 0).numberOfVertices(), 0);
+    assertEquals(0, MinimumSpanningTree.kruskal(null, 0).connections_.length, 0);
 
     // Second example.
     edgeWeights = new double[] {3, 100, 2, 2, 100, 100, 100, 100, 100, 100, 100,
@@ -147,62 +146,59 @@ public class MinimumSpanningTreeTest{
 
   }
 
+  /**
+   *  @brief Tests areConnected method of MinimumSpanningTree class.
+   */
   @Test
-  public void testConnectDisconnect(){
+  public void testAreConnected(){
     int numberOfVertices = 10;
-    MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(numberOfVertices);
-
+    boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        if(j == i){
-          minimumSpanningTree.connect(i, j);
-        }
-        else{
-          minimumSpanningTree.disconnect(i, j);
-        }
+        connections[i][j] = (i == j);
       }
     }
 
+    MinimumSpanningTree minimumSpanningTree = new MinimumSpanningTree(connections);
+
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        if(j == i){
-          assertTrue(minimumSpanningTree.areConnected(i, j));
-        }
-        else{
-          assertFalse(minimumSpanningTree.areConnected(i, j));
-        }
+        assertEquals(i == j, minimumSpanningTree.areConnected(i, j));
       }
     }
-
   }
 
+  /**
+   *  @brief Tests connect methods of MinimumSpanningTree class.
+   */
   @Test
-  public void testAddConnection() throws IllegalArgumentException,
-                                         InvocationTargetException,
-                                         IllegalAccessException,
-                                         NoSuchMethodException,
-                                         SecurityException{
-    Class[] arguments = new Class[2];
-    arguments[0] = boolean[][].class;
-    arguments[1] = int.class;
-    Method addConnection = MinimumSpanningTree.class.getDeclaredMethod(
-                                                    "addConnection", arguments);
-    addConnection.setAccessible(true);
-
-    boolean[][] connections = new boolean[5][5];
-    for(int i = 0;i < 5;i++){
-      for(int j = 0;j < 5;j++){
+  public void testConnect(){
+    int numberOfVertices = 10;
+    boolean[][] connections = new boolean[numberOfVertices][numberOfVertices];
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
         connections[i][j] = false;
       }
     }
 
-    addConnection.invoke(null, connections, 5);
-    assertTrue(connections[1][3]);
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        if(j == i){
+          MinimumSpanningTree.connect(connections, i, j);
+        }
+      }
+    }
 
-    addConnection.invoke(null, connections, 9);
-    assertTrue(connections[3][4]);
+    for(int i = 0;i < numberOfVertices;i++){
+      for(int j = 0;j < numberOfVertices;j++){
+        assertEquals(i == j, connections[i][j]);
+      }
+    }
   }
 
+  /**
+   *  @brief Tests getUniquePaths method of MinimumSpanningTree class.
+   */
   @Test
   public void testGetUniquePaths(){
     double[] edgeWeights = new double[] {12, 100, 16, 100, 100, 100, 13,
@@ -221,74 +217,77 @@ public class MinimumSpanningTreeTest{
     assertEquals(36, paths.length, 0);
   }
 
+  /**
+   *  @brief Tests updateScope method of MinimumSpanningTree class.
+   */
   @Test
-  public void testUpdateCanReach(){
+  public void testUpdateScope(){
     int numberOfVertices = 5;
-    boolean[][] canReach = new boolean[numberOfVertices][numberOfVertices];
+    boolean[][] scope = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        canReach[i][j] = (i == j);
+        scope[i][j] = (i == j);
       }
     }
 
-    canReach[0][2] = true; canReach[2][0] = true;
-    canReach[1][4] = true; canReach[4][1] = true;
+    scope[0][2] = true; scope[2][0] = true;
+    scope[1][4] = true; scope[4][1] = true;
 
-    canReach = MinimumSpanningTree.updateCanReach(canReach, 1, 2);
+    scope = MinimumSpanningTree.updateScope(scope, 1, 2);
 
-    assertTrue(canReach[0][1]); assertTrue(canReach[1][0]);
-    assertTrue(canReach[0][4]); assertTrue(canReach[4][0]);
-    assertTrue(canReach[1][2]); assertTrue(canReach[2][1]);
+    assertTrue(scope[0][1]); assertTrue(scope[1][0]);
+    assertTrue(scope[0][4]); assertTrue(scope[4][0]);
+    assertTrue(scope[1][2]); assertTrue(scope[2][1]);
 
     numberOfVertices = 10;
-    canReach = new boolean[numberOfVertices][numberOfVertices];
+    scope = new boolean[numberOfVertices][numberOfVertices];
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        canReach[i][j] = (i == j);
+        scope[i][j] = (i == j);
       }
     }
 
-    canReach[0][6] = true; canReach[6][0] = true;
-    canReach[1][5] = true; canReach[5][1] = true;
-    canReach[2][9] = true; canReach[9][2] = true;
-    canReach[6][8] = true; canReach[8][6] = true;
+    scope[0][6] = true; scope[6][0] = true;
+    scope[1][5] = true; scope[5][1] = true;
+    scope[2][9] = true; scope[9][2] = true;
+    scope[6][8] = true; scope[8][6] = true;
 
-    canReach = MinimumSpanningTree.updateCanReach(canReach, 0, 7);
+    scope = MinimumSpanningTree.updateScope(scope, 0, 7);
 
-    assertTrue(canReach[0][7]); assertTrue(canReach[7][0]);
-    assertTrue(canReach[6][7]); assertTrue(canReach[7][6]);
-    assertTrue(canReach[7][8]); assertTrue(canReach[8][7]);
+    assertTrue(scope[0][7]); assertTrue(scope[7][0]);
+    assertTrue(scope[6][7]); assertTrue(scope[7][6]);
+    assertTrue(scope[7][8]); assertTrue(scope[8][7]);
 
-    canReach = MinimumSpanningTree.updateCanReach(canReach, 2, 6);
+    scope = MinimumSpanningTree.updateScope(scope, 2, 6);
 
-    assertTrue(canReach[0][2]); assertTrue(canReach[2][0]);
-    assertTrue(canReach[0][9]); assertTrue(canReach[9][0]);
+    assertTrue(scope[0][2]); assertTrue(scope[2][0]);
+    assertTrue(scope[0][9]); assertTrue(scope[9][0]);
 
-    assertTrue(canReach[2][6]); assertTrue(canReach[6][2]);
-    assertTrue(canReach[6][9]); assertTrue(canReach[9][6]);
+    assertTrue(scope[2][6]); assertTrue(scope[6][2]);
+    assertTrue(scope[6][9]); assertTrue(scope[9][6]);
 
-    assertTrue(canReach[2][7]); assertTrue(canReach[7][2]);
-    assertTrue(canReach[7][9]); assertTrue(canReach[9][7]);
+    assertTrue(scope[2][7]); assertTrue(scope[7][2]);
+    assertTrue(scope[7][9]); assertTrue(scope[9][7]);
 
-    assertTrue(canReach[2][8]); assertTrue(canReach[8][2]);
-    assertTrue(canReach[8][9]); assertTrue(canReach[9][8]);
+    assertTrue(scope[2][8]); assertTrue(scope[8][2]);
+    assertTrue(scope[8][9]); assertTrue(scope[9][8]);
 
-    canReach = MinimumSpanningTree.updateCanReach(canReach, 4, 5);
+    scope = MinimumSpanningTree.updateScope(scope, 4, 5);
 
-    assertTrue(canReach[1][4]); assertTrue(canReach[4][1]);
-    assertTrue(canReach[4][5]); assertTrue(canReach[5][4]);
+    assertTrue(scope[1][4]); assertTrue(scope[4][1]);
+    assertTrue(scope[4][5]); assertTrue(scope[5][4]);
 
-    canReach = MinimumSpanningTree.updateCanReach(canReach, 1, 3);
+    scope = MinimumSpanningTree.updateScope(scope, 1, 3);
 
-    assertTrue(canReach[1][3]); assertTrue(canReach[3][1]);
-    assertTrue(canReach[3][4]); assertTrue(canReach[4][3]);
-    assertTrue(canReach[3][5]); assertTrue(canReach[5][3]);
+    assertTrue(scope[1][3]); assertTrue(scope[3][1]);
+    assertTrue(scope[3][4]); assertTrue(scope[4][3]);
+    assertTrue(scope[3][5]); assertTrue(scope[5][3]);
 
-    canReach = MinimumSpanningTree.updateCanReach(canReach, 4, 9);
+    scope = MinimumSpanningTree.updateScope(scope, 4, 9);
 
     for(int i = 0;i < numberOfVertices;i++){
       for(int j = 0;j < numberOfVertices;j++){
-        assertTrue(canReach[i][j]);
+        assertTrue(scope[i][j]);
       }
     }
   }
