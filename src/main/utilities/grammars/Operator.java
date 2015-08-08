@@ -290,6 +290,9 @@ public class Operator extends Symbol{
         if(relativePosition == ArgumentPosition.INSIDE || relativePosition == ArgumentPosition.BELOW_RIGHT){
           relativePosition = ArgumentPosition.LEFT;
         }
+        else if(relativePosition == ArgumentPosition.ABOVE){
+          relativePosition = ArgumentPosition.ABOVE_RIGHT;
+        }
 
         return relativePosition;
       default:
