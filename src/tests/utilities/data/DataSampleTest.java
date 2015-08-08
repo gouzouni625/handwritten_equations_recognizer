@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import main.utilities.Utilities;
 import main.utilities.data.DataSample;
 import main.utilities.grammars.SymbolFactory;
 

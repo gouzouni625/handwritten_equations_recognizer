@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.junit.Test;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.highgui.Highgui;
 
 import main.utilities.traces.Point;
 import main.utilities.traces.Trace;

@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.nio.ByteBuffer;
 
-import main.utilities.Utilities;
-
 /** @class DataSet
  *
  *  @brief Implements a data set.
