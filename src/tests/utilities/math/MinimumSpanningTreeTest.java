@@ -6,9 +6,6 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import main.utilities.math.MinimumSpanningTree;
 
 /** @class MinimumSpanningTreeTest
