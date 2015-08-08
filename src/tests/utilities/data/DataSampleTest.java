@@ -8,54 +8,63 @@ import main.utilities.Utilities;
 import main.utilities.data.DataSample;
 import main.utilities.grammars.SymbolFactory;
 
+/** @class DataSampleTest
+ *
+ *  @brief Class that contains tests for DataSample class.
+ */
 public class DataSampleTest{
-
+  /**
+   *  @brief Tests the constructors of DataSample class.
+   */
   @Test
   public void testDataSample(){
+    /* Test default constructor. */
     DataSample dataSample = new DataSample();
 
     assertEquals(SymbolFactory.UNKNOWN_LABEL, dataSample.label_, 0);
-  }
 
-  @Test
-  public void testDataSample2(){
+    /* Test second constructor. */
     byte[] array = new byte[] {0x01, 0x02, 0x03};
 
-    DataSample dataSample = new DataSample(array);
+    dataSample = new DataSample(array);
 
     for(int i = 0;i < array.length;i++){
       assertEquals(array[i], dataSample.data_[i], 0);
     }
     assertEquals(SymbolFactory.UNKNOWN_LABEL, dataSample.label_, 0);
-  }
 
-  @Test
-  public void testDataSample3(){
-    byte[] array = new byte[] {0x01, 0x02, 0x03};
+    // Make sure the given array is cloned.
+    array[0] = 0x04;
+
+    assertEquals(0x01, dataSample.data_[0], 0);
+
+    /* Test third constructor. */
+    array = new byte[] {0x01, 0x02, 0x03};
     byte label = 32;
 
-    DataSample dataSample = new DataSample(array, label);
+    dataSample = new DataSample(array, label);
 
     for(int i = 0;i < array.length;i++){
       assertEquals(array[i], dataSample.data_[i], 0);
     }
     assertEquals(label, dataSample.label_, 0);
-  }
 
-  @Test
-  public void testDataSample4(){
+    // Make sure the given array is cloned.
+    array[0] = 0x04;
+
+    assertEquals(0x01, dataSample.data_[0], 0);
+
+    /* Test fourth constructor. */
     int size = 103;
 
-    DataSample dataSample = new DataSample(size);
+    dataSample = new DataSample(size);
 
     assertEquals(size, dataSample.data_.length, 0);
     assertEquals(SymbolFactory.UNKNOWN_LABEL, dataSample.label_, 0);
-  }
 
-  @Test
-  public void testDataSample5(){
-    byte[] array = new byte[] {0x01, 0x02, 0x03};
-    byte label = 32;
+    /* Test fifth constructor. */
+    array = new byte[] {0x01, 0x02, 0x03};
+    label = 32;
 
     DataSample dataSample1 = new DataSample(array, label);
     DataSample dataSample2 = new DataSample(dataSample1);
