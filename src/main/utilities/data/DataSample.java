@@ -58,7 +58,10 @@ public class DataSample{
    *  @param dataSample The DataSample to be copied.
    */
   public DataSample(DataSample dataSample){
-    data_ = dataSample.data_.clone();
+    if(dataSample.data_ != null){
+      data_ = dataSample.data_.clone();
+    }
+
     label_ = dataSample.label_;
   }
 
