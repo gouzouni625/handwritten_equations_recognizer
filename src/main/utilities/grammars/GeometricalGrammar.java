@@ -1,5 +1,7 @@
 package main.utilities.grammars;
 
+import main.utilities.symbols.Symbol;
+
 public class GeometricalGrammar extends Grammar{
 
   public void parse(Symbol primary, Symbol secondary){

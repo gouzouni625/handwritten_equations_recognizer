@@ -1,6 +1,6 @@
 package main.utilities.grammars;
 
-import main.utilities.grammars.Symbol;
+import main.utilities.symbols.Symbol;
 
 public abstract class Grammar{
 

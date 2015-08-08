@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import main.utilities.data.DataSample;
 import main.utilities.data.DataSet;
-import main.utilities.grammars.SymbolFactory;
+import main.utilities.symbols.SymbolFactory;
 
 /** @class DataSetTest
  *

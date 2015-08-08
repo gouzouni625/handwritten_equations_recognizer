@@ -1,12 +1,12 @@
-package main.utilities.grammars;
+package main.utilities.symbols;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import main.utilities.grammars.Symbol;
-import main.utilities.grammars.Symbol.ArgumentPosition;
-import main.utilities.grammars.Symbol.ChildAcceptanceCriterion;
-import main.utilities.grammars.Symbol.SymbolClass;
+import main.utilities.symbols.Symbol;
+import main.utilities.symbols.Symbol.ArgumentPosition;
+import main.utilities.symbols.Symbol.ChildAcceptanceCriterion;
+import main.utilities.symbols.Symbol.SymbolClass;
 import main.utilities.traces.TraceGroup;
 
 public class Operator extends Symbol{

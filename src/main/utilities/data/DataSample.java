@@ -1,6 +1,6 @@
 package main.utilities.data;
 
-import main.utilities.grammars.SymbolFactory;
+import main.utilities.symbols.SymbolFactory;
 
 /** @class DataSample
  *

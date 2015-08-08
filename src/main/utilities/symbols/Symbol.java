@@ -1,4 +1,4 @@
-package main.utilities.grammars;
+package main.utilities.symbols;
 
 import java.util.Arrays;
 import java.util.List;
