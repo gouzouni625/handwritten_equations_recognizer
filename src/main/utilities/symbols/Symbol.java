@@ -245,7 +245,7 @@ public abstract class Symbol{
    *
    *  @param symbol The given Symbol.
    *
-   *  @return Returns the ArgumentPosition that the given Symbol has, relative to this Symbol.
+   *  @return Returns the relative position between this Symbol and the given one.
    */
   public ArgumentPosition relativePosition(Symbol symbol){
     traceGroup_.calculateCorners();
