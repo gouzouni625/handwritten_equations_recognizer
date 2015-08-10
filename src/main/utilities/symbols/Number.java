@@ -22,26 +22,27 @@ public class Number extends Symbol{
 
     type_ = type;
 
-    // Initially the Symbol has no parent.
+    // Initially the Number has no parent.
     parent_ = null;
 
     children_ = new ArrayList<List<Symbol>>();
     children_.add(new ArrayList<Symbol>());
     // A Number accepts children only on ABOVE_RIGHT position, as an exponent.
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
-    // A Number can accept as expoenent another Number, a Letter, an Operator or an UnrecognizedSymbol.
+    // A Number can accept as exponent another Number, a Letter, an Operator or an UnrecognizedSymbol.
     childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER, SymbolClass.OPERATOR,
                                            SymbolClass.UNRECOGNIZED}};
-    /* use width along with are to avoid the situation frac{x}{3}=y where = gets to be the exponent of 3.  */
     // - Use sizeChildAcceptanceCriterion for accepting another Number in ABOVE_RIGHT position. That means that, when
     //     drawing an equation, a Number, as an exponent, should have, at max, half the size of the base Number.
     // - Use sizeChildAcceptanceCriterion for accepting a Letter in ABOVE_RIGHT position. That means that, when drawing
     //     an equation, a Letter, as an exponent, should have, at max, half the size of the base Number.
     // - Use widthSizeExceptSQRTFractionLine for accepting an Operator in ABOVE_RIGHT position. That means that, when
     //     drawing an equation, an Operator, as an exponent, should have, at max, half the width of the base Number. This
-    //     doesn't apply for the Operator.Types.SQRT and Operator.TypesFraction_LINE Symbol. This is done to avoid the
+    //     doesn't apply for the square root and fraction line Symbol. The exclusion of these two is done to avoid the
     //     case of long fractions or square roots not being accepted as exponents to a Number(e.g.
-    //     5^{sqrt{5x^{2} + 2x + 6}}).
+    //     5^{sqrt{5x^{2} + 2x + 6}}). The size-width criterion is done avoid the case where x_{2}=5 gets recognized as
+    //     x_{2=}. In this situation, '=' will be bigger, or, at least, not twice as small as '2', so '2' will not accept
+    //     '=' as a child.
     // - Use sizeWidthChildAcceptanceCriterion for accepting an UnrecognizedSymbol in ABOVE_RIGHT position. That means
     //     that, when drawing an equation, an UnrecognizedSymbol, as an exponent, should have, at max, half the width
     //     and half the size of the base Number.
@@ -50,7 +51,7 @@ public class Number extends Symbol{
                                                                      widthSizeExceptSQRTFractionLine,
                                                                      sizeWidthChildAcceptanceCriterion}};
 
-    // Initially the Symbol has no next symbol.
+    // Initially the Number has no next symbol.
     nextSymbol_ = null;
     // A Number accepts next symbols only at RIGHT position.
     nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
