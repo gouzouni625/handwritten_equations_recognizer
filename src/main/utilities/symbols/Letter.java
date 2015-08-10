@@ -53,6 +53,11 @@ public class Letter extends Symbol{
         // - Use sizeWidthChildAcceptanceCriterion for accepting an UnrecognizedSymbol in ABOVE_RIGHT position. That means
         //     that, when drawing an equation, an UnrecognizedSymbol, as an exponent, should have, at max, half the width
         //     and half the size of the base Letter.
+        // --------------------------------------------------------------------------------------------------------------
+        // - Use sizeChildAcceptanceCriterion for accepting a Number in BELOW_RIGHT position. That means that, when drawing
+        //     an equation, a Number, as an index, should have, at max, half the size of the base Letter.
+        // - Use sizeChildAcceptanceCriterion for accepting a Letter in BELOW_RIGHT position. That means that, when drawing
+        //     an equation, a Letter, as an index, should have, at max, half the size of the base Letter.
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion,
                                                                          sizeChildAcceptanceCriterion,
                                                                          widthSizeExceptSQRTFractionLine,
