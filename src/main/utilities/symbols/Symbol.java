@@ -78,7 +78,7 @@ public abstract class Symbol{
   }
 
   /**
-   *  @brief Removes a child from this Symbol
+   *  @brief Removes a child from this Symbol.
    *
    *  @param symbol The child to be removed.
    */
