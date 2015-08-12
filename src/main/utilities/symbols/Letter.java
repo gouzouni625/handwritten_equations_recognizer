@@ -24,11 +24,10 @@ public class Letter extends Symbol{
     // Initially the Letter has no parent.
     parent_ = null;
 
-    // Initialize the members of this Letter, based on its Type.
+    // Initialize the members of this Letter, based on its type.
     switch(type){
       case LOWER_X:
       case LOWER_Y:
-        // LOWER_X and LOWER_Y act as the common known variables, x and y.
         children_ = new ArrayList<List<Symbol>>();
         children_.add(new ArrayList<Symbol>());
         children_.add(new ArrayList<Symbol>());
@@ -80,27 +79,27 @@ public class Letter extends Symbol{
    *  The TeX format for every Letter is saved as the String representation of the type.
    */
   public enum Types{
-    LOWER_X("x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"), //!< Letter x.
-    LOWER_Y("y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"); //!< Letter y.
+    LOWER_X("x^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"), //!< Letter LOWER_X x .
+    LOWER_Y("y^{" + ArgumentPosition.ABOVE_RIGHT + "}_{" + ArgumentPosition.BELOW_RIGHT + "}"); //!< Letter LOWER_Y y .
 
     /**
      *  @brief Constructor.
      *
-     *  @param stringValue The String value for this Type.
+     *  @param stringValue The String value for this type.
      */
     private Types(String stringValue){
       stringValue_ = stringValue;
     }
 
     /**
-     *  @brief Returns the string value of this Type.
+     *  @brief Returns the String value of this type.
      */
     @Override
     public String toString(){
       return stringValue_;
     }
 
-    private String stringValue_; //!< The string value of this Type.
+    private String stringValue_; //!< The string value of this type.
   }
 
   /**
