@@ -17,11 +17,11 @@ import main.utilities.Utilities;
 
 /** @class UtilitiesTest
  *
- *  @brief Class that contains tests for Utilities class.
+ *  @brief Class that contains tests for main.utilities.Utilities class.
  */
 public class UtilitiesTest{
   /**
-   *  @brief Tests sortArray method of Utilities class.
+   *  @brief Tests sortArray method of main.utilities.Utilities class.
    */
   @Test
   public void testSortArray(){
@@ -35,7 +35,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests arrayContains method of Utilities class.
+   *  @brief Tests arrayContains method of main.utilities.Utilities class.
    */
   @Test
   public void testArrayContains(){
@@ -51,7 +51,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests getContext methods of Utilities class.
+   *  @brief Tests getContext methods of main.utilities.Utilities class.
    */
   @Test
   public void testGetContext(){
@@ -106,7 +106,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests findUniquePaths method of Utilities class.
+   *  @brief Tests findUniquePaths method of main.utilities.Utilities class.
    */
   @Test
   public void testFindUniquePaths(){
@@ -147,7 +147,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests pathHashKey method of Utilities class.
+   *  @brief Tests pathHashKey method of main.utilities.Utilities class.
    */
   @Test
   public void pathHashKey(){
@@ -194,7 +194,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests indexOfMax method of Utilities class.
+   *  @brief Tests indexOfMax method of main.utilities.Utilities class.
    */
   @Test
   public void testIndexOfMax(){
@@ -204,7 +204,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests maxValue method of Utilities class.
+   *  @brief Tests maxValue method of main.utilities.Utilities class.
    */
   @Test
   public void testMaxValue(){
@@ -214,7 +214,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests imageToByteArray method of Utilities class.
+   *  @brief Tests imageToByteArray method of main.utilities.Utilities class.
    */
   @Test
   public void testImageToByteArray(){
@@ -234,7 +234,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests normalizeArray method of Utilities class.
+   *  @brief Tests normalizeArray method of main.utilities.Utilities class.
    */
   @Test
   public void testNormalizeArray(){
@@ -248,7 +248,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests vectorIndexToUpperTriangularIndeces method of Utilities class.
+   *  @brief Tests vectorIndexToUpperTriangularIndeces method of main.utilities.Utilities class.
    */
   @Test
   public void testVectorIndexToUpperTriangularIndeces(){
@@ -264,7 +264,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests upperTriangularIndicesToVectorIndex method of Utilities class.
+   *  @brief Tests upperTriangularIndicesToVectorIndex method of main.utilities.Utilities class.
    */
   @Test
   public void testUpperTriangularIndecesToVectorIndex(){
@@ -281,7 +281,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests areAllTrue method of Utilities class.
+   *  @brief Tests areAllTrue method of main.utilities.Utilities class.
    */
   @Test
   public void testAreAllTrue(){
@@ -306,7 +306,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests concatenateArrays method of Utilities class.
+   *  @brief Tests concatenateArrays method of main.utilities.Utilities class.
    */
   @Test
   public void testConcatenateArrays(){
@@ -338,7 +338,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests removeRows method of Utilities class.
+   *  @brief Tests removeRows method of main.utilities.Utilities class.
    */
   @Test
   public void testRemoveRows(){
@@ -379,7 +379,7 @@ public class UtilitiesTest{
   }
 
   /**
-   *  @brief Tests rowInArray method of Utilities class.
+   *  @brief Tests rowInArray method of main.utilities.Utilities class.
    */
   @Test
   public void testRowInArray(){

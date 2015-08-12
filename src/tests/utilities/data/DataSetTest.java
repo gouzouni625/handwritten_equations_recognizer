@@ -12,11 +12,11 @@ import main.utilities.symbols.SymbolFactory;
 
 /** @class DataSetTest
  *
- *  @brief Class that contains tests for DataSet class.
+ *  @brief Class that contains tests for main.utilities.data.DataSet class.
  */
 public class DataSetTest{
   /**
-   *  @brief Tests the constructors, size, get and add methods of DataSet class.
+   *  @brief Tests the constructors, size, get and add methods of main.utilities.data.DataSet class.
    */
   @Test
   public void testDataSet(){
@@ -44,9 +44,9 @@ public class DataSetTest{
   }
 
   /**
-   *  @brief Tests saveIDXFormat and loadIDXFormat methods of DataSet class.
+   *  @brief Tests saveIDXFormat and loadIDXFormat methods of main.utilities.data.DataSet class.
    *
-   *  @throws IOException When saveIDXFormat or loadIDXFormat throws an exception.
+   *  @throws IOException When saveIDXFormat or loadIDXFormat throw an exception.
    */
   @Test
   public void testIDXFormat() throws IOException{
@@ -75,7 +75,7 @@ public class DataSetTest{
   }
 
   /**
-   *  @brief Tests shuffle method of DataSet class.
+   *  @brief Tests shuffle method of main.utilities.data.DataSet class.
    */
   @Test
   public void testShuffle(){
@@ -102,7 +102,7 @@ public class DataSetTest{
   }
 
   /**
-   *  @brief Tests static add method of DataSet class.
+   *  @brief Tests static add method of main.utilities.data.DataSet class.
    */
   @Test
   public void testStaticAdd(){
@@ -138,7 +138,7 @@ public class DataSetTest{
   }
 
   /**
-   *  @brief Tests subDataSet method of DataSet class.
+   *  @brief Tests subDataSet method of main.utilities.data.DataSet class.
    */
   @Test
   public void testSubDataSet(){

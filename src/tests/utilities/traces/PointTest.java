@@ -8,13 +8,13 @@ import main.utilities.traces.Point;
 
 /** @class PointTest
  *
- *  @brief Class that contains tests for Point class.
+ *  @brief Class that contains tests for main.utilities.traces.Point class.
  *
  */
 public class PointTest{
 
   /**
-   *  @brief Tests the constructors of Point class.
+   *  @brief Tests the constructors of main.utilities.traces.Point class.
    */
   @Test
   public void testPoint(){
@@ -45,7 +45,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests add method of Point class.
+   *  @brief Tests add method of main.utilities.traces.Point class.
    */
   @Test
   public void testAdd(){
@@ -63,7 +63,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests MultiplyBy method of Point class.
+   *  @brief Tests MultiplyBy method of main.utilities.traces.Point class.
    */
   @Test
   public void testMultiplyBy(){
@@ -90,7 +90,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests divideBy method of Point class.
+   *  @brief Tests divideBy method of main.utilities.traces.Point class.
    */
   @Test
   public void testDivideBy(){
@@ -112,7 +112,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests divideBy method of Point class.
+   *  @brief Tests divideBy method of main.utilities.traces.Point class.
    *
    *  Concretely, tests if the right exception is thrown in case factor == 0.
    */
@@ -128,7 +128,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests subtract method of Point class.
+   *  @brief Tests subtract method of main.utilities.traces.Point class.
    */
   @Test
   public void testSubtract(){
@@ -152,7 +152,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests distance method of Point class.
+   *  @brief Tests distance method of main.utilities.traces.Point class.
    */
   @Test
   public void testDistance(){
@@ -170,7 +170,7 @@ public class PointTest{
   }
 
   /**
-   *  @brief Tests chain operations with Point objects.
+   *  @brief Tests chain operations with main.utilities.traces.Point objects.
    */
   @Test
   public void testChainOperations(){

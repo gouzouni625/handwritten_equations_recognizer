@@ -14,12 +14,12 @@ import main.utilities.traces.TraceGroup;
 
 /** @class TraceGroupTest
  *
- *  @brief Class that contains tests for TraceGroup class.
+ *  @brief Class that contains tests for main.utilities.traces.TraceGroup class.
  */
 public class TraceGroupTest{
 
   /**
-   *  @brief Tests for constructors of TraceGroup class.
+   *  @brief Tests the constructors of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testTraceGroup(){
@@ -30,7 +30,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests add and size methods of TraceGroup class.
+   *  @brief Tests add and size methods of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testAddSize(){
@@ -45,7 +45,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests get method of TraceGroup class.
+   *  @brief Tests get method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testGet(){
@@ -69,7 +69,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests subTraceGroup method of TraceGroup class.
+   *  @brief Tests subTraceGroup method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testSubTraceGroup(){
@@ -93,7 +93,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests multiplyBy method of TraceGroup class.
+   *  @brief Tests multiplyBy method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testMultiplyBy(){
@@ -122,7 +122,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests subtract method of TraceGroup class.
+   *  @brief Tests subtract method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testSubtract(){
@@ -153,7 +153,7 @@ public class TraceGroupTest{
 
   /**
    *  @brief Tests calculateCorners, getToLeftCorner, getBottomRightCorner, getBottomLeftCorner, getTopRightCorner,
-   *  getWidth, getHeight and getArea methods of TraceGroup class.
+   *  getWidth, getHeight and getArea methods of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testCalculateCorners(){
@@ -203,7 +203,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests getCentroid method of TraceGroup class.
+   *  @brief Tests getCentroid method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testGetCentroid(){
@@ -220,7 +220,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests getCenterOfMass method of TraceGroup class.
+   *  @brief Tests getCenterOfMass method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testGetCenterOfMass(){
@@ -237,7 +237,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests minimumDistance method of TraceGroup class.
+   *  @brief Tests minimumDistance method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testMinimumDistance(){
@@ -257,7 +257,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests closestTraces method of TraceGroup class.
+   *  @brief Tests closestTraces method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testClosestTraces(){
@@ -276,7 +276,7 @@ public class TraceGroupTest{
   }
 
   /**
-   *  @brief Tests closestPoints method of TraceGroup class.
+   *  @brief Tests closestPoints method of main.utilities.traces.TraceGroup class.
    */
   @Test
   public void testClosestPoints(){

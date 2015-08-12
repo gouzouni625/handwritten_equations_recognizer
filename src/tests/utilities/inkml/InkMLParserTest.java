@@ -13,12 +13,13 @@ import org.junit.Test;
 
 /** @class InkMLParserTest
  *
- *  @brief Class that contains tests for the InkMLParser class.
+ *  @brief Class that contains tests for the main.utilities.inkml.InkMLParser class.
  *
  */
 public class InkMLParserTest{
   /**
-   *  @brief Tests the constructors, setXMLData, getXMLData, getEquation and reset methods of InkMLParser class.
+   *  @brief Tests the constructors, setXMLData, getXMLData, getEquation and reset methods of
+   *         main.utilities.inkml.InkMLParser class.
    */
   @Test
   public void testInkMLParser(){
@@ -53,7 +54,7 @@ public class InkMLParserTest{
   }
 
   /**
-   *  @brief Tests readInkMLFile method of InkMLParser class.
+   *  @brief Tests readInkMLFile method of main.utilities.inkml.InkMLParser class.
    *
    *  Example InkML file: \n\n
    *  <ink xmlns="http://www.w3.org/2003/InkML"/>
@@ -104,7 +105,7 @@ public class InkMLParserTest{
   }
 
   /**
-   *  @brief Tests parse methods of InkMLParser class.
+   *  @brief Tests parse methods of main.utilities.inkml.InkMLParser class.
    *
    *  @throws FileNotFoundException In case parse method throws an exception.
    */

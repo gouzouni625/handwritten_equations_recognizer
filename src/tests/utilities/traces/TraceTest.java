@@ -13,11 +13,11 @@ import main.utilities.traces.Trace;
 
 /** @class TraceTest
  *
- *  @brief Class that contains tests for Trace class.
+ *  @brief Class that contains tests for main.utilities.traces.Trace class.
  */
 public class TraceTest{
   /**
-   *  @brief Tests the constructors of Trace class.
+   *  @brief Tests the constructors of main.utilities.traces.Trace class.
    */
   @Test
   public void testTrace(){
@@ -29,7 +29,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests add and size methods of Trace class.
+   *  @brief Tests add and size methods of main.utilities.traces.Trace class.
    */
   @Test
   public void testAddSize(){
@@ -43,7 +43,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests get method of Trace class.
+   *  @brief Tests get method of main.utilities.traces.Trace class.
    */
   @Test
   public void testGet(){
@@ -67,7 +67,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests multiplyBy method of Trace class.
+   *  @brief Tests multiplyBy method of main.utilities.traces.Trace class.
    */
   @Test
   public void testMultiplyBy(){
@@ -90,7 +90,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests subtract method of Trace class.
+   *  @brief Tests subtract method of main.utilities.traces.Trace class.
    */
   @Test
   public void testSubtract(){
@@ -115,7 +115,7 @@ public class TraceTest{
 
   /**
    *  @brief Tests calculateCorners, getTopLeftCorner, getBottomRightCorner, getBottomLeftCorner, getTopRightCorner,
-   *  getWidth and getHeight methods of Trace class.
+   *  getWidth and getHeight methods of main.utilities.traces.Trace class.
    */
   @Test
   public void testCalculateCorners(){
@@ -164,7 +164,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests getCentroid method of Trace class.
+   *  @brief Tests getCentroid method of main.utilities.traces.Trace class.
    */
   @Test
   public void testGetCentroid(){
@@ -181,7 +181,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests getCenterOfMass method of Trace class.
+   *  @brief Tests getCenterOfMass method of main.utilities.traces.Trace class.
    */
   @Test
   public void testGetCenterOfMass(){
@@ -198,7 +198,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests minimumDistance method of Trace class.
+   *  @brief Tests minimumDistance method of main.utilities.traces.Trace class.
    */
   @Test
   public void testMinimumDistance(){
@@ -218,7 +218,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests closestPoints method of Trace class.
+   *  @brief Tests closestPoints method of main.utilities.traces.Trace class.
    */
   @Test
   public void testClosestPoints(){
@@ -237,7 +237,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests closestPoint method of Trace class.
+   *  @brief Tests closestPoint method of main.utilities.traces.Trace class.
    */
   @Test
   public void testClosestPoint(){
@@ -253,7 +253,7 @@ public class TraceTest{
   }
 
   /**
-   *  @brief Tests toInkMLFormat method of Trace class.
+   *  @brief Tests toInkMLFormat method of main.utilities.traces.Trace class.
    */
   @Test
   public void testToInkMLFormat(){

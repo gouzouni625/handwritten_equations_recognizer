@@ -9,11 +9,11 @@ import main.utilities.symbols.SymbolFactory;
 
 /** @class DataSampleTest
  *
- *  @brief Class that contains tests for DataSample class.
+ *  @brief Class that contains tests for main.utilities.data.DataSample class.
  */
 public class DataSampleTest{
   /**
-   *  @brief Tests the constructors of DataSample class.
+   *  @brief Tests the constructors of main.utilities.data.DataSample class.
    */
   @Test
   public void testDataSample(){
