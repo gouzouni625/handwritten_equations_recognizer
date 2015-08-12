@@ -120,7 +120,7 @@ public class Operator extends Symbol{
     PLUS("+"), //!< Operator PLUS + .
     EQUALS("="), //!< Operator EQUALS = .
     MINUS("-"), //!< Operator MINUS - .
-    FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}"), //<! Operator FRACTION_LINE .
+    FRACTION_LINE("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}"), //!< Operator FRACTION_LINE .
     SQRT("\\sqrt{" + ArgumentPosition.INSIDE + "}^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Operator SQRT .
     LEFT_PARENTHESIS("("), //!< Operator LEFT_PARENTHESIS ( .
     RIGHT_PARENTHESIS(")^{" + ArgumentPosition.ABOVE_RIGHT + "}"); //!< Operator RIGHT_PARENTHESIS ) .
@@ -150,7 +150,7 @@ public class Operator extends Symbol{
    *
    *  Override the default implementation to treat some special cases.
    *
-   *  @param The given Symbol.
+   *  @param symbol The given Symbol.
    *
    *  @return Returns the relative position between this Symbol and the given one.
    */
