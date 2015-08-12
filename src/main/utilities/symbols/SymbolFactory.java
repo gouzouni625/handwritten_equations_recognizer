@@ -2,8 +2,24 @@ package main.utilities.symbols;
 
 import main.utilities.traces.TraceGroup;
 
+/** @class SymbolFactory
+ *
+ *  @brief A class used to create Symbol objects.
+ *
+ *  This class also contains all the needed variables and methods to make the transition of data between the equation
+ *  partitioner and the parser.
+ */
 public class SymbolFactory{
-
+  /**
+   *  @brief Creates a Symbol object for a given label.
+   *
+   *  This label is the label used by the equation partitioner and the neural network, thus an integer.
+   *
+   *  @param traceGroup The TraceGroup of the Symbol to be created.
+   *  @param label The label of the Symbol to be created.
+   *
+   *  @return Returns the created Symbol.
+   */
   public static Symbol createByLabel(TraceGroup traceGroup, int label){
 
     switch(label){
@@ -48,6 +64,14 @@ public class SymbolFactory{
     }
   }
 
+  /**
+   *  @brief Creates a Symbol object for a given type.
+   *
+   *  @param type The type of the Symbol to be created.
+   *  @param traceGroup The TraceGroup of the Symbol to be created.
+   *
+   *  @return Returns the created Symbol.
+   */
   public static <E extends Enum<E>> Symbol createByType(E type, TraceGroup traceGroup){
     if(type == Number.Types.ZERO){
       return (new Number(Number.Types.ZERO, traceGroup));
@@ -111,25 +135,24 @@ public class SymbolFactory{
     }
   }
 
-  public static final int UNKNOWN_LABEL = -1;
-  public static final int LABEL_ZERO = 0;
-  public static final int LABEL_ONE = 1;
-  public static final int LABEL_TWO = 2;
-  public static final int LABEL_THREE = 3;
-  public static final int LABEL_FOUR = 4;
-  public static final int LABEL_FIVE = 5;
-  public static final int LABEL_SIX = 6;
-  public static final int LABEL_SEVEN = 7;
-  public static final int LABEL_EIGHT = 8;
-  public static final int LABEL_NINE = 9;
-  public static final int LABEL_PLUS = 10;
-  public static final int LABEL_EQUALS = 11;
-  public static final int LABEL_LOWER_X = 12;
-  public static final int LABEL_LOWER_Y = 13;
-  public static final int LABEL_HORIZONTAL_LINE = 14;
-  public static final int LABEL_SQRT = 15;
-  public static final int LABEL_LEFT_PARENTHESIS = 16;
-  public static final int LABEL_RIGHT_PARENTHESIS = 17;
-  public static final int LABEL_GARBAGE = 18;
+  public static final int UNKNOWN_LABEL = -1; //!< Label to denote the lack of a label.
+  public static final int LABEL_ZERO = 0; //!< The integer used by the equation partitioner for '0'.
+  public static final int LABEL_ONE = 1; //!< The integer used by the equation partitioner for '1'.
+  public static final int LABEL_TWO = 2; //!< The integer used by the equation partitioner for '2'.
+  public static final int LABEL_THREE = 3; //!< The integer used by the equation partitioner for '3'.
+  public static final int LABEL_FOUR = 4; //!< The integer used by the equation partitioner for '4'.
+  public static final int LABEL_FIVE = 5; //!< The integer used by the equation partitioner for '5'.
+  public static final int LABEL_SIX = 6; //!< The integer used by the equation partitioner for '6'.
+  public static final int LABEL_SEVEN = 7; //!< The integer used by the equation partitioner for '7'.
+  public static final int LABEL_EIGHT = 8; //!< The integer used by the equation partitioner for '8'.
+  public static final int LABEL_NINE = 9; //!< The integer used by the equation partitioner for '9'.
+  public static final int LABEL_PLUS = 10; //!< The integer used by the equation partitioner for '+'.
+  public static final int LABEL_EQUALS = 11; //!< The integer used by the equation partitioner for '='.
+  public static final int LABEL_LOWER_X = 12; //!< The integer used by the equation partitioner for 'x'.
+  public static final int LABEL_LOWER_Y = 13; //!< The integer used by the equation partitioner for 'y'.
+  public static final int LABEL_HORIZONTAL_LINE = 14; //!< The integer used by the equation partitioner for '-'.
+  public static final int LABEL_SQRT = 15; //!< The integer used by the equation partitioner for sqrt symbol.
+  public static final int LABEL_LEFT_PARENTHESIS = 16; //!< The integer used by the equation partitioner for '('.
+  public static final int LABEL_RIGHT_PARENTHESIS = 17; //!< The integer used by the equation partitioner for ')'.
 
 }
