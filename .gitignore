@@ -6,8 +6,8 @@
 bin/
 
 # Doxygen generated files
-html/
-latex/
+doxygen/html/
+doxygen/latex/
 
 # Other
 src/main/executables/
