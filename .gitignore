@@ -1,16 +1,21 @@
-*.swp
-*.jar
-
+# Eclipse
 .classpath
 .project
+
+# Binaries
 /bin/
 
+# Doxygen
+doxygen/html
+doxygen/latex
+
+# Other
+src/main/evaluators/InstantDatabaseEvaluator.java
+testing_dir/
+backup/
 todo
 notes
 data
 to_improve
-
-testing_dir/
-backup/
-
-src/main/evaluators/InstantDatabaseEvaluator.java
+*.swp
+*.jar

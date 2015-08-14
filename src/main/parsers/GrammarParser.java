@@ -8,8 +8,8 @@ import java.util.Comparator;
 
 import main.utilities.Utilities;
 import main.utilities.grammars.Grammar;
-import main.utilities.grammars.Symbol;
-import main.utilities.grammars.SymbolFactory;
+import main.utilities.symbols.Symbol;
+import main.utilities.symbols.SymbolFactory;
 import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
@@ -251,11 +251,11 @@ public abstract class GrammarParser extends Parser{
   }
 
   public boolean isGrammarSilent(){
-    return grammar_.isSilent();
+    return grammar_.isQuiet();
   }
 
   public void setGrammarSilent(boolean silent){
-    grammar_.setSilent(silent);
+    grammar_.setQuiet(silent);
   }
 
   Symbol[] symbols_;

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import main.distorters.ImageDistorter;
 import main.evaluators.SimpleEvaluator;
-import main.partitioners.NNMSTPartitioner;
 
 public class HandWrittenEquationRecognizer{
 
