@@ -11,11 +11,13 @@ doxygen/latex
 
 # Other
 src/main/evaluators/InstantDatabaseEvaluator.java
+src/main/executables/
 testing_dir/
 backup/
 todo
 notes
-data
 to_improve
 *.swp
 *.jar
+data
+dump
