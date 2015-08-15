@@ -2,82 +2,119 @@ package main.evaluators;
 
 import java.io.IOException;
 
-import main.utilities.traces.Point;
-import main.utilities.traces.Trace;
+import main.utilities.inkml.InkMLParser;
 import main.utilities.traces.TraceGroup;
 import main.distorters.ImageDistorter;
 import main.partitioners.NNMSTPartitioner;
 import main.parsers.GGParser;
 
+/** @class SimpleEvaluator
+ *
+ *  @brief Combines a main.partitioners.NNMSTPartitioner and a main.parsers.GGParser to evaluate a given equation.
+ */
 public class SimpleEvaluator{
-
-  public SimpleEvaluator(String inkML, String neuralNetworkPath, int[] sizesOfLayers, ImageDistorter imageDistorter) throws IOException{
-    expression_ = new TraceGroup();
-
-    int startOfTrace = inkML.indexOf("<trace>");
-    int endOfTrace = inkML.indexOf("</trace>");
-    while(startOfTrace != -1){
-      String[] traceData = inkML.substring(startOfTrace + 7, endOfTrace).split(", "); // ("<trace>").length = 7.
-
-      Trace trace = new Trace();
-      for(int i = 0;i < traceData.length;i++){
-        double x = Double.parseDouble(traceData[i].split(" ")[0]);
-        double y = Double.parseDouble(traceData[i].split(" ")[1]);
-        trace.add(new Point(x, y));
-      }
-      if(trace.size() > 1){
-        expression_.add(trace);
-      }
-
-      inkML = inkML.substring(endOfTrace + 8); // ("</trace>").length = 8.
-      startOfTrace = inkML.indexOf("<trace>");
-      endOfTrace = inkML.indexOf("</trace>");
-    }
-
+  /**
+   *  @brief Constructor.
+   *
+   *  @param neuralNetworkPath The full path where the main.base.NeuralNetwork to be used by the
+   *                           main.partitioners.NNMSTPartitioner is located.
+   *  @param sizesOfLayers The sizes of the layers of the main.base.NeuralNetwork.
+   *  @param imageDistorter The main.distorters.ImageDistorter to be used by the main.partitioners.NNMSTPartitioner.
+   *
+   *  @throws IOException When the main.partitioners.NNMSTPartitioner.NNMSTPartitioner throws an exception.
+   */
+  public SimpleEvaluator(String neuralNetworkPath, int[] sizesOfLayers, ImageDistorter imageDistorter)
+                        throws IOException{
     partitioner_ = new NNMSTPartitioner(sizesOfLayers, neuralNetworkPath, imageDistorter);
 
     parser_ = new GGParser();
   }
 
-  public void evaluate(){
-    TraceGroup[] partition = partitioner_.partition(expression_);
+  /**
+   *  @brief Processes an equation.
+   *
+   *  @param xmlData The xmlData in InkML format of the given equation.
+   *
+   *  @return Returns the recognized equation in TeX format.
+   */
+  public String evaluate(String xmlData){
+    InkMLParser inkMLParser = new InkMLParser(new String(xmlData));
+    inkMLParser.parse();
+
+    TraceGroup[] partition = partitioner_.partition(inkMLParser.traceGroup_);
     int[] labels = partitioner_.getLabels();
 
     parser_.parse(partition, labels);
+
+    return (parser_.toString());
   }
 
+  /**
+   *  @brief Returns the recognized equation in TeX format.
+   *
+   *  @return Returns the recognized equation in TeX format.
+   */
   public String toString(){
     return parser_.toString();
   }
 
+  /**
+   *  @brief Getter method for the silent mode of the main.partitioners.NNMSTPartitioner.
+   *
+   *  @return Returns true if the main.partitioners.NNMSTPartitioner is in silent mode.
+   */
   public boolean isPartitionerSilent(){
     return (partitioner_.isSilent());
   }
 
+  /**
+   *  @brief Setter method for the silent mode of the main.partitioners.NNMSTPartitioner.
+   *
+   *  @param silent The value for the silent mode of the main.partitioners.NNMSTPartitioner.
+   */
   public void setPartitionerSilent(boolean silent){
     partitioner_.setSilent(silent);
   }
 
+  /**
+   *  @brief Getter method for the silent mode of the main.parsers.GGParser.
+   *
+   *  @return Returns true if the main.parsers.GGParser is in silent mode.
+   */
   public boolean isParserSilent(){
     return (parser_.isSilent());
   }
 
+  /**
+   *  @brief Setter method for the silent mode of the main.parsers.GGParser.
+   *
+   *  @param silent The value for the silent mode of the main.parsers.GGParser.
+   */
   public void setParserSilent(boolean silent){
     parser_.setSilent(silent);
   }
 
+  /**
+   *  @brief Getter method for the silent mode of the main.utilities.grammars.GeometricalGrammar used by the
+   *         main.parsers.GGParser.
+   *
+   *  @return Returns true if the main.utilities.grammars.GeometricalGrammar is in silent mode.
+   */
   public boolean isGrammarSilent(){
     return (parser_.isGrammarSilent());
   }
 
+  /**
+   *  @brief Setter method for the main.utilities.grammars.GeometricalGrammar used by the main.parsers.GGParser.
+   *
+   *  @param silent The value for the silent mode of the main.utilities.grammars.GeometricalGrammar.
+   */
   public void setGrammarSilent(boolean silent){
     parser_.setGrammarSilent(silent);
   }
 
-  private TraceGroup expression_;
+  private NNMSTPartitioner partitioner_; //!< The main.partitioners.NNMSTPartitioner of this SimpleEvaluator.
 
-  private NNMSTPartitioner partitioner_;
-
-  private GGParser parser_;
+  private GGParser parser_;//!< The main.parsers.GGParser of this SimpleEvaluator.
 
 }
