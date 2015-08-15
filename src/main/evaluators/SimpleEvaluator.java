@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import main.utilities.inkml.InkMLParser;
 import main.utilities.traces.TraceGroup;
+import main.base.NeuralNetwork;
 import main.distorters.ImageDistorter;
 import main.partitioners.NNMSTPartitioner;
 import main.parsers.GGParser;
@@ -16,16 +17,13 @@ public class SimpleEvaluator{
   /**
    *  @brief Constructor.
    *
-   *  @param neuralNetworkPath The full path where the main.base.NeuralNetwork to be used by the
-   *                           main.partitioners.NNMSTPartitioner is located.
-   *  @param sizesOfLayers The sizes of the layers of the main.base.NeuralNetwork.
+   *  @param neuralNetwork The main.base.NeuralNetwork to be used by the main.partitioners.NNMSTPartitioner.
    *  @param imageDistorter The main.distorters.ImageDistorter to be used by the main.partitioners.NNMSTPartitioner.
    *
    *  @throws IOException When the main.partitioners.NNMSTPartitioner.NNMSTPartitioner throws an exception.
    */
-  public SimpleEvaluator(String neuralNetworkPath, int[] sizesOfLayers, ImageDistorter imageDistorter)
-                        throws IOException{
-    partitioner_ = new NNMSTPartitioner(sizesOfLayers, neuralNetworkPath, imageDistorter);
+  public SimpleEvaluator(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter) throws IOException{
+    partitioner_ = new NNMSTPartitioner(neuralNetwork, imageDistorter);
 
     parser_ = new GGParser();
   }
