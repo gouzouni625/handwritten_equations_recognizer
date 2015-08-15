@@ -88,7 +88,9 @@ public class InkMLParser{
     int startOfAnnotation = xmlData.indexOf("<annotation type=\"equationInTeX\">");
     int endOfAnnotation = xmlData.indexOf("</annotation>");
 
-    equation_ = xmlData.substring(startOfAnnotation + ("<annotation type=\"equationInTeX\">").length(), endOfAnnotation);
+    if(startOfAnnotation != -1){
+      equation_ = xmlData.substring(startOfAnnotation + ("<annotation type=\"equationInTeX\">").length(), endOfAnnotation);
+    }
 
     int startOfTrace = xmlData.indexOf("<trace>");
     int endOfTrace = xmlData.indexOf("</trace>");
