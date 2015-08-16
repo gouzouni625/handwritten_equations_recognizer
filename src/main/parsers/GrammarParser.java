@@ -14,8 +14,17 @@ import main.utilities.traces.Point;
 import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
 
+/** @class GrammarParser
+ *
+ *  @brief Implements a Parser using a grammar to parse the given ink traces.
+ */
 public abstract class GrammarParser extends Parser{
-
+  /**
+   *  @brief Parses a given set of groups of ink traces along with its labels.
+   *
+   *  @param traceGroups An array with the main.utilities.traces.TraceGroup of ink traces.
+   *  @param labels The labels of the traces.
+   */
   public void parse(TraceGroup[] traceGroups, int[] labels){
     int numberOfTraceGroups = traceGroups.length;
 
@@ -45,6 +54,11 @@ public abstract class GrammarParser extends Parser{
     parse(symbols_);
   }
 
+  /**
+   *  @brief Parses again and again a group of main.utilities.symbols.Symbol until nothing changes.
+   *
+   *  @param symbols An array with the main.utilities.symbols.Symbol objects to parse.
+   */
   public void parse(Symbol[] symbols){
     int numberOfSymbols = symbols.length;
 
@@ -88,6 +102,14 @@ public abstract class GrammarParser extends Parser{
     /* ===== Logs ===== */
 
     // Preprocess symbols to find better symbol combinations.
+    // The symbols are parsed in pairs. After being sorted by abscissa, each symbol will be parsed with its next. For
+    // example, in \frac{2}{3}, the parsing pairs will be (\frac, 2) and (2, 3). A better parsing could be done if the
+    // pairs where (\frac, 2) and (\frac, 3). In the later case, the relationships between the symbols are obvious. To
+    // wrap up, the preprocessing done here will help solving the above problem. Concretely, if between two symbols that
+    // form a pair, lies another symbol, then, two new pairs will be created one for each of the two symbols with the
+    // one between, and the initial pair will be removed. For example, if the given pair is (2, 3), then this pair will
+    // be removed and two new will takes its place. Those two will be (\frac, 2) and (\frac, 3) because the fraction line
+    // is between 2 and 3.
     Hashtable<Integer, int[]> pathsTable = new Hashtable<Integer, int[]>();
     for(int i = 0;i < numberOfSymbols - 1;i++){
       int[][] paths = this.processPath(symbols, symbols[i], i, symbols[i + 1], i + 1);
@@ -167,6 +189,7 @@ public abstract class GrammarParser extends Parser{
       grammar_.parse(symbols[paths[i][0]], symbols[paths[i][1]]);
     }
 
+    // Reevaluate each unrecognized symbol to determine its type.
     for(Symbol symbol : symbols){
       if(symbol.symbolClass_ == Symbol.SymbolClass.UNRECOGNIZED){
         symbol.reEvaluate();
@@ -183,15 +206,23 @@ public abstract class GrammarParser extends Parser{
       }
     }while(!previousState.equals(this.toString()));
 
+    // At this point, "first level" parsing is done. Now, parse the children of each symbols as if they where a new
+    // equation. This makes it possible to have arbitrary depth in an equation. Concretely, equations like
+    // x^{2^{3}^{4}^...^{N}} can be parsed.
     for(Symbol symbol : symbols){
       for(List<Symbol> samePositionChildrenList : symbol.children_){
+
+        // Create an array of all the children on the same position.
         Symbol[] samePositionChildrenArray = new Symbol[samePositionChildrenList.size()];
         for(int i = 0;i < samePositionChildrenArray.length;i++){
           samePositionChildrenArray[i] = samePositionChildrenList.get(i);
         }
 
+        // Parse the children in the same position.
         parse(samePositionChildrenArray);
 
+        // The parsing may result in some symbols changing parents, so, remove all the children from the symbol and
+        // enter the parsed ones.
         samePositionChildrenList.clear();
         for(int i = 0;i < samePositionChildrenArray.length;i++){
           // If symbol is still the parent of samePositionChildrenArray[i], then add it.
@@ -205,6 +236,17 @@ public abstract class GrammarParser extends Parser{
     }
   }
 
+  /**
+   *  @brief Processes a pair of symbols to check if there is another symbol between them.
+   *
+   *  @param symbols All the symbols that are currently being processed.
+   *  @param symbol1 The first symbol to be processed.
+   *  @param index1 The position of the first symbol into symbols.
+   *  @param symbol2 The second symbol to be processed.
+   *  @param index2 The position of the second symbol into symbols.
+   *
+   *  @return Returns the paths that result from the preprocessing.
+   */
   public int[][] processPath(Symbol[] symbols, Symbol symbol1, int index1, Symbol symbol2, int index2){
     Trace connectionLine = new Trace();
     Point[] closestPoints = TraceGroup.closestPoints(symbol1.traceGroup_, symbol2.traceGroup_);
@@ -218,8 +260,10 @@ public abstract class GrammarParser extends Parser{
 
       for(int j = 0;j < symbols[i].traceGroup_.size();j++){
         if(Trace.areOverlapped(connectionLine, symbols[i].traceGroup_.get(j))){
-          int[] path1 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol1.traceGroup_.getTopLeftCorner().x_ ? new int[] {i, index1} : new int[] {index1, i};
-          int[] path2 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol2.traceGroup_.getTopLeftCorner().x_ ? new int[] {i, index2} : new int[] {index2, i};
+          int[] path1 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol1.traceGroup_.getTopLeftCorner().x_ ?
+                        new int[] {i, index1} : new int[] {index1, i};
+          int[] path2 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol2.traceGroup_.getTopLeftCorner().x_ ?
+                        new int[] {i, index2} : new int[] {index2, i};
           return (new int[][] {path1, path2});
         }
       }
@@ -228,6 +272,9 @@ public abstract class GrammarParser extends Parser{
     return (new int[][] {{index1, index2}});
   }
 
+  /**
+   *  @see main.parsers.Parser#toString()
+   */
   public String toString(){
     if(symbols_.length > 0){
       String equation = symbols_[0].toString();
@@ -250,16 +297,29 @@ public abstract class GrammarParser extends Parser{
     }
   }
 
+  /**
+   *  @brief Getter method for the silent mode of the grammar used by this GrammarParser.
+   *
+   *  @return Returns true if the grammar is in silent mode.
+   */
+
   public boolean isGrammarSilent(){
     return grammar_.isQuiet();
   }
 
+
+  /**
+   *  @brief Setter method for the silent mode of the grammar used by this GrammarParser.
+   *
+   *  @param silent The value for the silent mode of the grammar used by this GrammarParser.
+   */
   public void setGrammarSilent(boolean silent){
     grammar_.setQuiet(silent);
   }
 
-  Symbol[] symbols_;
 
-  protected Grammar grammar_;
+  protected Symbol[] symbols_; //!< All the symbols to be parsed by this GrammarParser.
+
+  protected Grammar grammar_; //!< The main.utilities.grammars.Grammar to be used by this GrammarParser.
 
 }
