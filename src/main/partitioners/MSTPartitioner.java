@@ -9,18 +9,29 @@ import main.utilities.traces.Trace;
 import main.utilities.traces.TraceGroup;
 import main.utilities.PathExtentionCheck;
 
-/* MST = Minimum Spanning Tree.*/
+/** @class MSTPartitioner
+ *
+ *  @brief A Partitioner that uses a Minimum Spanning Tree to partition the given equation.
+ */
 public abstract class MSTPartitioner extends Partitioner{
-
+  /**
+   *  @brief Partitions a group of ink traces of an equation.
+   *
+   *   The result is an array of groups of ink traces each one of which represents a symbol of the equation.
+   *
+   *  @param expression The main.utilities.traces.TraceGroup with the ink traces of the equation.
+   *
+   *  @return Returns an array of main.utilities.traces.TraceGroup each one of which contains the traces of a single
+   *          symbol.
+   */
   public TraceGroup[] partition(TraceGroup expression){
     expression_ = expression;
 
     int numberOfTraces = expression.size();
 
     if(numberOfTraces == 1){
-
       labels_ = new int[numberOfTraces];
-      classifier_.classify(expression, new TraceGroup(), true, true);
+      classifier_.classify(expression, new TraceGroup(), false, false);
       labels_[0] = classifier_.getClassificationLabel();
 
       return (new TraceGroup[] {expression});
@@ -60,6 +71,7 @@ public abstract class MSTPartitioner extends Partitioner{
     }
     /* ===== Logs ===== */
 
+    // Get all the unique paths upon the minimum spanning tree.
     int[][] paths = minimumSpanningTree.getUniquePaths(Partitioner.MAX_TRACES_IN_SYMBOL);
     int numberOfPaths = paths.length;
 
@@ -80,6 +92,7 @@ public abstract class MSTPartitioner extends Partitioner{
     }
     /* ===== Logs ===== */
 
+    // Find the overlapping traces.
     int[][] overlaps = Utilities.concatenateArrays(this.findOverlaps(expression), this.findEqualsSymbol(expression));
     int numberOfOverlaps = overlaps.length;
 
@@ -95,7 +108,8 @@ public abstract class MSTPartitioner extends Partitioner{
     }
     /* ===== Logs ===== */
 
-    // Delete all the paths that do not comply with the overlaps.
+    // Delete all the paths that do not comply with the overlaps. That is, a path that contains one symbol of an overlap
+    // but not the other is removed.
     ArrayList<Integer> pathsToClear = new ArrayList<Integer>();
     boolean foundFirstOverlapIndex;
     boolean foundSecondOvelapIndex;
@@ -151,27 +165,27 @@ public abstract class MSTPartitioner extends Partitioner{
     int[] pathsLabels = new int[numberOfPaths];
 
     TraceGroup symbol;
-    TraceGroup context;
-    int[] contextIndices;
+    //TraceGroup context;
+    //int[] contextIndices;
 
     for(int i = 0;i < numberOfPaths;i++){
       // Create the traceGroup of symbols.
       symbol = expression.subTraceGroup(paths[i]);
 
       // Find the context.
-      contextIndices = minimumSpanningTree.getContext(paths[i]);
-      context = expression.subTraceGroup(contextIndices);
+      //contextIndices = minimumSpanningTree.getContext(paths[i]);
+      //context = expression.subTraceGroup(contextIndices);
 
       // Evaluate each path and discard garbage.
-      boolean subSymbolCheck = !Utilities.rowInArray(overlaps, paths[i], false);
-      pathsRates[i] = classifier_.classify(symbol, context, subSymbolCheck, true);
+      //boolean subSymbolCheck = !Utilities.rowInArray(overlaps, paths[i], false);
+      pathsRates[i] = classifier_.classify(symbol, null, false, false);
       pathsLabels[i] = classifier_.getClassificationLabel();
 
       /* ===== Logs ===== */
       if(!silent_){
         System.out.println("Log: path rate and label... ===== Start =====");
 
-        System.out.println("path " + i + " subSymbolCheck: " + subSymbolCheck);
+        System.out.println("path " + i + " subSymbolCheck: " + false);
         System.out.println("path " + i + " rate: " + pathsRates[i]);
         System.out.println("path " + i + " label: " + pathsLabels[i]);
 
@@ -213,7 +227,7 @@ public abstract class MSTPartitioner extends Partitioner{
     // remove partitions that are not eligible(e.g. they contain the same trace more than once).
     ArrayList<Integer> partitionsToRemove = new ArrayList<Integer>();
     for(int partition = 0;partition < numberOfPartitions;partition++){
-      if(!this.isEligible(partitions[partition], paths, numberOfTraces)){
+      if(!this.isPartitionEligible(partitions[partition], paths, numberOfTraces)){
         partitionsToRemove.add(partition);
       }
     }
@@ -291,11 +305,29 @@ public abstract class MSTPartitioner extends Partitioner{
     return partition;
   }
 
+  /**
+   *  @brief Getter method for the labels of each symbol.
+   *
+   *  The labels are the ones calculated by main.partitioners.MSTPartitioner.partition method.
+   *
+   *  @return Returns the labels calculated by main.partitioners.MSTPartitioner.partition method.
+   */
   public int[] getLabels(){
     return labels_;
   }
 
-  private boolean isEligible(int[] partition, int[][] paths, int numberOfTraces){
+  /**
+   *  @brief Checks if a partition is eligible.
+   *
+   *  Concretely, it checks if an ink trace is used by, at least, two different paths in the given partition.
+   *
+   *  @param partition The partition to be checked.
+   *  @param paths All the paths upon the minimum spanning tree.
+   *  @param numberOfTraces The total number of ink traces in the equation.
+   *
+   *  @return Returns true if each ink trace is used exactly once by the given partition.
+   */
+  private boolean isPartitionEligible(int[] partition, int[][] paths, int numberOfTraces){
     int[] tracesOccurenceCounter = new int[numberOfTraces];
     for(int i = 0;i < numberOfTraces;i++){
       tracesOccurenceCounter[i] = 0;
@@ -316,6 +348,13 @@ public abstract class MSTPartitioner extends Partitioner{
     return true;
   }
 
+  /**
+   *  @brief Calculates the distances between all the ink traces of a given equation.
+   *
+   *  @param expression The equation.
+   *
+   *  @return Returns the distances between all the ink traces.
+   */
   private double[] calculateDistancesBetweenTraces(TraceGroup expression){
     int numberOfTraces = expression.size();
 
@@ -331,6 +370,32 @@ public abstract class MSTPartitioner extends Partitioner{
     return distances;
   }
 
+  /**
+   *  @brief Calculates the distance between two main.utilities.traces.Trace.
+   *
+   *  @param trace1 The first Trace.
+   *  @param trace2 The second Trace.
+   *
+   *  @return Returns the distance of the two traces.
+   */
+  private double distanceOfTraces(Trace trace1, Trace trace2){
+    if(trace1.size() == 0 || trace2.size() == 0){
+      return -1;
+    }
+
+    Point centerOfMass1 = trace1.getCenterOfMass();
+    Point centerOfMass2 = trace2.getCenterOfMass();
+
+    return (Point.distance(centerOfMass1, centerOfMass2));
+  }
+
+  /**
+   *  @brief Finds which ink traces inside an equation are overlapped.
+   *
+   *  @param expression The equation.
+   *
+   *  @return Returns the overlapping pairs of of ink traces.
+   */
   private int[][] findOverlaps(TraceGroup expression){
     int numberOfTraces = expression.size();
 
@@ -354,6 +419,13 @@ public abstract class MSTPartitioner extends Partitioner{
     return overlapsArray;
   }
 
+  /**
+   *  @brief Finds all equals symbols in an equation.
+   *
+   *  @param expression The equation.
+   *
+   *  @return Returns the pairs of traces that create an equals symbol.
+   */
   private int[][] findEqualsSymbol(TraceGroup expression){
     int numberOfTraces = expression.size();
 
@@ -377,20 +449,33 @@ public abstract class MSTPartitioner extends Partitioner{
     return equalsArray;
   }
 
+  /**
+   *  @brief Checks if two main.utilities.traces.Trace create an equals symbol.
+   *
+   *  @param trace1 The first trace.
+   *  @param trace2 The second trace.
+   *
+   *  @return Returns true if the two traces create an equals symbols.
+   */
   private boolean areEqualsSymbol(Trace trace1, Trace trace2){
     trace1.calculateCorners();
     trace2.calculateCorners();
 
-    double trace1Slope = Math.atan((trace1.getOutterRightPoint().y_ - trace1.getOutterLeftPoint().y_) / (trace1.getOutterRightPoint().x_ - trace1.getOutterLeftPoint().x_));
-    double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) / (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
+    double trace1Slope = Math.atan((trace1.getOutterRightPoint().y_ - trace1.getOutterLeftPoint().y_) /
+                                   (trace1.getOutterRightPoint().x_ - trace1.getOutterLeftPoint().x_));
+    double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) /
+                                   (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
 
-    if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ && trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
+    if((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ &&
+        trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
        (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
        (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
        (trace1Slope >= -Math.PI / 4 && trace1Slope <= Math.PI / 4 ) && // About the slope of the line.
        (trace2Slope >= -Math.PI / 4 && trace2Slope <= Math.PI / 4 ) && // About the slope of the line.
-       (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) && // About the distances between the two lines.
-       (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){ // About the length of the two lines.s
+       // About the distances between the two lines.
+       (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) &&
+       // About the length of the two lines.
+       (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))){
 
       // Check that between these 2 lines there is no other symbol.
       Trace smaller;
@@ -426,25 +511,16 @@ public abstract class MSTPartitioner extends Partitioner{
     return false;
   }
 
-  private double distanceOfTraces(Trace trace1, Trace trace2){
-    if(trace1.size() == 0 || trace2.size() == 0){
-      return -1;
-    }
-
-    Point centerOfMass1 = trace1.getCenterOfMass();
-    Point centerOfMass2 = trace2.getCenterOfMass();
-
-    return (Point.distance(centerOfMass1, centerOfMass2));
-  }
-
-  public void setSilent(boolean silent){
-    silent_ = silent;
-  }
-
-  public boolean isSilent(){
-    return silent_;
-  }
-
+  /**
+   *  @brief Check if two paths upon the minimum spanning tree are combinable.
+   *
+   *  Two paths are combinable if they don't contain the same ink trace.
+   *
+   *  @param path1 The first path.
+   *  @param path2 The second path.
+   *
+   *  @return Returns true if the two paths do not contain the same ink trace.
+   */
   private boolean areCombinable(int[] path1, int[] path2){
     int length1 = path1.length;
     int length2 = path2.length;
@@ -460,17 +536,34 @@ public abstract class MSTPartitioner extends Partitioner{
     return true;
   }
 
-  private boolean silent_ = true;
+  private int[] labels_; //!< The labels of the symbols that resulted from the partitioning.
 
-  private int[] labels_;
-
+  /** @class PartitionCheck
+   *
+   *  @brief implements PathExtentionCheck to create a check whether a partition is eligible on not.
+   *         This check is used during the calculation of all possible partitions upon the remaining paths. It helps
+   *         reduce the number of possible partitions and thus make the partition faster.
+   */
   private class PartitionCheck implements PathExtentionCheck{
 
+    /**
+     *  @brief Constructor.
+     *
+     *  @param paths The paths upon the minimum spanning tree.
+     *  @param numberOfTraces The number of ink traces in the given equation.
+     */
     public PartitionCheck(int[][] paths, int numberOfTraces){
       paths_ = paths;
       numberOfTraces_ = numberOfTraces;
     }
 
+    /**
+     *  @brief The check that will be performed to decide whether the given path is valid or not.
+     *
+     *  @param list The path that should be checked for validity.
+     *
+     *  @return Returns true if the path is valid.
+     */
     public boolean check(ArrayList<Integer> list){
       int[] tracesOccurenceCounter = new int[numberOfTraces_];
       for(int i = 0;i < numberOfTraces_;i++){
@@ -492,9 +585,10 @@ public abstract class MSTPartitioner extends Partitioner{
       return true;
     }
 
-    private int[][] paths_;
-    private int numberOfTraces_;
+    private int[][] paths_; //!< The paths upon the minimum spanning tree.
+    private int numberOfTraces_; //!< The number of ink traces in the given equation.
   }
 
-  private TraceGroup expression_;
+  private TraceGroup expression_; //!< The given equation to be partitioned.
+
 }

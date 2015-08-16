@@ -1,26 +1,21 @@
 package main.partitioners;
 
-import java.io.IOException;
-
 import main.base.NeuralNetwork;
 import main.classifiers.NeuralNetworkClassifier;
 import main.distorters.ImageDistorter;
 
-/* NN = Neural Network, describes the classifier.
- * MST = Minimum Spanning Tree, describes the partitioning algorithm.
+/** @class NNMSTPartitioner
+ *
+ *  @brief Uses a neural network classifier as a classifier for a minimum spanning tree partitioner.
  */
 public class NNMSTPartitioner extends MSTPartitioner{
-
-  public NNMSTPartitioner(int[] sizesOfLayers){
-    classifier_ = new NeuralNetworkClassifier(sizesOfLayers, Partitioner.MAX_TRACES_IN_SYMBOL);
-  }
-
-  public NNMSTPartitioner(int[] sizesOfLayers, String path) throws IOException{
-    classifier_ = new NeuralNetworkClassifier(sizesOfLayers, Partitioner.MAX_TRACES_IN_SYMBOL);
-    ((NeuralNetworkClassifier)(classifier_)).loadNeuralNetwork(path);
-  }
-
-  public NNMSTPartitioner(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter) throws IOException{
+  /**
+   *  @brief Constructor.
+   *
+   *  @param neuralNetwork The neural network to be used by the main.classifiers.NeuralNetworkClassifier.
+   *  @param imageDistorter The image distorter to be used by the main.classifiers.NeuralNetworkClassifier.
+   */
+  public NNMSTPartitioner(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter){
     classifier_ = new NeuralNetworkClassifier(neuralNetwork, Partitioner.MAX_TRACES_IN_SYMBOL);
 
     ((NeuralNetworkClassifier)(classifier_)).setImageDistorter(imageDistorter);
