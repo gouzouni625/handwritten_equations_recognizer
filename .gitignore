@@ -11,6 +11,9 @@ doxygen/latex
 
 # Other
 src/main/evaluators/InstantDatabaseEvaluator.java
+src/main/utilities/data_managers/FillDatabase.java
+src/main/utilities/data_managers/GarbageDataGenerator.java
+src/main/utilities/data_managers/ParseDatabase.java
 src/main/executables/
 testing_dir/
 backup/
