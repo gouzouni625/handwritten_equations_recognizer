@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="client/index.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.2.0/katex.min.css">
+    <link rel="stylesheet" media="screen" href="http://openfontlibrary.org/face/carlito" rel="stylesheet" type="text/css"/> 
+  </head>
+
+  <body>
+    <h1> Handwritten Equation Recognition - International Institute of GeoGebra - Google Summer of Code 2015 </h1>
+
+    <p id="introduction"> This front end application is designed to help you use the handwritten equation recognizer.
+                          You can draw your equation on the view below and hit the submit bottom. The application
+                          will generate the equation you entered in InkML which you can feed directly to the
+                          handwritten equation recognizer. 
+    </p>
+
+    <p id="output_container"><output id="inkml_output"></output></p>
+
+    <table id="main_table">
+      <tr>
+        <td id="applet_container" rowspan="1" colspan="3"></td>
+      </tr>
+      <tr>
+        <td id="button_container" rowspan="1" colspan="2">
+          <button type="submit" id="submit_button">submit</button>
+          <button type="button" id="reset_applet_button">reset applet</button>
+        </td>
+      </tr>
+    </table>
+
+    <footer>
+      <p>Created with <a href="http://www.geogebra.org/">GeoGebra</a> by Georgios Ouzounis</p>
+    </footer>
+
+    <script type="text/javascript" src="http://www.geogebratube.org/scripts/deployggb.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.2.0/katex.min.js"></script>
+    <script type="text/javascript" src="client/javascript/utilities.js"></script>
+    <script type="text/javascript" src="client/javascript/InkMLFile.js"></script>
+    <script type="text/javascript" src="client/javascript/StrokeParser.js"></script>
+    <script type="text/javascript">
+      var appletWidth = document.getElementById("applet_container").offsetWidth;
+      var appletHeight = document.getElementById("applet_container").offsetHeight;
+      ggbApplet = new GGBApplet({width:appletWidth, height:appletHeight,
+                                 customToolBar:"62", showAlgebraInput:true,
+                                 perspective:"2", enableRightClick:false,
+                                 enableShiftDragZoom:false}, true);
+
+      window.onload = function(){
+        ggbApplet.inject("applet_container", "preferHTML5");
+      };
+
+      function ggbOnInit(){
+        ggbApplet.setGridVisible(true);
+        ggbApplet.setMode(62);
+        ggbApplet.setAxesVisible(false, false);
+
+        window.addEventListener("keyup", ggbAppletKeyUpListener, false);
+
+        var resetAppletButton = document.getElementById("reset_applet_button");
+        resetAppletButton.addEventListener("click", resetGGBApplet, false);
+
+        var submitButton = document.getElementById("submit_button");
+        submitButton.addEventListener("click", submitButtonClickListener, false);
+      }
+
+    </script>
+
+  </body>
+
+</html>
+
