@@ -30,7 +30,10 @@ cd handwritten_equations_recognizer
 git submodule update --init
 ```
 
-. The documentation is written using Doxygen[4]. To generate the documentation
+.
+
+## Building the Documentation
+The documentation is written using Doxygen[4]. To generate the documentation
 pages, you have to install Doxygen and download the code to your local file
 system. After that, do:
 
@@ -44,10 +47,63 @@ doxygen Doxyfile
 documentation pages, open  `html/index.html` with a browser of your choice.
 
 ## Usage
-ToDo
+Since the project is still in beta version, using it requires some work but it
+is possible. First, we have to download the code by doing:
+
+```
+git clone https://github.com/gouzouni625/handwritten_equations_recognizer.git
+cd handwritten_equations_recognizer
+git submodule update --init
+```
+
+. After that, we have to build the project and package it in `.jar` files.
+This is done using Apache Maven so make sure it is installed on your system.
+To build the project and package it to `.jar files`, we need to do:
+
+```
+cd handwritten_equations_recognizer/maven
+mvn package
+```
+
+. Now we must download the dependences of the project and move everything on
+a single directory. This can be done with the following commands:
+
+```
+mvn dependences:copy-dependences
+cd ..
+mkdir run
+cp target/handwritten_equation_recognizer-0.9.jar run/
+cp sub_modules/neural_network/target/neural_network-0.9.jar run/
+cp sub_modules/neural_network/target/dependences/opencv-2.4.9-4.jar run/
+cp resources/trained_neural_networks/neural_network.binary run/
+```
+
+. Note that `mvn dependences:copy-dependences` will show some errors when
+trying to download `neural_network` but you can ignore this. Now that we have
+everything on a single directory, there are a few more things to do. That is,
+we must extract the native library of OpenCV from inside the `.jar` file so
+it can be loaded from the Handwritten Equation Recognizer. This can be done
+with the following commands:
+
+```
+cd run
+unzip opencv-2.4.9-4.jar -d OpenCV
+```
+
+. Now, you are ready to use the Handwritten Equation Recognizer. You can use it
+with the following command:
+
+```
+java -Djava.library.path=OpenCV/nu/pattern/opencv/<proper-library> \
+-cp opencv-2.4.9-4.jar:neural_network-0.9.jar:handwritten_equation_recognizer-0.9.jar main.java.executables.HandWrittenEquationRecognizer \
+"../resources/trained_neural_networks/neural_network.binary" \
+"<inkml-string>"
+```
+
+.
 
 ## Efficiency
-At the moment, the Hanwritten Equation Recognizer can recognize equation that
+At the moment, the Handwritten Equation Recognizer can recognize equation that
 include the following symbols:
 
 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, =, +, -, x, y, (, ), sqrt(square root).
