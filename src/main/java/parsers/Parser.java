@@ -10,7 +10,7 @@ public abstract class Parser{
   /**
    *  @brief Parses a given set of groups of ink traces along with its labels.
    *
-   *  @param traceGroups An array with the main.utilities.traces.TraceGroup of ink traces.
+   *  @param traceGroups An array with the main.java.utilities.traces.TraceGroup of ink traces.
    *  @param labels The labels of the traces.
    */
   public abstract void parse(TraceGroup[] traceGroups, int[] labels);

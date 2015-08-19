@@ -22,7 +22,7 @@ public abstract class GrammarParser extends Parser{
   /**
    *  @brief Parses a given set of groups of ink traces along with its labels.
    *
-   *  @param traceGroups An array with the main.utilities.traces.TraceGroup of ink traces.
+   *  @param traceGroups An array with the main.java.utilities.traces.TraceGroup of ink traces.
    *  @param labels The labels of the traces.
    */
   public void parse(TraceGroup[] traceGroups, int[] labels){
@@ -55,9 +55,9 @@ public abstract class GrammarParser extends Parser{
   }
 
   /**
-   *  @brief Parses again and again a group of main.utilities.symbols.Symbol until nothing changes.
+   *  @brief Parses again and again a group of main.java.utilities.symbols.Symbol until nothing changes.
    *
-   *  @param symbols An array with the main.utilities.symbols.Symbol objects to parse.
+   *  @param symbols An array with the main.java.utilities.symbols.Symbol objects to parse.
    */
   public void parse(Symbol[] symbols){
     int numberOfSymbols = symbols.length;
@@ -273,7 +273,7 @@ public abstract class GrammarParser extends Parser{
   }
 
   /**
-   *  @see main.java.parsers.Parser#toString()
+   *  @see main.java.java.parsers.Parser#toString()
    */
   public String toString(){
     if(symbols_.length > 0){
@@ -320,6 +320,6 @@ public abstract class GrammarParser extends Parser{
 
   protected Symbol[] symbols_; //!< All the symbols to be parsed by this GrammarParser.
 
-  protected Grammar grammar_; //!< The main.utilities.grammars.Grammar to be used by this GrammarParser.
+  protected Grammar grammar_; //!< The main.java.utilities.grammars.Grammar to be used by this GrammarParser.
 
 }

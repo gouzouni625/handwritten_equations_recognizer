@@ -10,12 +10,12 @@ import main.java.utilities.math.MinimumSpanningTree;
 
 /** @class MinimumSpanningTreeTest
  *
- *  @brief Class that contains tests for main.utilities.math.MinimumSpanningTree class.
+ *  @brief Class that contains tests for main.java.utilities.math.MinimumSpanningTree class.
  */
 public class MinimumSpanningTreeTest{
 
 /**
- *  @brief Tests the constructor of main.utilities.math.MinimumSpanningTree class.
+ *  @brief Tests the constructor of main.java.utilities.math.MinimumSpanningTree class.
  */
   @Test
   public void testMinimumSpanningTree(){
@@ -52,7 +52,7 @@ public class MinimumSpanningTreeTest{
   }
 
   /**
-   *  @brief Tests kruskal method of main.utilities.math.MinimumSpanningTree class.
+   *  @brief Tests kruskal method of main.java.utilities.math.MinimumSpanningTree class.
    */
   @Test
   public void testKruskal(){
@@ -144,7 +144,7 @@ public class MinimumSpanningTreeTest{
   }
 
   /**
-   *  @brief Tests areConnected method of main.utilities.math.MinimumSpanningTree class.
+   *  @brief Tests areConnected method of main.java.utilities.math.MinimumSpanningTree class.
    */
   @Test
   public void testAreConnected(){
@@ -166,7 +166,7 @@ public class MinimumSpanningTreeTest{
   }
 
   /**
-   *  @brief Tests connect methods of main.utilities.math.MinimumSpanningTree class.
+   *  @brief Tests connect methods of main.java.utilities.math.MinimumSpanningTree class.
    */
   @Test
   public void testConnect(){
@@ -194,7 +194,7 @@ public class MinimumSpanningTreeTest{
   }
 
   /**
-   *  @brief Tests getUniquePaths method of main.utilities.math.MinimumSpanningTree class.
+   *  @brief Tests getUniquePaths method of main.java.utilities.math.MinimumSpanningTree class.
    */
   @Test
   public void testGetUniquePaths(){
@@ -215,7 +215,7 @@ public class MinimumSpanningTreeTest{
   }
 
   /**
-   *  @brief Tests updateScope method of main.utilities.math.MinimumSpanningTree class.
+   *  @brief Tests updateScope method of main.java.utilities.math.MinimumSpanningTree class.
    */
   @Test
   public void testUpdateScope(){

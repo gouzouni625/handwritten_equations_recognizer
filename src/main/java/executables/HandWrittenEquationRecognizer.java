@@ -15,10 +15,10 @@ public class HandWrittenEquationRecognizer{
    *  @brief main function.
    *
    *  @param args Accepts 2 String arguments. The first, is the full or the relative path of the file where the
-   *              main.base.NeuralNetwork to be used is located. Note that this file should end with .binary or .xml.
+   *              main.java.base.NeuralNetwork to be used is located. Note that this file should end with .binary or .xml.
    *              The second, is the equation's InkML data.
    *
-   *  @throws IOException When the main.evaluators.SimpleEvaluator.SimpleEvaluator throws an exception.
+   *  @throws IOException When the main.java.evaluators.SimpleEvaluator.SimpleEvaluator throws an exception.
    */
   public static void main(String[] args) throws IOException{
     String extention = args[0].substring(args[0].lastIndexOf('.'));

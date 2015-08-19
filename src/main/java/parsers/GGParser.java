@@ -4,7 +4,7 @@ import main.java.utilities.grammars.GeometricalGrammar;
 
 /** @class GGParser
  *
- *  @brief Implement a GrammarParser that uses a main.utilities.grammars.GeometricalGrammar.
+ *  @brief Implement a GrammarParser that uses a main.java.utilities.grammars.GeometricalGrammar.
  */
 public class GGParser extends GrammarParser{
   /**

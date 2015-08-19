@@ -12,15 +12,15 @@ import org.opencv.core.Size;
 
 /** @class NeuralNetworkClassifier
  *
- *  @brief Implements a Classifier using a main.base.NeuralNetwork as a classification algorithm.
+ *  @brief Implements a Classifier using a main.java.base.NeuralNetwork as a classification algorithm.
  */
 public class NeuralNetworkClassifier extends Classifier{
   /**
    *  @brief Constructor.
    *
-   *  @param sizesOfLayers The sizes of the layers of the main.base.NeuralNetwork.
-   *  @param maxTracesInSymbol The maximum number of main.utilities.traces.Trace objects in a
-   *                           main.utilities.symbols.Symbol object.
+   *  @param sizesOfLayers The sizes of the layers of the main.java.base.NeuralNetwork.
+   *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
+   *                           main.java.utilities.symbols.Symbol object.
    */
   public NeuralNetworkClassifier(int[] sizesOfLayers, int maxTracesInSymbol){
     super(maxTracesInSymbol);
@@ -31,9 +31,9 @@ public class NeuralNetworkClassifier extends Classifier{
   /**
    *  @brief Constructor.
    *
-   *  @param neuralNetwork The main.base.NeuralNetwork to be used.
-   *  @param maxTracesInSymbol The maximum number of main.utilities.traces.Trace objects in a
-   *                           main.utilities.symbols.Symbol object.
+   *  @param neuralNetwork The main.java.base.NeuralNetwork to be used.
+   *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
+   *                           main.java.utilities.symbols.Symbol object.
    */
   public NeuralNetworkClassifier(NeuralNetwork neuralNetwork, int maxTracesInSymbol){
     super(maxTracesInSymbol);
@@ -42,23 +42,23 @@ public class NeuralNetworkClassifier extends Classifier{
   }
 
   /**
-   *  @brief Loads a main.base.NeuralNetwork from a given path.
+   *  @brief Loads a main.java.base.NeuralNetwork from a given path.
    *
-   *  @param path The path where the main.base.NeuralNetwork parameters' file is located.
+   *  @param path The path where the main.java.base.NeuralNetwork parameters' file is located.
    *
-   *  @throws IOException When main.base.NeuralNetwork.loadNetwork throws an exception.
+   *  @throws IOException When main.java.base.NeuralNetwork.loadNetwork throws an exception.
    */
   public void loadNeuralNetwork(String path) throws IOException{
     neuralNetwork_.loadFromBinary(path);
   }
 
   /**
-   *  @brief Loads a new main.base.NeuralNetwork to this NeuralNetworkClassifier.
+   *  @brief Loads a new main.java.base.NeuralNetwork to this NeuralNetworkClassifier.
    *
-   *  @param sizesOfLayers The sizes of the layers of the new the main.base.NeuralNetwork.
-   *  @param path The path where the new main.base.NeuralNetwork parameters' file is located.
+   *  @param sizesOfLayers The sizes of the layers of the new the main.java.base.NeuralNetwork.
+   *  @param path The path where the new main.java.base.NeuralNetwork parameters' file is located.
    *
-   *  @throws IOException When main.base.NeuralNetwork.loadNetwork throws an exception.
+   *  @throws IOException When main.java.base.NeuralNetwork.loadNetwork throws an exception.
    */
   public void newNeuralNetwork(int[] sizesOfLayers, String path) throws IOException{
     neuralNetwork_ = new NeuralNetwork(sizesOfLayers);
@@ -66,21 +66,21 @@ public class NeuralNetworkClassifier extends Classifier{
   }
 
   /**
-   *  @brief Classifies a given main.utilities.symbols.Symbol.
+   *  @brief Classifies a given main.java.utilities.symbols.Symbol.
    *
-   *  Uses the main.base.NeuralNetwork to classify the given main.utilities.symbols.Symbol.
+   *  Uses the main.java.base.NeuralNetwork to classify the given main.java.utilities.symbols.Symbol.
    *
-   *  @param symbol The main.utilities.symbols.Symbol to classify.
-   *  @param context The context of the given main.utilities.symbols.Symbol. The context of a
-   *         main.utilities.symbols.Symbol contains all the main.utilities.traces.Trace objects that are near the
-   *         but not part of the main.utilities.symbols.Symbol. The proximity measurement can be arbitrary.
-   *  @param subSymbolCheck Check sub-groups of the main.utilities.traces.Trace objects of the given
-   *                        main.utilities.symbols.Symbol
-   *  @param subContextCheck Checks sub-groups of the main.utilities.traces.Trace objects of the context of the
-   *                         given main.utilities.symbols.Symbol
+   *  @param symbol The main.java.utilities.symbols.Symbol to classify.
+   *  @param context The context of the given main.java.utilities.symbols.Symbol. The context of a
+   *         main.java.utilities.symbols.Symbol contains all the main.java.utilities.traces.Trace objects that are near the
+   *         but not part of the main.java.utilities.symbols.Symbol. The proximity measurement can be arbitrary.
+   *  @param subSymbolCheck Check sub-groups of the main.java.utilities.traces.Trace objects of the given
+   *                        main.java.utilities.symbols.Symbol
+   *  @param subContextCheck Checks sub-groups of the main.java.utilities.traces.Trace objects of the context of the
+   *                         given main.java.utilities.symbols.Symbol
    *
    *  @return Returns the confidence of this NeuralNetworkClassifier for the classification of the given
-   *          main.utilities.symbols.Symbol.
+   *          main.java.utilities.symbols.Symbol.
    */
   public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
     int symbolSize = symbol.size();
@@ -101,15 +101,15 @@ public class NeuralNetworkClassifier extends Classifier{
   }
 
   /**
-   *  @brief Feeds the given vector to the main.base.NeuralNetwork.
+   *  @brief Feeds the given vector to the main.java.base.NeuralNetwork.
    *
-   *  The vector is subject to random distortions using an main.distorters.ImageDistorter and fed again and again to the
-   *  main.base.NeuralNetwork. The final confidence of the main.base.NeuralNetwork is the average value of all these
-   *  classifications.
+   *  The vector is subject to random distortions using an main.java.distorters.ImageDistorter and fed again and again to
+   *  the main.java.base.NeuralNetwork. The final confidence of the main.java.base.NeuralNetwork is the average value of
+   *  all these classifications.
    *
-   *  @param imageVector The vector to be fed to the main.base.NeuralNetwork.
+   *  @param imageVector The vector to be fed to the main.java.base.NeuralNetwork.
    *
-   *  @return Returns the confidence of the main.base.NeuralNetwork for the classification.
+   *  @return Returns the confidence of the main.java.base.NeuralNetwork for the classification.
    */
   private double[] feedForward(double[] imageVector){
     int numberOfDistortions = 100;
@@ -206,29 +206,29 @@ public class NeuralNetworkClassifier extends Classifier{
   }
 
   /**
-   *  @brief Setter method for the main.distorters.ImageDistorter.
+   *  @brief Setter method for the main.java.distorters.ImageDistorter.
    *
-   *  @param imageDistorter The main.distorters.ImageDistorter.
+   *  @param imageDistorter The main.java.distorters.ImageDistorter.
    */
   public void setImageDistorter(ImageDistorter imageDistorter){
     imageDistorter_ = imageDistorter;
   }
 
   /**
-   *  @brief Getter method for the main.distorters.ImageDistorter.
+   *  @brief Getter method for the main.java.distorters.ImageDistorter.
    *
-   *  @return Returns the current main.distorters.ImageDistorter.
+   *  @return Returns the current main.java.distorters.ImageDistorter.
    */
   public ImageDistorter getImageDistorter(){
     return imageDistorter_;
   }
 
-  private NeuralNetwork neuralNetwork_; //!< The main.base.NeuralNetwork of this NeuralNetworkClassifier.
+  private NeuralNetwork neuralNetwork_; //!< The main.java.base.NeuralNetwork of this NeuralNetworkClassifier.
 
   private int classificationLabel_; //!< The label chosen by this NeuralNetworkClassifier during the classification.
 
   private boolean silent_ = true; //!< Flag for the silent mode of this NeuralNetworkClassifier.
 
-  private ImageDistorter imageDistorter_ = null; //!< The main.distorters.ImageDistorter of this NeuralNetworkClassifier.
+  private ImageDistorter imageDistorter_ = null; //!< The ImageDistorter of this NeuralNetworkClassifier.
 
 }

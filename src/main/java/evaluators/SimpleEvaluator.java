@@ -11,16 +11,18 @@ import main.java.utilities.traces.TraceGroup;
 
 /** @class SimpleEvaluator
  *
- *  @brief Combines a main.partitioners.NNMSTPartitioner and a main.parsers.GGParser to evaluate a given equation.
+ *  @brief Combines a main.java.partitioners.NNMSTPartitioner and a main.java.parsers.GGParser to evaluate a given
+ *         equation.
  */
 public class SimpleEvaluator{
   /**
    *  @brief Constructor.
    *
-   *  @param neuralNetwork The main.base.NeuralNetwork to be used by the main.partitioners.NNMSTPartitioner.
-   *  @param imageDistorter The main.distorters.ImageDistorter to be used by the main.partitioners.NNMSTPartitioner.
+   *  @param neuralNetwork The main.java.base.NeuralNetwork to be used by the main.java.partitioners.NNMSTPartitioner.
+   *  @param imageDistorter The main.java.distorters.ImageDistorter to be used by the
+   *                        main.java.partitioners.NNMSTPartitioner.
    *
-   *  @throws IOException When the main.partitioners.NNMSTPartitioner.NNMSTPartitioner throws an exception.
+   *  @throws IOException When the main.java.partitioners.NNMSTPartitioner.NNMSTPartitioner throws an exception.
    */
   public SimpleEvaluator(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter) throws IOException{
     partitioner_ = new NNMSTPartitioner(neuralNetwork, imageDistorter);
@@ -57,62 +59,62 @@ public class SimpleEvaluator{
   }
 
   /**
-   *  @brief Getter method for the silent mode of the main.partitioners.NNMSTPartitioner.
+   *  @brief Getter method for the silent mode of the main.java.partitioners.NNMSTPartitioner.
    *
-   *  @return Returns true if the main.partitioners.NNMSTPartitioner is in silent mode.
+   *  @return Returns true if the main.java.partitioners.NNMSTPartitioner is in silent mode.
    */
   public boolean isPartitionerSilent(){
     return (partitioner_.isSilent());
   }
 
   /**
-   *  @brief Setter method for the silent mode of the main.partitioners.NNMSTPartitioner.
+   *  @brief Setter method for the silent mode of the main.java.partitioners.NNMSTPartitioner.
    *
-   *  @param silent The value for the silent mode of the main.partitioners.NNMSTPartitioner.
+   *  @param silent The value for the silent mode of the main.java.partitioners.NNMSTPartitioner.
    */
   public void setPartitionerSilent(boolean silent){
     partitioner_.setSilent(silent);
   }
 
   /**
-   *  @brief Getter method for the silent mode of the main.parsers.GGParser.
+   *  @brief Getter method for the silent mode of the main.java.parsers.GGParser.
    *
-   *  @return Returns true if the main.parsers.GGParser is in silent mode.
+   *  @return Returns true if the main.java.parsers.GGParser is in silent mode.
    */
   public boolean isParserSilent(){
     return (parser_.isSilent());
   }
 
   /**
-   *  @brief Setter method for the silent mode of the main.parsers.GGParser.
+   *  @brief Setter method for the silent mode of the main.java.parsers.GGParser.
    *
-   *  @param silent The value for the silent mode of the main.parsers.GGParser.
+   *  @param silent The value for the silent mode of the main.java.parsers.GGParser.
    */
   public void setParserSilent(boolean silent){
     parser_.setSilent(silent);
   }
 
   /**
-   *  @brief Getter method for the silent mode of the main.utilities.grammars.GeometricalGrammar used by the
-   *         main.parsers.GGParser.
+   *  @brief Getter method for the silent mode of the main.java.utilities.grammars.GeometricalGrammar used by the
+   *         main.java.parsers.GGParser.
    *
-   *  @return Returns true if the main.utilities.grammars.GeometricalGrammar is in silent mode.
+   *  @return Returns true if the main.java.utilities.grammars.GeometricalGrammar is in silent mode.
    */
   public boolean isGrammarSilent(){
     return (parser_.isGrammarSilent());
   }
 
   /**
-   *  @brief Setter method for the main.utilities.grammars.GeometricalGrammar used by the main.parsers.GGParser.
+   *  @brief Setter method for the main.java.utilities.grammars.GeometricalGrammar used by the main.java.parsers.GGParser.
    *
-   *  @param silent The value for the silent mode of the main.utilities.grammars.GeometricalGrammar.
+   *  @param silent The value for the silent mode of the main.java.utilities.grammars.GeometricalGrammar.
    */
   public void setGrammarSilent(boolean silent){
     parser_.setGrammarSilent(silent);
   }
 
-  private NNMSTPartitioner partitioner_; //!< The main.partitioners.NNMSTPartitioner of this SimpleEvaluator.
+  private NNMSTPartitioner partitioner_; //!< The main.java.partitioners.NNMSTPartitioner of this SimpleEvaluator.
 
-  private GGParser parser_;//!< The main.parsers.GGParser of this SimpleEvaluator.
+  private GGParser parser_;//!< The main.java.parsers.GGParser of this SimpleEvaluator.
 
 }

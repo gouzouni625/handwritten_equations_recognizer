@@ -10,11 +10,8 @@ doxygen/html
 doxygen/latex
 
 # Other
-src/main/evaluators/InstantDatabaseEvaluator.java
-src/main/utilities/data_managers/FillDatabase.java
-src/main/utilities/data_managers/GarbageDataGenerator.java
-src/main/utilities/data_managers/ParseDatabase.java
-src/main/executables/
+src/main/java/evaluators/InstantDatabaseEvaluator.java
+src/main/java/utilities/data_managers/
 testing_dir/
 backup/
 todo

@@ -19,9 +19,9 @@ public abstract class MSTPartitioner extends Partitioner{
    *
    *   The result is an array of groups of ink traces each one of which represents a symbol of the equation.
    *
-   *  @param expression The main.utilities.traces.TraceGroup with the ink traces of the equation.
+   *  @param expression The main.java.utilities.traces.TraceGroup with the ink traces of the equation.
    *
-   *  @return Returns an array of main.utilities.traces.TraceGroup each one of which contains the traces of a single
+   *  @return Returns an array of main.java.utilities.traces.TraceGroup each one of which contains the traces of a single
    *          symbol.
    */
   public TraceGroup[] partition(TraceGroup expression){
@@ -308,9 +308,9 @@ public abstract class MSTPartitioner extends Partitioner{
   /**
    *  @brief Getter method for the labels of each symbol.
    *
-   *  The labels are the ones calculated by main.partitioners.MSTPartitioner.partition method.
+   *  The labels are the ones calculated by main.java.partitioners.MSTPartitioner.partition method.
    *
-   *  @return Returns the labels calculated by main.partitioners.MSTPartitioner.partition method.
+   *  @return Returns the labels calculated by main.java.partitioners.MSTPartitioner.partition method.
    */
   public int[] getLabels(){
     return labels_;
@@ -371,7 +371,7 @@ public abstract class MSTPartitioner extends Partitioner{
   }
 
   /**
-   *  @brief Calculates the distance between two main.utilities.traces.Trace.
+   *  @brief Calculates the distance between two main.java.utilities.traces.Trace.
    *
    *  @param trace1 The first Trace.
    *  @param trace2 The second Trace.
@@ -450,7 +450,7 @@ public abstract class MSTPartitioner extends Partitioner{
   }
 
   /**
-   *  @brief Checks if two main.utilities.traces.Trace create an equals symbol.
+   *  @brief Checks if two main.java.utilities.traces.Trace create an equals symbol.
    *
    *  @param trace1 The first trace.
    *  @param trace2 The second trace.

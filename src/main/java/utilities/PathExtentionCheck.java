@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /** @interface PathExtentionCheck
  *
- *  @brief Interface that can be implmented to create checks for findUniquePaths method of Utilities class.
+ *  @brief Interface that can be implemented to create checks for findUniquePaths method of Utilities class.
  */
 public interface PathExtentionCheck{
   /**
