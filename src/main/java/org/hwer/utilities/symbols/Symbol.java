@@ -351,7 +351,6 @@ public abstract class Symbol{
    *  Accepts a child only if the candidate parent's area is, at least, twice as big as the child's.
    */
   public ChildAcceptanceCriterion sizeChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
-    @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
       return (symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea());
     }
@@ -364,7 +363,6 @@ public abstract class Symbol{
    *  parent's width is, at least, twice as big as the child's.
    */
   public ChildAcceptanceCriterion sizeWidthChildAcceptanceCriterion = new ChildAcceptanceCriterion() {
-    @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
       return ((symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea()) &&
               (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth()));
@@ -377,7 +375,6 @@ public abstract class Symbol{
    *  Accepts a child only if the candidate parent's width is, at least, twice as big as the child's.
    */
   public ChildAcceptanceCriterion widthChildAcceptanceCriterion = new ChildAcceptanceCriterion() {
-    @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
       return (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth());
     }
@@ -389,7 +386,6 @@ public abstract class Symbol{
    *  Accepts any child no matter what.
    */
   public ChildAcceptanceCriterion allChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
-    @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
       return (true);
     }
@@ -403,7 +399,6 @@ public abstract class Symbol{
    *  Symbol, it is accepted no matter what.
    */
   public ChildAcceptanceCriterion widthSizeExceptSQRTFractionLine = new ChildAcceptanceCriterion(){
-    @Override
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
       if(child.type_ == Operator.Types.SQRT || child.type_ == Operator.Types.FRACTION_LINE){
         return true;

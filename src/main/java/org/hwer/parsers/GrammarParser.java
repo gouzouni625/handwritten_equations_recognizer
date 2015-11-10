@@ -72,7 +72,6 @@ public abstract class GrammarParser extends Parser{
     }
 
     Arrays.sort(symbols, new Comparator<Symbol>(){
-      @Override
       public int compare(Symbol symbol1, Symbol symbol2){
         double x1 = symbol1.traceGroup_.getTopLeftCorner().x_;
         double x2 = symbol2.traceGroup_.getTopLeftCorner().x_;
@@ -144,7 +143,6 @@ public abstract class GrammarParser extends Parser{
     // Sort paths by first symbol and then by second. Note that, since symbols are sorted by abscissa then paths will
     // also be sorted by abscissa if they are sorted by symbols.
     Arrays.sort(paths, new Comparator<int[]>(){
-      @Override
       public int compare(int[] path1, int[] path2){
         if(path1[0] > path2[0]){
           return 1;
@@ -273,7 +271,7 @@ public abstract class GrammarParser extends Parser{
   }
 
   /**
-   *  @see main.java.java.parsers.Parser#toString()
+   *  @see main.java.parsers.Parser#toString()
    */
   public String toString(){
     if(symbols_.length > 0){

@@ -10,7 +10,7 @@
 
   <modules>
     <module>../</module>
-    <module>../sub_modules/neural_network</module>
+    <module>../../neural_network</module>
   </modules>
 
 </project>

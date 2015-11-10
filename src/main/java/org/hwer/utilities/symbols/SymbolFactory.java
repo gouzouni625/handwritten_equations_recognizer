@@ -2,8 +2,6 @@ package org.hwer.utilities.symbols;
 
 import org.hwer.utilities.traces.TraceGroup;
 
-import java.lang.*;
-
 /** @class SymbolFactory
  *
  *  @brief A class used to create Symbol objects.
@@ -26,25 +24,25 @@ public class SymbolFactory{
 
     switch(label){
       case SymbolFactory.LABEL_ZERO:
-        return SymbolFactory.createByType(java.lang.Number.Types.ZERO, traceGroup);
+        return SymbolFactory.createByType(Number.Types.ZERO, traceGroup);
       case SymbolFactory.LABEL_ONE:
-        return SymbolFactory.createByType(java.lang.Number.Types.ONE, traceGroup);
+        return SymbolFactory.createByType(Number.Types.ONE, traceGroup);
       case SymbolFactory.LABEL_TWO:
-        return SymbolFactory.createByType(java.lang.Number.Types.TWO, traceGroup);
+        return SymbolFactory.createByType(Number.Types.TWO, traceGroup);
       case SymbolFactory.LABEL_THREE:
-        return SymbolFactory.createByType(java.lang.Number.Types.THREE, traceGroup);
+        return SymbolFactory.createByType(Number.Types.THREE, traceGroup);
       case SymbolFactory.LABEL_FOUR:
-        return SymbolFactory.createByType(java.lang.Number.Types.FOUR, traceGroup);
+        return SymbolFactory.createByType(Number.Types.FOUR, traceGroup);
       case SymbolFactory.LABEL_FIVE:
-        return SymbolFactory.createByType(java.lang.Number.Types.FIVE, traceGroup);
+        return SymbolFactory.createByType(Number.Types.FIVE, traceGroup);
       case SymbolFactory.LABEL_SIX:
-        return SymbolFactory.createByType(java.lang.Number.Types.SIX, traceGroup);
+        return SymbolFactory.createByType(Number.Types.SIX, traceGroup);
       case SymbolFactory.LABEL_SEVEN:
-        return SymbolFactory.createByType(java.lang.Number.Types.SEVEN, traceGroup);
+        return SymbolFactory.createByType(Number.Types.SEVEN, traceGroup);
       case SymbolFactory.LABEL_EIGHT:
-        return SymbolFactory.createByType(java.lang.Number.Types.EIGHT, traceGroup);
+        return SymbolFactory.createByType(Number.Types.EIGHT, traceGroup);
       case SymbolFactory.LABEL_NINE:
-        return SymbolFactory.createByType(java.lang.Number.Types.NINE, traceGroup);
+        return SymbolFactory.createByType(Number.Types.NINE, traceGroup);
       case SymbolFactory.LABEL_LOWER_X:
         return SymbolFactory.createByType(Letter.Types.LOWER_X, traceGroup);
       case SymbolFactory.LABEL_LOWER_Y:
@@ -75,35 +73,35 @@ public class SymbolFactory{
    *  @return Returns the created Symbol.
    */
   public static <E extends Enum<E>> Symbol createByType(E type, TraceGroup traceGroup){
-    if(type == java.lang.Number.Types.ZERO){
-      return (new java.lang.Number(java.lang.Number.Types.ZERO, traceGroup));
+    if(type == Number.Types.ZERO){
+      return (new Number(Number.Types.ZERO, traceGroup));
     }
-    else if(type == java.lang.Number.Types.ONE){
-      return (new java.lang.Number(java.lang.Number.Types.ONE, traceGroup));
+    else if(type == Number.Types.ONE){
+      return (new Number(Number.Types.ONE, traceGroup));
     }
-    else if(type == java.lang.Number.Types.TWO){
-      return (new java.lang.Number(java.lang.Number.Types.TWO, traceGroup));
+    else if(type == Number.Types.TWO){
+      return (new Number(Number.Types.TWO, traceGroup));
     }
-    else if(type == java.lang.Number.Types.THREE){
-      return (new java.lang.Number(java.lang.Number.Types.THREE, traceGroup));
+    else if(type == Number.Types.THREE){
+      return (new Number(Number.Types.THREE, traceGroup));
     }
-    else if(type == java.lang.Number.Types.FOUR){
-      return (new java.lang.Number(java.lang.Number.Types.FOUR, traceGroup));
+    else if(type == Number.Types.FOUR){
+      return (new Number(Number.Types.FOUR, traceGroup));
     }
-    else if(type == java.lang.Number.Types.FIVE){
-      return (new java.lang.Number(java.lang.Number.Types.FIVE, traceGroup));
+    else if(type == Number.Types.FIVE){
+      return (new Number(Number.Types.FIVE, traceGroup));
     }
-    else if(type == java.lang.Number.Types.SIX){
-      return (new java.lang.Number(java.lang.Number.Types.SIX, traceGroup));
+    else if(type == Number.Types.SIX){
+      return (new Number(Number.Types.SIX, traceGroup));
     }
-    else if(type == java.lang.Number.Types.SEVEN){
-      return (new java.lang.Number(java.lang.Number.Types.SEVEN, traceGroup));
+    else if(type == Number.Types.SEVEN){
+      return (new Number(Number.Types.SEVEN, traceGroup));
     }
-    else if(type == java.lang.Number.Types.EIGHT){
-      return (new java.lang.Number(java.lang.Number.Types.EIGHT, traceGroup));
+    else if(type == Number.Types.EIGHT){
+      return (new Number(Number.Types.EIGHT, traceGroup));
     }
-    else if(type == java.lang.Number.Types.NINE){
-      return (new java.lang.Number(java.lang.Number.Types.NINE, traceGroup));
+    else if(type == Number.Types.NINE){
+      return (new Number(Number.Types.NINE, traceGroup));
     }
     else if(type == Letter.Types.LOWER_X){
       return (new Letter(Letter.Types.LOWER_X, traceGroup));

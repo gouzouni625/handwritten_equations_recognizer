@@ -2,22 +2,25 @@
 .classpath
 .project
 
+# Intelij
+*.iml
+
 # Binaries
-/bin/
+classes/
 
 # Doxygen
 doxygen/html
 doxygen/latex
 
 # Other
-src/main/java/evaluators/InstantDatabaseEvaluator.java
-src/main/java/utilities/data_managers/
 testing_dir/
 backup/
 todo
 notes
 to_improve
-*.swp
-*.jar
-data
-dump
+/data
+/target
+/src/devel
+/src/main/java/org/hwer/evaluators/InstantDatabaseEvaluator.java
+/src/main/java/org/hwer/utilities/data_managers/
+/src/main/java/org/hwer/utilities/image_processing/

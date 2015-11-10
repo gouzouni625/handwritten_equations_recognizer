@@ -1,8 +1,8 @@
 package org.hwer.partitioners;
 
-import main.java.base.NeuralNetwork;
+import org.nn.base.NeuralNetwork;
 import org.hwer.classifiers.NeuralNetworkClassifier;
-import main.java.distorters.ImageDistorter;
+import org.nn.distorters.ImageDistorter;
 
 /** @class NNMSTPartitioner
  *

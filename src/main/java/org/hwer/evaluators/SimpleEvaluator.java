@@ -2,8 +2,8 @@ package org.hwer.evaluators;
 
 import java.io.IOException;
 
-import main.java.base.NeuralNetwork;
-import main.java.distorters.ImageDistorter;
+import org.nn.base.NeuralNetwork;
+import org.nn.distorters.ImageDistorter;
 import org.hwer.parsers.GGParser;
 import org.hwer.partitioners.NNMSTPartitioner;
 import org.hwer.utilities.inkml.InkMLParser;
@@ -11,20 +11,23 @@ import org.hwer.utilities.traces.TraceGroup;
 
 /** @class SimpleEvaluator
  *
- *  @brief Combines a main.java.partitioners.NNMSTPartitioner and a main.java.parsers.GGParser to evaluate a given
- *         equation.
+ *  @brief Combines a main.java.partitioners.NNMSTPartitioner and a main.java.parsers.GGParser to
+ *         evaluate a given equation.
  */
 public class SimpleEvaluator{
   /**
    *  @brief Constructor.
    *
-   *  @param neuralNetwork The main.java.base.NeuralNetwork to be used by the main.java.partitioners.NNMSTPartitioner.
+   *  @param neuralNetwork The main.java.base.NeuralNetwork to be used by the
+   *                       main.java.partitioners.NNMSTPartitioner.
    *  @param imageDistorter The main.java.distorters.ImageDistorter to be used by the
    *                        main.java.partitioners.NNMSTPartitioner.
    *
-   *  @throws IOException When the main.java.partitioners.NNMSTPartitioner.NNMSTPartitioner throws an exception.
+   *  @throws IOException When the main.java.partitioners.NNMSTPartitioner.NNMSTPartitioner
+   *                      throws an exception.
    */
-  public SimpleEvaluator(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter) throws IOException{
+  public SimpleEvaluator(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter)
+      throws IOException{
     partitioner_ = new NNMSTPartitioner(neuralNetwork, imageDistorter);
 
     parser_ = new GGParser();
@@ -95,8 +98,8 @@ public class SimpleEvaluator{
   }
 
   /**
-   *  @brief Getter method for the silent mode of the main.java.utilities.grammars.GeometricalGrammar used by the
-   *         main.java.parsers.GGParser.
+   *  @brief Getter method for the silent mode of the
+   *         main.java.utilities.grammars.GeometricalGrammar used by the main.java.parsers.GGParser.
    *
    *  @return Returns true if the main.java.utilities.grammars.GeometricalGrammar is in silent mode.
    */
@@ -105,15 +108,18 @@ public class SimpleEvaluator{
   }
 
   /**
-   *  @brief Setter method for the main.java.utilities.grammars.GeometricalGrammar used by the main.java.parsers.GGParser.
+   *  @brief Setter method for the main.java.utilities.grammars.GeometricalGrammar used by the
+   *         main.java.parsers.GGParser.
    *
-   *  @param silent The value for the silent mode of the main.java.utilities.grammars.GeometricalGrammar.
+   *  @param silent The value for the silent mode of the
+   *                main.java.utilities.grammars.GeometricalGrammar.
    */
   public void setGrammarSilent(boolean silent){
     parser_.setGrammarSilent(silent);
   }
 
-  private NNMSTPartitioner partitioner_; //!< The main.java.partitioners.NNMSTPartitioner of this SimpleEvaluator.
+  private NNMSTPartitioner partitioner_; //!< The main.java.partitioners.NNMSTPartitioner of this
+                                         //!< SimpleEvaluator.
 
   private GGParser parser_;//!< The main.java.parsers.GGParser of this SimpleEvaluator.
 
