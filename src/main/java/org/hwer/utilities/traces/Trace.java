@@ -1,8 +1,8 @@
 package org.hwer.utilities.traces;
 
-import org.hwer.utilities.image_processing.Drawer;
-
-import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.BasicStroke;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -10,8 +10,8 @@ import java.util.ArrayList;
  *
  *  @brief Implements a Trace of Ink.
  *
- *  A Trace of Ink is a sequence of Point objects. They represent the places where a pen has contacted the drawing
- *  surface.
+ *  A Trace of Ink is a sequence of Point objects. They represent the places where a pen has
+ *  contacted the drawing surface.
  */
 public class Trace{
   /**
@@ -39,12 +39,13 @@ public class Trace{
   /**
    *  @brief Adds a Point to this Trace.
    *
-   *  It is not the actual Point that is added but a copy of it. That is, if the given as input Point changes, the Point
-   *  inside the Trace will not change.
+   *  It is not the actual Point that is added but a copy of it. That is, if the given as
+   *  input Point changes, the Point inside the Trace will not change.
    *
    *  @param point The Point to be added to this Trace.
    *
-   *  @return Returns this Trace in order for chain commands to be possible(e.g. tr.add(p1).add(p2);).
+   *  @return Returns this Trace in order for chain commands to be
+   *          possible(e.g. tr.add(p1).add(p2);).
    */
   public Trace add(Point point){
     points_.add(new Point(point));
@@ -55,8 +56,8 @@ public class Trace{
   /**
    *  @brief Returns the Point at a specific position in this Trace.
    *
-   *  The Point returned is the actual Point that exists inside this Trace. That is, if the returned Point changes, then,
-   *  the Point inside the Trace will also change.
+   *  The Point returned is the actual Point that exists inside this Trace.
+   *  That is, if the returned Point changes, then, the Point inside the Trace will also change.
    *
    *  @param index The position of the Point to be returned.
    *
@@ -82,7 +83,8 @@ public class Trace{
    *
    *  @param factor The double that this Trace should be multiplied with.
    *
-   *  @return Returns this Trace in order for chain commands to be possible(e.g. tr1.multiplyBy(3).multiplyBy(2);).
+   *  @return Returns this Trace in order for chain commands to be
+   *          possible(e.g. tr1.multiplyBy(3).multiplyBy(2);).
    */
   public Trace multiplyBy(double factor){
     for(int i = 0;i < points_.size();i++){
@@ -99,7 +101,8 @@ public class Trace{
    *
    *  @param point The Point to be subtracted from this Trace.
    *
-   *  @return Returns this Trace in order for chain commands to be possible(e.g. tr1.multiplyBy(3).subtract(p1);).
+   *  @return Returns this Trace in order for chain commands to be
+   *          possible(e.g. tr1.multiplyBy(3).subtract(p1);).
    */
   public Trace subtract(Point point){
     for(int i = 0;i < points_.size();i++){
@@ -151,8 +154,8 @@ public class Trace{
   /**
    *  @brief Getter method for topLeftCorner.
    *
-   *  The Point returned is not the actual topLeftCorner but a copy of it. That is, if the returned Point is changed,
-   *  topLeftCorner will not be changed.
+   *  The Point returned is not the actual topLeftCorner but a copy of it. That is,
+   *  if the returned Point is changed, topLeftCorner will not be changed.
    *
    *  @return Returns the top left corner of this Trace.
    */
@@ -163,8 +166,8 @@ public class Trace{
   /**
    *  @brief Getter method for bottomRightCorner.
    *
-   *  The Point returned is not the actual bottomRightCorner but a copy of it. That is, if the returned Point is changed,
-   *  bottomRightCorner will not be changed.
+   *  The Point returned is not the actual bottomRightCorner but a copy of it. That is,
+   *  if the returned Point is changed, bottomRightCorner will not be changed.
    *
    *  @return Returns the bottom right corner of this Trace.
    */
@@ -175,8 +178,8 @@ public class Trace{
   /**
    *  @brief Getter method for bottomLeftCorner.
    *
-   *  The Point returned is not the actual bottomLeftCorner but a copy of it. That is, if the returned Point is changed,
-   *  bottomLeftCorner will not be changed.
+   *  The Point returned is not the actual bottomLeftCorner but a copy of it. That is,
+   *  if the returned Point is changed, bottomLeftCorner will not be changed.
    *
    *  @return Returns the bottom left corner of this Trace.
    */
@@ -187,8 +190,8 @@ public class Trace{
   /**
    *  @brief Getter method for top right corner.
    *
-   *  The Point returned is not the actual topRightCorner but a copy of it. That is, if the returned Point is changed,
-   *  topRightCorner will not be changed.
+   *  The Point returned is not the actual topRightCorner but a copy of it. That is,
+   *  if the returned Point is changed, topRightCorner will not be changed.
    *
    *  @return Returns the top right corner of this Trace.
    */
@@ -199,8 +202,8 @@ public class Trace{
   /**
    *  @brief Calculates and returns the Point of this Trace with the minimum abscissa(x).
    *
-   *  The Point returned is not the actual Point with the minimum abscissa(x) but a copy of it. That is, if the Point
-   *  returned is changed, the Point inside the Trace will not be changed.
+   *  The Point returned is not the actual Point with the minimum abscissa(x) but a copy of it.
+   *  That is, if the Point returned is changed, the Point inside the Trace will not be changed.
    *
    *  @return Returns the Point inside this Trace with the minimum abscissa(x).
    */
@@ -220,8 +223,8 @@ public class Trace{
   /**
    *  @brief Calculates and returns the Point of this Trace with the maximum abscissa(x).
    *
-   *  The Point returned is not the actual Point with the maximum abscissa(x) but a copy of it. That is, if the Point
-   *  returned is changed, the Point inside the Trace will not be changed.
+   *  The Point returned is not the actual Point with the maximum abscissa(x) but a copy of it.
+   *  That is, if the Point returned is changed, the Point inside the Trace will not be changed.
    *
    *  @return Returns the Point inside this Trace with the maximum abscissa(x).
    */
@@ -272,12 +275,16 @@ public class Trace{
    *  (e.g. tr2.print(tr1.print(image, thickness1), thickness2);).
    */
   public BufferedImage print(BufferedImage image, int thickness){
-    int height = image.getHeight();
+    Graphics2D graphics2D = image.createGraphics();
+
+    graphics2D.setStroke(new BasicStroke(thickness));
 
     for(int i = 0;i < points_.size() - 1;i++){
-      Drawer.drawLine(image, (int) points_.get(i).x_, (int) (height - points_.get(i).y_),
-          (int) (points_.get(i + 1).x_), (int) (height - points_.get(i + 1).y_), thickness);
+      graphics2D.draw(new Line2D.Double((int) points_.get(i).x_, (int) (points_.get(i).y_),
+          (int) (points_.get(i + 1).x_), (int) (points_.get(i + 1).y_)));
     }
+
+    graphics2D.dispose();
 
     return image;
   }
@@ -330,7 +337,7 @@ public class Trace{
    *  @return Returns true if these two Trace objects are overlapped.
    */
   public static boolean areOverlapped(Trace trace1, Trace trace2){
-    Trace trace1Copy = new Trace(trace1);
+    /*Trace trace1Copy = new Trace(trace1);
     Trace trace2Copy = new Trace(trace2);
     trace1Copy.multiplyBy(100).calculateCorners();
     trace2Copy.multiplyBy(100).calculateCorners();
@@ -340,9 +347,12 @@ public class Trace{
     traceGroup.add(trace2Copy);
     traceGroup.calculateCorners();
 
-    trace1Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
-    trace2Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
-    traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_, traceGroup.getBottomRightCorner().y_));
+    trace1Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_,
+                                  traceGroup.getBottomRightCorner().y_));
+    trace2Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_,
+                                  traceGroup.getBottomRightCorner().y_));
+    traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_,
+                                  traceGroup.getBottomRightCorner().y_));
 
     double width = traceGroup.getWidth();
     if(width < 100){
@@ -353,8 +363,8 @@ public class Trace{
       height = 100;
     }
 
-    BufferedImage image1 = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_BYTE_GRAY);
-    BufferedImage image2 = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_BYTE_GRAY);
+    Image image1 = new Image((int)width, (int)height);
+    Image image2 = new Image((int)width, (int)height);
 
     trace1Copy.print(image1, 1);
     trace2Copy.print(image2, 1);
@@ -362,20 +372,20 @@ public class Trace{
     int blackRGB = Color.BLACK.getRGB();
     for(int x = 0; x < (int)width;x++){
       for(int y = 0;y < (int)height;y++){
-        if(image1.getRGB(x, y) > blackRGB &&
-          ((x - 1 >= 0         && y - 1 >= 0          && image2.getRGB(x - 1, y - 1) > blackRGB) ||
-           (x - 1 >= 0         &&                        image2.getRGB(x - 1, y    ) > blackRGB) ||
-           (x - 1 >= 0         && y + 1 < (int)height && image2.getRGB(x - 1, y + 1) > blackRGB) ||
-           (                      y - 1 >= 0          && image2.getRGB(x    , y - 1) > blackRGB) ||
-           (                                             image2.getRGB(x    , y    ) > blackRGB) ||
-           (                      y + 1 < (int)height && image2.getRGB(x    , y + 1) > blackRGB) ||
-           (x + 1 < (int)width && y - 1 >= 0          && image2.getRGB(x + 1, y - 1) > blackRGB) ||
-           (x + 1 < (int)width &&                        image2.getRGB(x + 1, y    ) > blackRGB) ||
-           (x + 1 < (int)width && y + 1 < (int)height && image2.getRGB(x + 1, y + 1) > blackRGB))) {
+        if(image1.getPixel(x, y) > blackRGB &&
+          ((x - 1 >= 0         && y - 1 >= 0          && image2.getPixel(x - 1, y - 1) > blackRGB) ||
+           (x - 1 >= 0         &&                        image2.getPixel(x - 1, y) > blackRGB) ||
+           (x - 1 >= 0         && y + 1 < (int)height && image2.getPixel(x - 1, y + 1) > blackRGB) ||
+           (                      y - 1 >= 0          && image2.getPixel(x, y - 1) > blackRGB) ||
+           (                                             image2.getPixel(x, y) > blackRGB) ||
+           (                      y + 1 < (int)height && image2.getPixel(x, y + 1) > blackRGB) ||
+           (x + 1 < (int)width && y - 1 >= 0          && image2.getPixel(x + 1, y - 1) > blackRGB) ||
+           (x + 1 < (int)width &&                        image2.getPixel(x + 1, y) > blackRGB) ||
+           (x + 1 < (int)width && y + 1 < (int)height && image2.getPixel(x + 1, y + 1) > blackRGB))) {
           return true;
         }
       }
-    }
+    }*/
 
     return false;
   }
@@ -383,8 +393,8 @@ public class Trace{
   /**
    *  @brief Calculates and returns the minimum distance between two Trace objects.
    *
-   *  The minimum distance between two Trace objects is calculated as the distance between the closest Point objects of
-   *  these Traces.
+   *  The minimum distance between two Trace objects is calculated as the distance between the
+   *  closest Point objects of these Traces.
    *
    *  @param trace1 The first Trace.
    *  @param trace2 The second Trace.
@@ -400,14 +410,15 @@ public class Trace{
   /**
    *  @brief Calculates and returns the two closest Point objects from these two Trace objects.
    *
-   *  The Point objects returned are the actual Point objects that are inside the Trace objects. That is, if the returned
-   *  Point objects are changed, then, the actual Point objects will also be changed.
+   *  The Point objects returned are the actual Point objects that are inside the Trace objects.
+   *  That is, if the returned Point objects are changed, then, the actual Point objects will also
+   *  be changed.
    *
    *  @param trace1 The first Trace.
    *  @param trace2 The second Trace.
    *
-   *  @return Returns an array with the two closest Point object. The first Point belongs to the first Trace and the
-   *  second Point belongs to the second Trace.
+   *  @return Returns an array with the two closest Point object. The first Point belongs to the
+   *  first Trace and the second Point belongs to the second Trace.
    */
   public static Point[] closestPoints(Trace trace1, Trace trace2){
     double min = Point.distance(trace1.get(0), trace2.get(0));
@@ -437,8 +448,9 @@ public class Trace{
    *
    *  @param point The Point to find the closest to.
    *
-   *  @return Returns the Point of this Trace that is the closest to the specified Point. The Point returned is the actual
-   *  Point. That is, if the returned Point is changed, then, the actual Point inside the Trace will also be changed.
+   *  @return Returns the Point of this Trace that is the closest to the specified Point.
+   *  The Point returned is the actual Point. That is, if the returned Point is changed, then, the
+   *  actual Point inside the Trace will also be changed.
    */
   public Point closestPoint(Point point){
     double minDistance = Point.distance(points_.get(0), point);
