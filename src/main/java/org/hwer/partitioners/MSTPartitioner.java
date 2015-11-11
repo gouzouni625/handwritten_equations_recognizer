@@ -31,7 +31,7 @@ public abstract class MSTPartitioner extends Partitioner{
 
     if(numberOfTraces == 1){
       labels_ = new int[numberOfTraces];
-      classifier_.classify(expression, new TraceGroup(), false, false);
+      classifier_.classify(expression, null, false, false);
       labels_[0] = classifier_.getClassificationLabel();
 
       return (new TraceGroup[] {expression});

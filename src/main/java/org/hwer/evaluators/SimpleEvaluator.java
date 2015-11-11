@@ -44,6 +44,8 @@ public class SimpleEvaluator{
     InkMLParser inkMLParser = new InkMLParser(new String(xmlData));
     inkMLParser.parse();
 
+    inkMLParser.traceGroup_.multiplyBy(100).calculateCorners();
+
     TraceGroup[] partition = partitioner_.partition(inkMLParser.traceGroup_);
     int[] labels = partitioner_.getLabels();
 

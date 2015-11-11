@@ -286,6 +286,9 @@ public class TraceGroup{
 
     traceGroup.calculateCorners();
 
+    traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_,
+        traceGroup.getBottomRightCorner().y_));
+
     int originalWidth = (int)traceGroup.getWidth();
     int originalHeight = (int)traceGroup.getHeight();
 
