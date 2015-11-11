@@ -1,6 +1,6 @@
 package org.hwer.utilities.traces;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -389,7 +389,7 @@ public class TraceGroup{
    *  first TraceGroup and the second Trace belongs to the second TraceGroup.
    */
   public static Trace[] closestTraces(TraceGroup traceGroup1, TraceGroup traceGroup2){
-    double minimumDinstance = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
+    double minimumDistance = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
     int index1 = 0;
     int index2 = 0;
 
@@ -399,8 +399,8 @@ public class TraceGroup{
       for(int j = 0;j < size2;j++){
         double distance = Trace.minimumDistance(traceGroup1.get(i), traceGroup2.get(j));
 
-        if(distance < minimumDinstance){
-          minimumDinstance = distance;
+        if(distance < minimumDistance){
+          minimumDistance = distance;
           index1 = i;
           index2 = j;
         }

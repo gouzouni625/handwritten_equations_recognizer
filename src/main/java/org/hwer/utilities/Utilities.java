@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.opencv.core.Mat;
+//import org.opencv.core.Mat;
 
 /** @class Utilities
 *
@@ -298,33 +298,6 @@ public class Utilities{
    */
   public static double maxValue(double[] array){
     return (array[Utilities.indexOfMax(array)]);
-  }
-
-  /**
-   *  @brief Converts an image to an array o bytes.
-   *
-   *  The image is an OpenCV Mat object and contains values from 0 to 255.
-   *
-   *  @param image The image to be converted to a byte array.
-   *
-   *  @return Returns the byte array conversion of the image.
-   */
-  public static byte[] imageToByteArray(Mat image){
-    int numberOfRows = image.rows();
-    int numberOfColumns = image.cols();
-
-    byte[] array = new byte[numberOfRows * numberOfColumns];
-    if(array.length == 0){
-      return array;
-    }
-
-    for(int row = 0;row < numberOfRows;row++){
-      for(int column = 0;column < numberOfColumns;column++){
-        array[row * numberOfColumns + column] = (byte)(image.get(row, column)[0]);
-      }
-    }
-
-    return array;
   }
 
   /**

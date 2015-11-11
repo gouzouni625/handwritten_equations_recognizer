@@ -1,17 +1,19 @@
 package org.hwer.classifiers;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import main.java.base.NeuralNetwork;
-import main.java.distorters.ImageDistorter;
+import org.nn.base.NeuralNetwork;
+import org.nn.distorters.ImageDistorter;
 import org.hwer.utilities.Utilities;
 import org.hwer.utilities.traces.TraceGroup;
 
 
 /** @class NeuralNetworkClassifier
  *
- *  @brief Implements a Classifier using a main.java.base.NeuralNetwork as a classification algorithm.
+ *  @brief Implements a Classifier using a main.java.base.NeuralNetwork as a classification
+ *         algorithm.
  */
 public class NeuralNetworkClassifier extends Classifier{
   /**
@@ -67,30 +69,51 @@ public class NeuralNetworkClassifier extends Classifier{
   /**
    *  @brief Classifies a given main.java.utilities.symbols.Symbol.
    *
-   *  Uses the main.java.base.NeuralNetwork to classify the given main.java.utilities.symbols.Symbol.
+   *  Uses the main.java.base.NeuralNetwork to classify the given
+   *  main.java.utilities.symbols.Symbol.
    *
    *  @param symbol The main.java.utilities.symbols.Symbol to classify.
    *  @param context The context of the given main.java.utilities.symbols.Symbol. The context of a
-   *         main.java.utilities.symbols.Symbol contains all the main.java.utilities.traces.Trace objects that are near the
-   *         but not part of the main.java.utilities.symbols.Symbol. The proximity measurement can be arbitrary.
-   *  @param subSymbolCheck Check sub-groups of the main.java.utilities.traces.Trace objects of the given
-   *                        main.java.utilities.symbols.Symbol
-   *  @param subContextCheck Checks sub-groups of the main.java.utilities.traces.Trace objects of the context of the
-   *                         given main.java.utilities.symbols.Symbol
+   *                 main.java.utilities.symbols.Symbol contains all the
+   *                 main.java.utilities.traces.Trace objects that are near the but not part of the
+   *                 main.java.utilities.symbols.Symbol. The proximity measurement can be arbitrary.
+   *  @param subSymbolCheck Check sub-groups of the main.java.utilities.traces.Trace objects of the
+   *                        given main.java.utilities.symbols.Symbol
+   *  @param subContextCheck Checks sub-groups of the main.java.utilities.traces.Trace objects of
+   *                         the context of the given main.java.utilities.symbols.Symbol
    *
-   *  @return Returns the confidence of this NeuralNetworkClassifier for the classification of the given
-   *          main.java.utilities.symbols.Symbol.
+   *  @return Returns the confidence of this NeuralNetworkClassifier for the classification of the
+   *          given main.java.utilities.symbols.Symbol.
    */
-  public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
+  public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck,
+                         boolean subContextCheck){
     int symbolSize = symbol.size();
-    //int contextSize = context.size();
 
     if(symbolSize > maxTracesInSymbol_){
       return MINIMUM_RATE;
     }
 
-    double[] neuralNetworkOutput = this.feedForward(this.imageToVector(symbol.print(
-                                   imageDistorter_.getSampleRows(), imageDistorter_.getSampleColumns()), -1, 1));
+    BufferedImage image = symbol.print(imageDistorter_.getSampleColumns(),
+        imageDistorter_.getSampleRows(), 120);
+
+    int borderLeft = (int)(imageDistorter_.getSampleColumns() * 0.2);
+    int borderTop = (int)(imageDistorter_.getSampleRows() * 0.2);
+
+    BufferedImage borderedImage = new BufferedImage(imageDistorter_.getSampleColumns() +
+        2 * borderLeft, imageDistorter_.getSampleRows() + 2 * borderTop,
+        BufferedImage.TYPE_BYTE_GRAY);
+
+    Graphics2D graphics2D = borderedImage.createGraphics();
+    graphics2D.drawImage(image, borderLeft, borderTop, borderLeft + image.getWidth(),
+        borderTop + image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), null);
+    graphics2D.dispose();
+
+    graphics2D = image.createGraphics();
+    graphics2D.drawImage(borderedImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0,
+        borderedImage.getWidth(), borderedImage.getHeight(), null);
+    graphics2D.dispose();
+
+    double[] neuralNetworkOutput = this.feedForward(image);
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
@@ -102,27 +125,29 @@ public class NeuralNetworkClassifier extends Classifier{
   /**
    *  @brief Feeds the given vector to the main.java.base.NeuralNetwork.
    *
-   *  The vector is subject to random distortions using an main.java.distorters.ImageDistorter and fed again and again to
-   *  the main.java.base.NeuralNetwork. The final confidence of the main.java.base.NeuralNetwork is the average value of
-   *  all these classifications.
+   *  The vector is subject to random distortions using an main.java.distorters.ImageDistorter and
+   *  fed again and again to the main.java.base.NeuralNetwork. The final confidence of the
+   *  main.java.base.NeuralNetwork is the average value of all these classifications.
    *
-   *  @param imageVector The vector to be fed to the main.java.base.NeuralNetwork.
+   *  @param image The vector to be fed to the main.java.base.NeuralNetwork.
    *
    *  @return Returns the confidence of the main.java.base.NeuralNetwork for the classification.
    */
-  private double[] feedForward(double[] imageVector){
+  private double[] feedForward(BufferedImage image){
     int numberOfDistortions = 100;
 
-    double[] neuralNetworkOutput = neuralNetwork_.feedForward(imageVector);
+    BufferedImage imageClone = new BufferedImage(image.getWidth(), image.getHeight(),
+        image.getType());
+
+    double[] neuralNetworkOutput = neuralNetwork_.feedForward(this.imageToVector(image, -1, 1));
 
     if(imageDistorter_ != null){
-      double[][] dataToDistort = new double[1][];
-
       for(int i = 0;i < numberOfDistortions;i++){
-        dataToDistort[0] = imageVector.clone();
-        imageDistorter_.distort(dataToDistort);
+        imageClone.setData(image.getRaster());
 
-        double[] currentOutput = neuralNetwork_.feedForward(dataToDistort[0]);
+        imageClone = imageDistorter_.distort(imageClone);
+
+        double[] currentOutput = neuralNetwork_.feedForward(this.imageToVector(imageClone, -1, 1));
         for(int j = 0;j < neuralNetworkOutput.length;j++){
           neuralNetworkOutput[j] += currentOutput[j];
         }
@@ -161,19 +186,19 @@ public class NeuralNetworkClassifier extends Classifier{
    */
   private double[] imageToVector(BufferedImage image, double min, double max){
     // Find the minimum and the maximum values of the image.
-    double minValue = image.getRGB(0, 0);
-    double maxValue = image.getRGB(0, 0);
+    double minValue = image.getRGB(0, 0) & 0xFF;
+    double maxValue = image.getRGB(0, 0) & 0xFF;
 
     int width = image.getWidth();
     int height = image.getHeight();
     for(int x = 0;x < width;x++){
       for(int y = 0;y < height;y++){
-        if(image.getRGB(x, y) > maxValue){
-          maxValue = image.getRGB(x, y);
+        if((image.getRGB(x, y) & 0xFF) > maxValue){
+          maxValue = image.getRGB(x, y) & 0xFF;
         }
 
-        if(image.getRGB(x, y) < minValue){
-          minValue = image.getRGB(x, y);
+        if((image.getRGB(x, y) & 0xFF) < minValue){
+          minValue = image.getRGB(x, y) & 0xFF;
         }
       }
     }
@@ -182,7 +207,8 @@ public class NeuralNetworkClassifier extends Classifier{
 
     for(int y = 0;y < height;y++){
       for(int x = 0;x < width;x++){
-        vector[y * width + x] = (image.getRGB(x, y) - minValue) * (max - min) / (maxValue - minValue) + min;
+        vector[y * width + x] = ((image.getRGB(x, height - y - 1) & 0xFF) - minValue) *
+            (max - min) / (maxValue - minValue) + min;
       }
     }
 
@@ -225,12 +251,14 @@ public class NeuralNetworkClassifier extends Classifier{
     return imageDistorter_;
   }
 
-  private NeuralNetwork neuralNetwork_; //!< The main.java.base.NeuralNetwork of this NeuralNetworkClassifier.
+  private NeuralNetwork neuralNetwork_; //!< The NeuralNetwork of this NeuralNetworkClassifier.
 
-  private int classificationLabel_; //!< The label chosen by this NeuralNetworkClassifier during the classification.
+  private int classificationLabel_; //!< The label chosen by this NeuralNetworkClassifier during
+                                    //   the classification.
 
   private boolean silent_ = true; //!< Flag for the silent mode of this NeuralNetworkClassifier.
 
-  private ImageDistorter imageDistorter_ = null; //!< The ImageDistorter of this NeuralNetworkClassifier.
+  private ImageDistorter imageDistorter_ = null; //!< The ImageDistorter of this
+                                                 //   NeuralNetworkClassifier.
 
 }
