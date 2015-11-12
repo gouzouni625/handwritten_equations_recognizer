@@ -1,5 +1,8 @@
 package org.hwer.utilities.traces;
 
+import org.hwer.utilities.image_processing.drawing.Drawer;
+import org.hwer.utilities.image_processing.image.Image;
+
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.geom.Line2D;
@@ -275,16 +278,30 @@ public class Trace{
    *  (e.g. tr2.print(tr1.print(image, thickness1), thickness2);).
    */
   public BufferedImage print(BufferedImage image, int thickness){
+    int numberOfLines = points_.size() - 1;
+
     Graphics2D graphics2D = image.createGraphics();
 
     graphics2D.setStroke(new BasicStroke(thickness));
 
-    for(int i = 0;i < points_.size() - 1;i++){
+    for(int i = 0;i < numberOfLines;i++){
       graphics2D.draw(new Line2D.Double((int) points_.get(i).x_, (int) (points_.get(i).y_),
           (int) (points_.get(i + 1).x_), (int) (points_.get(i + 1).y_)));
     }
 
     graphics2D.dispose();
+
+    return image;
+  }
+
+  public Image print(Image image){
+    int height = image.getHeight();
+    int numberOfLines = points_.size() - 1;
+
+    for(int i = 0;i < numberOfLines;i++) {
+      Drawer.drawLine(image, (int) points_.get(i).x_, (int) (height - points_.get(i).y_),
+          (int) (points_.get(i + 1).x_), (int) (height - points_.get(i + 1).y_));
+    }
 
     return image;
   }
@@ -337,10 +354,10 @@ public class Trace{
    *  @return Returns true if these two Trace objects are overlapped.
    */
   public static boolean areOverlapped(Trace trace1, Trace trace2){
-    /*Trace trace1Copy = new Trace(trace1);
+    Trace trace1Copy = new Trace(trace1);
     Trace trace2Copy = new Trace(trace2);
-    trace1Copy.multiplyBy(100).calculateCorners();
-    trace2Copy.multiplyBy(100).calculateCorners();
+    trace1Copy.calculateCorners();
+    trace2Copy.calculateCorners();
 
     TraceGroup traceGroup = new TraceGroup();
     traceGroup.add(trace1Copy);
@@ -352,7 +369,7 @@ public class Trace{
     trace2Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_,
                                   traceGroup.getBottomRightCorner().y_));
     traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_,
-                                  traceGroup.getBottomRightCorner().y_));
+        traceGroup.getBottomRightCorner().y_));
 
     double width = traceGroup.getWidth();
     if(width < 100){
@@ -366,26 +383,26 @@ public class Trace{
     Image image1 = new Image((int)width, (int)height);
     Image image2 = new Image((int)width, (int)height);
 
-    trace1Copy.print(image1, 1);
-    trace2Copy.print(image2, 1);
+    trace1Copy.print(image1);
+    trace2Copy.print(image2);
 
-    int blackRGB = Color.BLACK.getRGB();
+    int white = Drawer.WHITE;
     for(int x = 0; x < (int)width;x++){
       for(int y = 0;y < (int)height;y++){
-        if(image1.getPixel(x, y) > blackRGB &&
-          ((x - 1 >= 0         && y - 1 >= 0          && image2.getPixel(x - 1, y - 1) > blackRGB) ||
-           (x - 1 >= 0         &&                        image2.getPixel(x - 1, y) > blackRGB) ||
-           (x - 1 >= 0         && y + 1 < (int)height && image2.getPixel(x - 1, y + 1) > blackRGB) ||
-           (                      y - 1 >= 0          && image2.getPixel(x, y - 1) > blackRGB) ||
-           (                                             image2.getPixel(x, y) > blackRGB) ||
-           (                      y + 1 < (int)height && image2.getPixel(x, y + 1) > blackRGB) ||
-           (x + 1 < (int)width && y - 1 >= 0          && image2.getPixel(x + 1, y - 1) > blackRGB) ||
-           (x + 1 < (int)width &&                        image2.getPixel(x + 1, y) > blackRGB) ||
-           (x + 1 < (int)width && y + 1 < (int)height && image2.getPixel(x + 1, y + 1) > blackRGB))) {
+        if(image1.getPixel(x, y) == white &&
+          ((x - 1 >= 0         && y - 1 >= 0          && image2.getPixel(x - 1, y - 1) == white) ||
+           (x - 1 >= 0         &&                        image2.getPixel(x - 1, y) == white) ||
+           (x - 1 >= 0         && y + 1 < (int)height && image2.getPixel(x - 1, y + 1) == white) ||
+           (                      y - 1 >= 0          && image2.getPixel(x, y - 1) == white) ||
+           (                                             image2.getPixel(x, y) == white) ||
+           (                      y + 1 < (int)height && image2.getPixel(x, y + 1) == white) ||
+           (x + 1 < (int)width && y - 1 >= 0          && image2.getPixel(x + 1, y - 1) == white) ||
+           (x + 1 < (int)width &&                        image2.getPixel(x + 1, y) == white) ||
+           (x + 1 < (int)width && y + 1 < (int)height && image2.getPixel(x + 1, y + 1) == white))) {
           return true;
         }
       }
-    }*/
+    }
 
     return false;
   }
