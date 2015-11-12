@@ -290,7 +290,13 @@ public class TraceGroup{
         traceGroup.getBottomRightCorner().y_));
 
     int originalWidth = (int)traceGroup.getWidth();
+    if (originalWidth < 100) {
+      originalWidth = 100;
+    }
     int originalHeight = (int)traceGroup.getHeight();
+    if (originalHeight < 100) {
+      originalHeight = 100;
+    }
 
     BufferedImage image = new BufferedImage((int)(originalWidth * 1.2), (int)(originalHeight * 1.2),
         BufferedImage.TYPE_BYTE_GRAY);
