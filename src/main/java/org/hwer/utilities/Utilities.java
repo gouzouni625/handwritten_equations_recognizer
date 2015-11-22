@@ -1,5 +1,6 @@
 package org.hwer.utilities;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -298,6 +299,33 @@ public class Utilities{
    */
   public static double maxValue(double[] array){
     return (array[Utilities.indexOfMax(array)]);
+  }
+
+  /**
+   *  @brief Converts an image to an array o bytes.
+   *
+   *  The image is an OpenCV Mat object and contains values from 0 to 255.
+   *
+   *  @param image The image to be converted to a byte array.
+   *
+   *  @return Returns the byte array conversion of the image.
+   */
+  public static byte[] imageToByteArray(BufferedImage image) {
+    int width = image.getWidth();
+    int height = image.getHeight();
+
+    byte[] array = new byte[width * height];
+    if (array.length == 0) {
+      return array;
+    }
+
+    for (int y = 0;y < height;y++) {
+      for (int x = 0; x < width; x++) {
+        array[y * width + x] = (byte) (image.getRGB(x, height - y - 1) & 0xFF);
+      }
+    }
+
+    return array;
   }
 
   /**

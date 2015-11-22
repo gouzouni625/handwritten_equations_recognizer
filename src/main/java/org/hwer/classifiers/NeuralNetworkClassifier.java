@@ -1,6 +1,5 @@
 package org.hwer.classifiers;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -94,32 +93,14 @@ public class NeuralNetworkClassifier extends Classifier{
     }
 
     BufferedImage image = symbol.print(imageDistorter_.getSampleColumns(),
-        imageDistorter_.getSampleRows(), 120);
-
-    int borderLeft = (int)(imageDistorter_.getSampleColumns() * 0.2);
-    int borderTop = (int)(imageDistorter_.getSampleRows() * 0.2);
-
-    BufferedImage borderedImage = new BufferedImage(imageDistorter_.getSampleColumns() +
-        2 * borderLeft, imageDistorter_.getSampleRows() + 2 * borderTop,
-        BufferedImage.TYPE_BYTE_GRAY);
-
-    Graphics2D graphics2D = borderedImage.createGraphics();
-    graphics2D.drawImage(image, borderLeft, borderTop, borderLeft + image.getWidth(),
-        borderTop + image.getHeight(), 0, 0, image.getWidth(), image.getHeight(), null);
-    graphics2D.dispose();
-
-    graphics2D = image.createGraphics();
-    graphics2D.drawImage(borderedImage, 0, 0, image.getWidth(), image.getHeight(), 0, 0,
-        borderedImage.getWidth(), borderedImage.getHeight(), null);
-    graphics2D.dispose();
+        imageDistorter_.getSampleRows(), 30);
 
     double[] neuralNetworkOutput = this.feedForward(image);
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
-    double finalRate = symbolRate;
 
-    return finalRate;
+    return symbolRate;
   }
 
   /**
@@ -209,7 +190,15 @@ public class NeuralNetworkClassifier extends Classifier{
       for(int x = 0;x < width;x++){
         vector[y * width + x] = ((image.getRGB(x, height - y - 1) & 0xFF) - minValue) *
             (max - min) / (maxValue - minValue) + min;
+        /*if(vector[y * width + x] == - 1){
+          System.out.print(0 + " ");
+        }
+        else {
+          System.out.print(1 + " ");
+          vector[y * width + x] = 1;
+        }*/
       }
+      // System.out.println();
     }
 
     return vector;

@@ -290,27 +290,65 @@ public class TraceGroup{
         traceGroup.getBottomRightCorner().y_));
 
     int originalWidth = (int)traceGroup.getWidth();
-    if (originalWidth < 100) {
-      originalWidth = 100;
+    if (originalWidth < 30) {
+      originalWidth = 30;
     }
     int originalHeight = (int)traceGroup.getHeight();
-    if (originalHeight < 100) {
-      originalHeight = 100;
+    if (originalHeight < 30) {
+      originalHeight = 30;
     }
 
-    BufferedImage image = new BufferedImage((int)(originalWidth * 1.2), (int)(originalHeight * 1.2),
+    int horizontalBorder = originalWidth >> 1;
+    if (horizontalBorder < 50) {
+      horizontalBorder = 50;
+    }
+    int verticalBorder = originalHeight >> 1;
+    if (verticalBorder < 50) {
+      verticalBorder = 50;
+    }
+
+    BufferedImage image = new BufferedImage((int)(originalWidth * 1.1), (int)(originalHeight * 1.1),
         BufferedImage.TYPE_BYTE_GRAY);
 
     for(int i = 0;i < traceGroup.size();i++){
       traceGroup.get(i).print(image, thickness);
     }
 
-    BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+    BufferedImage borderedImage = new BufferedImage(image.getWidth() + (horizontalBorder << 1),
+        image.getHeight() + (verticalBorder << 1), image.getType());
 
-    Graphics2D graphics2D = resizedImage.createGraphics();
+    Graphics2D graphics2D = borderedImage.createGraphics();
 
-    graphics2D.drawImage(image, 0, 0, width, height, 0, 0, image.getWidth(), image.getHeight(),
-        null);
+    graphics2D.drawImage(image, horizontalBorder, verticalBorder,
+        horizontalBorder + image.getWidth(), verticalBorder + image.getHeight(), 0, 0,
+        image.getWidth(), image.getHeight(), null);
+
+    graphics2D.dispose();
+
+    /*BufferedImage largeImage = new BufferedImage(1000, 1000, borderedImage.getType());
+
+    graphics2D = largeImage.createGraphics();
+
+    graphics2D.drawImage(borderedImage, 0, 0, 1000, 1000, 0, 0, borderedImage.getWidth(),
+        borderedImage.getHeight(), null);
+
+    graphics2D.dispose();
+
+    float[] matrix = new float[40000];
+    for (int i = 0; i < 40000; i++) {
+      matrix[i] = (float) 1 / 40000;
+    }
+
+    BufferedImageOp bufferedImageOp = new ConvolveOp(new Kernel(200, 200, matrix),
+        ConvolveOp.EDGE_NO_OP, null);
+    BufferedImage blurredImage = bufferedImageOp.filter(largeImage, null);*/
+
+    BufferedImage resizedImage = new BufferedImage(width, height, borderedImage.getType());
+
+    graphics2D = resizedImage.createGraphics();
+
+    graphics2D.drawImage(borderedImage, 0, 0, width, height, 0, 0, borderedImage.getWidth(),
+        borderedImage.getHeight(), null);
 
     graphics2D.dispose();
 
