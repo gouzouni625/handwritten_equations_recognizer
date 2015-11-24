@@ -1,6 +1,7 @@
 package org.hwer.utilities;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -310,22 +311,28 @@ public class Utilities{
    *
    *  @return Returns the byte array conversion of the image.
    */
-  public static byte[] imageToByteArray(BufferedImage image) {
-    int width = image.getWidth();
-    int height = image.getHeight();
+  public static byte[] imageToByteVector(BufferedImage image) {
+    byte[] reversedPixels = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
 
-    byte[] array = new byte[width * height];
-    if (array.length == 0) {
-      return array;
-    }
+    int numberOfPixels = reversedPixels.length;
+    int imageWidth = image.getWidth();
+    int imageHeight = image.getHeight();
 
-    for (int y = 0;y < height;y++) {
-      for (int x = 0; x < width; x++) {
-        array[y * width + x] = (byte) (image.getRGB(x, height - y - 1) & 0xFF);
+    byte[] pixels = new byte[numberOfPixels];
+
+    int x = 0;
+    int y = imageHeight - 1;
+    for(int i = 0;i < numberOfPixels;i++){
+      pixels[y * imageWidth + x] = (byte)(reversedPixels[i] & 0xFF);
+
+      x++;
+      if(x == imageWidth){
+        x = 0;
+        y--;
       }
     }
 
-    return array;
+    return pixels;
   }
 
   /**
