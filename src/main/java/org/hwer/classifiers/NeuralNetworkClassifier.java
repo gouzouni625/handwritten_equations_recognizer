@@ -1,6 +1,7 @@
 package org.hwer.classifiers;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.IOException;
 
 import org.nn.base.NeuralNetwork;
@@ -120,7 +121,8 @@ public class NeuralNetworkClassifier extends Classifier{
     BufferedImage imageClone = new BufferedImage(image.getWidth(), image.getHeight(),
         image.getType());
 
-    double[] neuralNetworkOutput = neuralNetwork_.feedForward(this.imageToVector(image, -1, 1));
+    double[] neuralNetworkOutput = neuralNetwork_.feedForward(
+        ImageDistorter.bufferedImageToVector(image, -1, 1));
 
     if(imageDistorter_ != null){
       for(int i = 0;i < numberOfDistortions;i++){
@@ -128,7 +130,8 @@ public class NeuralNetworkClassifier extends Classifier{
 
         imageClone = imageDistorter_.distort(imageClone);
 
-        double[] currentOutput = neuralNetwork_.feedForward(this.imageToVector(imageClone, -1, 1));
+        double[] currentOutput = neuralNetwork_.feedForward(
+            ImageDistorter.bufferedImageToVector(imageClone, -1, 1));
         for(int j = 0;j < neuralNetworkOutput.length;j++){
           neuralNetworkOutput[j] += currentOutput[j];
         }
@@ -154,54 +157,6 @@ public class NeuralNetworkClassifier extends Classifier{
    */
   public int getClassificationLabel(){
     return classificationLabel_;
-  }
-
-  /**
-   *  @brief Converts an image to a vector of doubles.
-   *
-   *  @param image The OpenCV Mat object that represents the image.
-   *  @param min The minimum value that the vector should have.
-   *  @param max The maximum value that the vector should have.
-   *
-   *  @return Returns the image conversion to a vector.
-   */
-  private double[] imageToVector(BufferedImage image, double min, double max){
-    // Find the minimum and the maximum values of the image.
-    double minValue = image.getRGB(0, 0) & 0xFF;
-    double maxValue = image.getRGB(0, 0) & 0xFF;
-
-    int width = image.getWidth();
-    int height = image.getHeight();
-    for(int x = 0;x < width;x++){
-      for(int y = 0;y < height;y++){
-        if((image.getRGB(x, y) & 0xFF) > maxValue){
-          maxValue = image.getRGB(x, y) & 0xFF;
-        }
-
-        if((image.getRGB(x, y) & 0xFF) < minValue){
-          minValue = image.getRGB(x, y) & 0xFF;
-        }
-      }
-    }
-
-    double[] vector = new double[width * height];
-
-    for(int y = 0;y < height;y++){
-      for(int x = 0;x < width;x++){
-        vector[y * width + x] = ((image.getRGB(x, height - y - 1) & 0xFF) - minValue) *
-            (max - min) / (maxValue - minValue) + min;
-        /*if(vector[y * width + x] == - 1){
-          System.out.print(0 + " ");
-        }
-        else {
-          System.out.print(1 + " ");
-          vector[y * width + x] = 1;
-        }*/
-      }
-      // System.out.println();
-    }
-
-    return vector;
   }
 
   /**
