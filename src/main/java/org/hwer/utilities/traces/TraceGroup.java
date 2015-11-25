@@ -1,6 +1,8 @@
 package org.hwer.utilities.traces;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -351,6 +353,13 @@ public class TraceGroup{
         borderedImage.getHeight(), null);
 
     graphics2D.dispose();
+
+    // Flip image.
+    AffineTransform affineTransform = AffineTransform.getScaleInstance(1, -1);
+    affineTransform.translate(0, -resizedImage.getHeight());
+    AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform,
+        AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+    resizedImage = affineTransformOp.filter(resizedImage, null);
 
     return resizedImage;
   }
