@@ -1,13 +1,12 @@
 package org.hwer.classifiers;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.IOException;
 
 import org.nn.base.NeuralNetwork;
 import org.nn.distorters.ImageDistorter;
-import org.hwer.utilities.Utilities;
-import org.hwer.utilities.traces.TraceGroup;
+import org.hwer.engine.utilities.Utilities;
+import org.hwer.engine.utilities.traces.TraceGroup;
 
 
 /** @class NeuralNetworkClassifier

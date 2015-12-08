@@ -1,6 +1,6 @@
 package org.hwer.classifiers;
 
-import org.hwer.utilities.traces.TraceGroup;
+import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Classifier
  *

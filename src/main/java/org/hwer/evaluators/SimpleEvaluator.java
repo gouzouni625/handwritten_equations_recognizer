@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.nn.base.NeuralNetwork;
 import org.nn.distorters.ImageDistorter;
-import org.hwer.parsers.GGParser;
-import org.hwer.partitioners.NNMSTPartitioner;
-import org.hwer.utilities.inkml.InkMLParser;
-import org.hwer.utilities.traces.TraceGroup;
+import org.hwer.engine.parsers.GGParser;
+import org.hwer.engine.partitioners.NNMSTPartitioner;
+import org.hwer.engine.utilities.inkml.InkMLParser;
+import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class SimpleEvaluator
  *
