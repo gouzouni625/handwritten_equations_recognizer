@@ -3,10 +3,6 @@ package org.hwer.engine.utilities.traces;
 import org.hwer.engine.utilities.image_processing.drawing.Drawer;
 import org.hwer.engine.utilities.image_processing.image.Image;
 
-import java.awt.Graphics2D;
-import java.awt.BasicStroke;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /** @class Trace
@@ -277,23 +273,6 @@ public class Trace{
    *  @return Returns the image so that the method can be used in chain commands
    *  (e.g. tr2.print(tr1.print(image, thickness1), thickness2);).
    */
-  public BufferedImage print(BufferedImage image, int thickness){
-    int numberOfLines = points_.size() - 1;
-
-    Graphics2D graphics2D = image.createGraphics();
-
-    graphics2D.setStroke(new BasicStroke(thickness));
-
-    for(int i = 0;i < numberOfLines;i++){
-      graphics2D.draw(new Line2D.Double((int) points_.get(i).x_, (int) (points_.get(i).y_),
-          (int) (points_.get(i + 1).x_), (int) (points_.get(i + 1).y_)));
-    }
-
-    graphics2D.dispose();
-
-    return image;
-  }
-
   public Image print(Image image){
     int height = image.getHeight();
     int numberOfLines = points_.size() - 1;

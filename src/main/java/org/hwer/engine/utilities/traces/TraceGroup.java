@@ -1,9 +1,5 @@
 package org.hwer.engine.utilities.traces;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 
@@ -272,96 +268,6 @@ public class TraceGroup{
    */
   public double getHeight(){
     return (topLeftCorner_.y_ - bottomRightCorner_.y_);
-  }
-
-  /**
-   *  @brief Prints this TraceGroup to an image of a given size.
-   *
-   *  @param width
-   *  @param height
-   *
-   *  @return Returns the OpenCV Mat object that is used as an image.
-   */
-  public BufferedImage print(int width, int height, int thickness){
-    // Work on a copy of this trace group.
-    TraceGroup traceGroup = new TraceGroup(this);
-
-    traceGroup.calculateCorners();
-
-    traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_,
-        traceGroup.getBottomRightCorner().y_));
-
-    int originalWidth = (int)traceGroup.getWidth();
-    if (originalWidth < 30) {
-      originalWidth = 30;
-    }
-    int originalHeight = (int)traceGroup.getHeight();
-    if (originalHeight < 30) {
-      originalHeight = 30;
-    }
-
-    int horizontalBorder = originalWidth >> 1;
-    if (horizontalBorder < 50) {
-      horizontalBorder = 50;
-    }
-    int verticalBorder = originalHeight >> 1;
-    if (verticalBorder < 50) {
-      verticalBorder = 50;
-    }
-
-    BufferedImage image = new BufferedImage((int)(originalWidth * 1.1), (int)(originalHeight * 1.1),
-        BufferedImage.TYPE_BYTE_GRAY);
-
-    for(int i = 0;i < traceGroup.size();i++){
-      traceGroup.get(i).print(image, thickness);
-    }
-
-    BufferedImage borderedImage = new BufferedImage(image.getWidth() + (horizontalBorder << 1),
-        image.getHeight() + (verticalBorder << 1), image.getType());
-
-    Graphics2D graphics2D = borderedImage.createGraphics();
-
-    graphics2D.drawImage(image, horizontalBorder, verticalBorder,
-        horizontalBorder + image.getWidth(), verticalBorder + image.getHeight(), 0, 0,
-        image.getWidth(), image.getHeight(), null);
-
-    graphics2D.dispose();
-
-    /*BufferedImage largeImage = new BufferedImage(1000, 1000, borderedImage.getType());
-
-    graphics2D = largeImage.createGraphics();
-
-    graphics2D.drawImage(borderedImage, 0, 0, 1000, 1000, 0, 0, borderedImage.getWidth(),
-        borderedImage.getHeight(), null);
-
-    graphics2D.dispose();
-
-    float[] matrix = new float[40000];
-    for (int i = 0; i < 40000; i++) {
-      matrix[i] = (float) 1 / 40000;
-    }
-
-    BufferedImageOp bufferedImageOp = new ConvolveOp(new Kernel(200, 200, matrix),
-        ConvolveOp.EDGE_NO_OP, null);
-    BufferedImage blurredImage = bufferedImageOp.filter(largeImage, null);*/
-
-    BufferedImage resizedImage = new BufferedImage(width, height, borderedImage.getType());
-
-    graphics2D = resizedImage.createGraphics();
-
-    graphics2D.drawImage(borderedImage, 0, 0, width, height, 0, 0, borderedImage.getWidth(),
-        borderedImage.getHeight(), null);
-
-    graphics2D.dispose();
-
-    // Flip image.
-    AffineTransform affineTransform = AffineTransform.getScaleInstance(1, -1);
-    affineTransform.translate(0, -resizedImage.getHeight());
-    AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform,
-        AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-    resizedImage = affineTransformOp.filter(resizedImage, null);
-
-    return resizedImage;
   }
 
   /**
