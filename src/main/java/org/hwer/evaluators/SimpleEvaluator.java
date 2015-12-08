@@ -2,10 +2,9 @@ package org.hwer.evaluators;
 
 import java.io.IOException;
 
-import org.nn.base.NeuralNetwork;
-import org.nn.distorters.ImageDistorter;
+import org.hwer.classifiers.Classifier;
+import org.hwer.engine.partitioners.MSTPartitioner;
 import org.hwer.engine.parsers.GGParser;
-import org.hwer.engine.partitioners.NNMSTPartitioner;
 import org.hwer.engine.utilities.inkml.InkMLParser;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
@@ -15,20 +14,10 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *         evaluate a given equation.
  */
 public class SimpleEvaluator{
-  /**
-   *  @brief Constructor.
-   *
-   *  @param neuralNetwork The main.java.base.NeuralNetwork to be used by the
-   *                       main.java.partitioners.NNMSTPartitioner.
-   *  @param imageDistorter The main.java.distorters.ImageDistorter to be used by the
-   *                        main.java.partitioners.NNMSTPartitioner.
-   *
-   *  @throws IOException When the main.java.partitioners.NNMSTPartitioner.NNMSTPartitioner
-   *                      throws an exception.
-   */
-  public SimpleEvaluator(NeuralNetwork neuralNetwork, ImageDistorter imageDistorter)
+
+  public SimpleEvaluator(Classifier classifier)
       throws IOException{
-    partitioner_ = new NNMSTPartitioner(neuralNetwork, imageDistorter);
+    partitioner_ = new MSTPartitioner(classifier);
 
     parser_ = new GGParser();
   }
@@ -120,7 +109,7 @@ public class SimpleEvaluator{
     parser_.setGrammarSilent(silent);
   }
 
-  private NNMSTPartitioner partitioner_; //!< The main.java.partitioners.NNMSTPartitioner of this
+  private MSTPartitioner partitioner_; //!< The main.java.partitioners.NNMSTPartitioner of this
                                          //!< SimpleEvaluator.
 
   private GGParser parser_;//!< The main.java.parsers.GGParser of this SimpleEvaluator.
