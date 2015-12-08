@@ -1,7 +1,8 @@
 package org.hwer.engine.partitioners;
 
-import org.nn.base.NeuralNetwork;
+import org.hwer.image_processing.ImageProcessor;
 import org.hwer.classifiers.NeuralNetworkClassifier;
+import org.nn.base.NeuralNetwork;
 import org.nn.distorters.ImageDistorter;
 
 /** @class NNMSTPartitioner
@@ -19,6 +20,7 @@ public class NNMSTPartitioner extends MSTPartitioner{
     classifier_ = new NeuralNetworkClassifier(neuralNetwork, MAX_TRACES_IN_SYMBOL);
 
     ((NeuralNetworkClassifier)(classifier_)).setImageDistorter(imageDistorter);
+    ((NeuralNetworkClassifier)(classifier_)).setImageProcessor(new ImageProcessor());
   }
 
 }

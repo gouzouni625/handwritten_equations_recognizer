@@ -14,6 +14,6 @@ public interface PathExtentionCheck{
    *
    *  @return Returns true if the path is valid.
    */
-  public boolean check(ArrayList<Integer> list);
+  boolean check(ArrayList<Integer> list);
 
 }
