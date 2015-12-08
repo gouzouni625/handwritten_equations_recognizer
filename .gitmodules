@@ -1,3 +1,0 @@
-[submodule "sub_modules/neural_network"]
-	path = sub_modules/neural_network
-	url = https://github.com/gouzouni625/neural_network.git
