@@ -1,13 +1,14 @@
 package org.hwer.executables;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.hwer.classifiers.neural_network_classifier.NeuralNetworkClassifier;
-import org.hwer.classifiers.neural_network_classifier.image_processing.ImageDistorter;
-import org.hwer.classifiers.neural_network_classifier.image_processing.ImageProcessor;
+import org.hwer.custom_classifiers.neural_network_classifier.NeuralNetworkClassifier;
+import org.hwer.custom_classifiers.neural_network_classifier.neural_network.CustomNeuralNetwork;
+import org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing.ImageDistorter;
+import org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing.ImageProcessor;
 import org.hwer.engine.partitioners.Partitioner;
 import org.hwer.evaluators.SimpleEvaluator;
-import org.hwer.classifiers.neural_network_classifier.NeuralNetworkClassifier.NeuralNetwork;
 
 /** @class HandWrittenEquationRecognizer
  *
@@ -25,24 +26,11 @@ public class HandWrittenEquationRecognizer{
    *          exception.
    */
   public static void main(String[] args) throws IOException{
-    String extension = args[0].substring(args[0].lastIndexOf('.'));
-
-    NeuralNetwork neuralNetwork = new NeuralNetwork();
-    if(extension.equals("xml")){
-      neuralNetwork.loadFromXML(args[0]);
-    }
-    else{
-      neuralNetwork.loadFromBinary(args[0]);
-    }
+    CustomNeuralNetwork neuralNetwork = new CustomNeuralNetwork(new ImageProcessor(), new ImageDistorter());
+    neuralNetwork.loadFromInputStream(new FileInputStream(args[0]));
 
     NeuralNetworkClassifier neuralNetworkClassifier = new NeuralNetworkClassifier(neuralNetwork,
         Partitioner.MAX_TRACES_IN_SYMBOL);
-
-    ImageDistorter imageDistorter = new ImageDistorter();
-    ImageProcessor imageProcessor = new ImageProcessor();
-
-    neuralNetworkClassifier.setImageDistorter(imageDistorter);
-    neuralNetworkClassifier.setImageProcessor(imageProcessor);
 
     SimpleEvaluator evaluator = new SimpleEvaluator(neuralNetworkClassifier);
 
