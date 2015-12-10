@@ -48,18 +48,4 @@ public class ImageDistorter implements Distorter {
     return (new CustomImage(transformedImage));
   }
 
-  public Image vectorToImage (double[] vector, int width, int height,
-                                      double minValue, double maxValue) {
-    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-    byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-
-    int numberOfPixels = pixels.length;
-
-    for (int i = 0; i < numberOfPixels; i++) {
-      pixels[i] = (byte) (((byte) ((vector[i] - minValue) * 255 / (maxValue - minValue))) & 0xFF);
-    }
-
-    return (new CustomImage(bufferedImage));
-  }
-
 }
