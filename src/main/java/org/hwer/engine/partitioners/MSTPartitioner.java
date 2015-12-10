@@ -2,7 +2,7 @@ package org.hwer.engine.partitioners;
 
 import java.util.ArrayList;
 
-import org.hwer.classifiers.Classifier;
+import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;

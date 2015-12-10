@@ -2,7 +2,7 @@ package org.hwer.evaluators;
 
 import java.io.IOException;
 
-import org.hwer.classifiers.Classifier;
+import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.partitioners.MSTPartitioner;
 import org.hwer.engine.parsers.GGParser;
 import org.hwer.engine.utilities.inkml.InkMLParser;

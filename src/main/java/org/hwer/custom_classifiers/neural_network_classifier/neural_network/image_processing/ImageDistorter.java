@@ -1,4 +1,4 @@
-package org.hwer.classifiers.neural_network_classifier.image_processing;
+package org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -45,7 +45,7 @@ public class ImageDistorter implements Distorter {
     int numberOfImages = data.length;
 
     for (int i = 0; i < numberOfImages; i++) {
-      BufferedImage image = vectorToBufferedImage(data[i], 64, 64, - 1, 1);
+      BufferedImage image = vectorToImage(data[i], 64, 64, - 1, 1);
       image = distort(image);
       data[i] = bufferedImageToVector(image, - 1, 1);
     }
@@ -53,8 +53,8 @@ public class ImageDistorter implements Distorter {
     return data;
   }
 
-  public BufferedImage vectorToBufferedImage (double[] vector, int width, int height,
-                                              double minValue, double maxValue) {
+  public BufferedImage vectorToImage (double[] vector, int width, int height,
+                                      double minValue, double maxValue) {
     BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
     byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 

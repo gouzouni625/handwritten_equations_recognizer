@@ -1,4 +1,4 @@
-package org.hwer.classifiers;
+package org.hwer.engine.classifiers;
 
 import org.hwer.engine.utilities.traces.TraceGroup;
 

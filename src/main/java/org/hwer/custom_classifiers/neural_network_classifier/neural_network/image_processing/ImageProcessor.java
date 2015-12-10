@@ -1,4 +1,4 @@
-package org.hwer.classifiers.neural_network_classifier.image_processing;
+package org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing;
 
 
 import org.hwer.engine.utilities.traces.*;

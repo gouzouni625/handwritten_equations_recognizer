@@ -1,6 +1,6 @@
 package org.hwer.engine.partitioners;
 
-import org.hwer.classifiers.Classifier;
+import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /**
