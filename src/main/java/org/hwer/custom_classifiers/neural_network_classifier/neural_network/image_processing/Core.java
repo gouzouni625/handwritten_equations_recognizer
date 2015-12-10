@@ -1,9 +1,7 @@
 package org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing;
 
-import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 public interface Core {
-  Image printTrace(Trace trace, Image image, int thickness);
   Image printTraceGroup(TraceGroup traceGroup, int width, int height, int thickness);
 }

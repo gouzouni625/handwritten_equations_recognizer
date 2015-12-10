@@ -5,7 +5,4 @@ public interface Distorter {
 
   Image vectorToImage (double[] vector, int width, int height, double minValue,
                        double maxValue);
-
-  double[] ImageToVector (Image image, double min, double max);
-
 }
