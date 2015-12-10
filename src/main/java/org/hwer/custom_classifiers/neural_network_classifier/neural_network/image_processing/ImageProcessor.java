@@ -30,7 +30,7 @@ public class ImageProcessor implements Core{
     return image;
   }
 
-  public BufferedImage printTraceGroup (TraceGroup traceGroup, int width, int height, int thickness) {
+  public Image printTraceGroup (TraceGroup traceGroup, int width, int height, int thickness) {
     // Work on a copy of this trace group.
     TraceGroup traceGroupCopy = new TraceGroup(traceGroup);
 
@@ -109,6 +109,6 @@ public class ImageProcessor implements Core{
         AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
     resizedImage = affineTransformOp.filter(resizedImage, null);
 
-    return resizedImage;
+    return (new CustomImage(resizedImage));
   }
 }

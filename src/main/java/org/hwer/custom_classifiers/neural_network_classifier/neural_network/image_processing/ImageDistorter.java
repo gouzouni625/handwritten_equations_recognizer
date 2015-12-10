@@ -7,53 +7,48 @@ import java.awt.image.DataBufferByte;
 import java.util.Random;
 
 public class ImageDistorter implements Distorter {
-  public BufferedImage distort (BufferedImage image) {
+  public ImageDistorter(){
+
+  }
+
+  public Image distort (Image image) {
     Random random = new Random();
     double distortionType = random.nextDouble();
 
-    BufferedImage transformedImage = new BufferedImage(image.getWidth(), image.getHeight(),
-        image.getType());
+    BufferedImage bufferedImage = ((CustomImage) image).getImplementation();
+
+    BufferedImage transformedImage = new BufferedImage(bufferedImage.getWidth(),
+        bufferedImage.getHeight(), bufferedImage.getType());
 
     if (distortionType < 0.25) { // Rotating. [-pi/12, pi/12).
       double parameter = ((2 * random.nextDouble() - 1) / 12) * Math.PI; // Angle.
 
-      new AffineTransformOp(AffineTransform.getRotateInstance(parameter, image.getWidth() / 2,
-          image.getHeight() / 2), AffineTransformOp.TYPE_BILINEAR).filter(image, transformedImage);
+      new AffineTransformOp(AffineTransform.getRotateInstance(parameter,
+          bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2),
+          AffineTransformOp.TYPE_BILINEAR).filter(bufferedImage, transformedImage);
     } else if (distortionType < 0.5) {  // Scaling. [0.85, 1.15).
       // Volume for horizontal axis.
       double parameter = ((2 * random.nextDouble() - 1) * 15 / 100) + 1;
 
       new AffineTransformOp(AffineTransform.getScaleInstance(parameter, parameter),
-          AffineTransformOp.TYPE_BILINEAR).filter(image, transformedImage);
+          AffineTransformOp.TYPE_BILINEAR).filter(bufferedImage, transformedImage);
     } else if (distortionType < 0.75) {  // Shearing. [-0.15, 0.15).
       double parameter = ((2 * random.nextDouble() - 1) * 15 / 100);
 
       new AffineTransformOp(AffineTransform.getShearInstance(parameter, parameter),
-          AffineTransformOp.TYPE_BILINEAR).filter(image, transformedImage);
+          AffineTransformOp.TYPE_BILINEAR).filter(bufferedImage, transformedImage);
     } else { // translating [-5, 5).
       double parameterX = (2 * random.nextDouble() - 1) * 5;
       double parameterY = (2 * random.nextDouble() - 1) * 5;
 
       new AffineTransformOp(AffineTransform.getTranslateInstance(parameterX, parameterY),
-          AffineTransformOp.TYPE_BILINEAR).filter(image, transformedImage);
+          AffineTransformOp.TYPE_BILINEAR).filter(bufferedImage, transformedImage);
     }
 
-    return transformedImage;
+    return (new CustomImage(transformedImage));
   }
 
-  public double[][] distort (double[][] data) {
-    int numberOfImages = data.length;
-
-    for (int i = 0; i < numberOfImages; i++) {
-      BufferedImage image = vectorToImage(data[i], 64, 64, - 1, 1);
-      image = distort(image);
-      data[i] = bufferedImageToVector(image, - 1, 1);
-    }
-
-    return data;
-  }
-
-  public BufferedImage vectorToImage (double[] vector, int width, int height,
+  public Image vectorToImage (double[] vector, int width, int height,
                                       double minValue, double maxValue) {
     BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
     byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
@@ -64,35 +59,7 @@ public class ImageDistorter implements Distorter {
       pixels[i] = (byte) (((byte) ((vector[i] - minValue) * 255 / (maxValue - minValue))) & 0xFF);
     }
 
-    return bufferedImage;
-  }
-
-  public double[] bufferedImageToVector (BufferedImage image, double min, double max) {
-    byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-
-    int numberOfPixels = pixels.length;
-
-    double[] vector = new double[numberOfPixels];
-
-    for (int i = 0; i < numberOfPixels; i++) {
-      vector[i] = (pixels[i] & 0xFF) * (max - min) / 255 + min;
-    }
-
-    /*****/
-    /*for (int i = 0; i < 4096; i++) {
-      if (vector[i] == - 1) {
-        System.out.print(0 + " ");
-      } else {
-        System.out.print(1 + " ");
-      }
-      if (i % 64 == 0) {
-        System.out.println();
-      }
-    }
-    System.out.println();*/
-    /*****/
-
-    return vector;
+    return (new CustomImage(bufferedImage));
   }
 
 }
