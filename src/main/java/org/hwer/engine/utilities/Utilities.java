@@ -1,15 +1,11 @@
 package org.hwer.engine.utilities;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-
-//import org.opencv.core.Mat;
 
 /** @class Utilities
 *
@@ -300,39 +296,6 @@ public class Utilities{
    */
   public static double maxValue(double[] array){
     return (array[Utilities.indexOfMax(array)]);
-  }
-
-  /**
-   *  @brief Converts an image to an array o bytes.
-   *
-   *  The image is an OpenCV Mat object and contains values from 0 to 255.
-   *
-   *  @param image The image to be converted to a byte array.
-   *
-   *  @return Returns the byte array conversion of the image.
-   */
-  public static byte[] imageToByteVector(BufferedImage image) {
-    byte[] reversedPixels = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
-
-    int numberOfPixels = reversedPixels.length;
-    int imageWidth = image.getWidth();
-    int imageHeight = image.getHeight();
-
-    byte[] pixels = new byte[numberOfPixels];
-
-    int x = 0;
-    int y = imageHeight - 1;
-    for(int i = 0;i < numberOfPixels;i++){
-      pixels[y * imageWidth + x] = (byte)(reversedPixels[i] & 0xFF);
-
-      x++;
-      if(x == imageWidth){
-        x = 0;
-        y--;
-      }
-    }
-
-    return pixels;
   }
 
   /**
