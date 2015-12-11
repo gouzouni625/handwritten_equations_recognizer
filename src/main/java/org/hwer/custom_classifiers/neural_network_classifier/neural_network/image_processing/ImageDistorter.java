@@ -3,7 +3,6 @@ package org.hwer.custom_classifiers.neural_network_classifier.neural_network.ima
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.util.Random;
 
 public class ImageDistorter implements Distorter {

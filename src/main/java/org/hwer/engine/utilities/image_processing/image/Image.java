@@ -1,10 +1,5 @@
 package org.hwer.engine.utilities.image_processing.image;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 public class Image{
   public Image(int width, int height){
     width_ = width;
@@ -28,19 +23,6 @@ public class Image{
 
   public byte getPixel(int x, int y){
     return pixels_[x][y];
-  }
-
-  public void save(String outputDirectory, String outputFileName, String outputExtension)
-      throws IOException {
-    BufferedImage bufferedImage = new BufferedImage(width_, height_, BufferedImage.TYPE_BYTE_GRAY);
-    for(int x = 0;x < width_;x++){
-      for(int y = 0;y < height_;y++){
-        bufferedImage.setRGB(x, height_ - y - 1, pixels_[x][y]);
-      }
-    }
-
-    File outputFile = new File(outputDirectory + outputFileName + "." + outputExtension);
-    ImageIO.write(bufferedImage, outputExtension, outputFile);
   }
 
   public int getWidth(){
