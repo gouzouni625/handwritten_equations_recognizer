@@ -482,6 +482,10 @@ public class Trace{
     return inkMLRepresentation;
   }
 
+  public void clear(){
+    points_.clear();
+  }
+
   private ArrayList<Point> points_; //!< The Point objects of this Trace.
 
   private Point topLeftCorner_; //!< The top left corner of this Trace.
