@@ -52,7 +52,7 @@ public class NeuralNetworkClassifier extends Classifier {
       return MINIMUM_RATE;
     }
 
-    double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 100);
+    double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 1);
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
     double symbolRate = neuralNetworkOutput[classificationLabel_];
