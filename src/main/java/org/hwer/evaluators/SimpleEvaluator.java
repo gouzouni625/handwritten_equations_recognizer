@@ -43,6 +43,15 @@ public class SimpleEvaluator{
     return (parser_.toString());
   }
 
+  public String evaluate(TraceGroup traceGroup){
+    TraceGroup[] partition = partitioner_.partition(traceGroup);
+    int[] labels = partitioner_.getLabels();
+
+    parser_.parse(partition, labels);
+
+    return (parser_.toString());
+  }
+
   /**
    *  @brief Returns the recognized equation in TeX format.
    *
