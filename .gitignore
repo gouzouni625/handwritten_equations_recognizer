@@ -19,8 +19,5 @@ doxygen/latex
 production/
 testing_dir/
 notes
-/data
-/target
-/src/devel
-/src/main/java/org/hwer/evaluators/InstantDatabaseEvaluator.java
-src/main/java/org/hwer/engine/utilities/data_managers/
+data
+src/devel/
