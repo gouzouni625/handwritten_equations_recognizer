@@ -31,12 +31,19 @@ public class MSTPartitioner extends Partitioner {
    * <p>
    * The result is an array of groups of ink traces each one of which represents a symbol of the equation.
    */
-  public TraceGroup[] partition (TraceGroup expression) {
+  public TraceGroup[] partition (TraceGroup expression) throws IllegalArgumentException {
+    if (expression == null) {
+      throw new IllegalArgumentException();
+    }
+
     expression_ = expression;
 
     int numberOfTraces = expression.size();
 
-    if (numberOfTraces == 1) {
+    if (numberOfTraces == 0) {
+      return new TraceGroup[0];
+    }
+    else if (numberOfTraces == 1) {
       labels_ = new int[numberOfTraces];
       classifier_.classify(expression, null, false, false);
       labels_[0] = classifier_.getClassificationLabel();
@@ -477,7 +484,8 @@ public class MSTPartitioner extends Partitioner {
       if (trace1.getWidth() > trace2.getWidth()) {
         smaller = trace2;
         bigger = trace1;
-      } else {
+      }
+      else {
         smaller = trace1;
         bigger = trace2;
       }

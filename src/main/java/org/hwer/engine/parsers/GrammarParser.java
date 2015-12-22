@@ -274,7 +274,7 @@ public abstract class GrammarParser extends Parser{
    *  @see main.java.parsers.Parser#toString()
    */
   public String toString(){
-    if(symbols_.length > 0){
+    if(symbols_ != null && symbols_.length > 0){
       String equation = symbols_[0].toString();
 
       for(int i = 0;i < symbols_.length - 1;i++){
