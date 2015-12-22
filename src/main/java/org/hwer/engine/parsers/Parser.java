@@ -38,6 +38,8 @@ public abstract class Parser{
     return silent_;
   }
 
+  public abstract void reset();
+
   protected boolean silent_ = true; //!< Flag for the silent mode of this Parser.
 
 }

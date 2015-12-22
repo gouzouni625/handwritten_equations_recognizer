@@ -315,6 +315,9 @@ public abstract class GrammarParser extends Parser{
     grammar_.setQuiet(silent);
   }
 
+  public void reset(){
+    symbols_ = null;
+  }
 
   protected Symbol[] symbols_; //!< All the symbols to be parsed by this GrammarParser.
 
