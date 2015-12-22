@@ -118,6 +118,10 @@ public class SimpleEvaluator{
     parser_.setGrammarSilent(silent);
   }
 
+  public void reset(){
+    parser_.reset();
+  }
+
   private MSTPartitioner partitioner_; //!< The main.java.partitioners.NNMSTPartitioner of this
                                          //!< SimpleEvaluator.
 
