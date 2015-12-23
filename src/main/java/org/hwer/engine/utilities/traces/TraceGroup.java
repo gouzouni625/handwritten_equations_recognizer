@@ -397,6 +397,18 @@ public class TraceGroup{
     bottomRightCorner_ = null;
   }
 
+  public boolean isOverlappedBy(Trace trace){
+    int numberOfTraces = traces_.size();
+
+    for(int i = 0;i < numberOfTraces;i++){
+      if(Trace.areOverlapped(traces_.get(i), trace)){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private ArrayList<Trace> traces_; //!< The Trace objects of this TraceGroup.
 
   private Point topLeftCorner_; //!< The top left corner of this TraceGroup.
