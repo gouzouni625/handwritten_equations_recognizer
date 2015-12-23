@@ -391,8 +391,10 @@ public class TraceGroup{
     return (Trace.closestPoints(closestTraces[0], closestTraces[1]));
   }
 
-  public void clear(){
+  public void reset(){
     traces_.clear();
+    topLeftCorner_ = null;
+    bottomRightCorner_ = null;
   }
 
   private ArrayList<Trace> traces_; //!< The Trace objects of this TraceGroup.

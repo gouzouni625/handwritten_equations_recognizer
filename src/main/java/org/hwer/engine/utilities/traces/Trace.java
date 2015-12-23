@@ -268,7 +268,6 @@ public class Trace{
    *  Using OpenCV Core.line method, draws this Trace on an image.
    *
    *  @param image The OpenCV Mat that is used as an image.
-   *  @param thickness The thickness of the line during the drawing.
    *
    *  @return Returns the image so that the method can be used in chain commands
    *  (e.g. tr2.print(tr1.print(image, thickness1), thickness2);).
@@ -482,8 +481,10 @@ public class Trace{
     return inkMLRepresentation;
   }
 
-  public void clear(){
+  public void reset(){
     points_.clear();
+    topLeftCorner_ = null;
+    bottomRightCorner_ = null;
   }
 
   private ArrayList<Point> points_; //!< The Point objects of this Trace.
