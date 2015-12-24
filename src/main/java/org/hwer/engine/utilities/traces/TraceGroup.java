@@ -409,6 +409,14 @@ public class TraceGroup{
     return false;
   }
 
+  public void remove(int index){
+    traces_.remove(index);
+  }
+
+  public void remove(Trace trace){
+    traces_.remove(trace);
+  }
+
   private ArrayList<Trace> traces_; //!< The Trace objects of this TraceGroup.
 
   private Point topLeftCorner_; //!< The top left corner of this TraceGroup.
