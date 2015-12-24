@@ -135,6 +135,69 @@ public class SymbolFactory{
     }
   }
 
+  public static <E extends Enum<?>> int getLabelByType(E type){
+    if(type == Number.Types.ZERO){
+      return LABEL_ZERO;
+    }
+    else if(type == Number.Types.ONE){
+      return LABEL_ONE;
+    }
+    else if(type == Number.Types.TWO){
+      return LABEL_TWO;
+    }
+    else if(type == Number.Types.THREE){
+      return LABEL_THREE;
+    }
+    else if(type == Number.Types.FOUR){
+      return LABEL_FOUR;
+    }
+    else if(type == Number.Types.FIVE){
+      return LABEL_FIVE;
+    }
+    else if(type == Number.Types.SIX){
+      return LABEL_SIX;
+    }
+    else if(type == Number.Types.SEVEN){
+      return LABEL_SEVEN;
+    }
+    else if(type == Number.Types.EIGHT){
+      return LABEL_EIGHT;
+    }
+    else if(type == Number.Types.NINE){
+      return LABEL_NINE;
+    }
+    else if(type == Letter.Types.LOWER_X){
+      return LABEL_LOWER_X;
+    }
+    else if(type == Letter.Types.LOWER_Y){
+      return LABEL_LOWER_Y;
+    }
+    else if(type == Operator.Types.PLUS){
+      return LABEL_PLUS;
+    }
+    else if(type == Operator.Types.EQUALS){
+      return LABEL_EQUALS;
+    }
+    else if(type == Operator.Types.MINUS){
+      return LABEL_HORIZONTAL_LINE;
+    }
+    else if(type == Operator.Types.FRACTION_LINE){
+      return LABEL_HORIZONTAL_LINE;
+    }
+    else if(type == Operator.Types.SQRT){
+      return LABEL_SQRT;
+    }
+    else if(type == Operator.Types.LEFT_PARENTHESIS){
+      return LABEL_LEFT_PARENTHESIS;
+    }
+    else if(type == Operator.Types.RIGHT_PARENTHESIS){
+      return LABEL_RIGHT_PARENTHESIS;
+    }
+    else{
+      return UNKNOWN_LABEL;
+    }
+  }
+
   public static final int UNKNOWN_LABEL = -1; //!< Label to denote the lack of a label.
   public static final int LABEL_ZERO = 0; //!< The integer used by the equation partitioner for '0'.
   public static final int LABEL_ONE = 1; //!< The integer used by the equation partitioner for '1'.
