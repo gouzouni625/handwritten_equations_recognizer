@@ -1,5 +1,6 @@
 package org.hwer.engine.parsers;
 
+import org.hwer.engine.utilities.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Parser
@@ -14,6 +15,8 @@ public abstract class Parser{
    *  @param labels The labels of the traces.
    */
   public abstract void parse(TraceGroup[] traceGroups, int[] labels);
+
+  public abstract void append(TraceGroup[] traceGroups, int[] labels);
 
   /**
    *  @brief Returns a String with the equation parsed in TeX format.

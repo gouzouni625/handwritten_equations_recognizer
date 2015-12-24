@@ -234,6 +234,43 @@ public abstract class GrammarParser extends Parser{
     }
   }
 
+  public void append(TraceGroup[] traceGroups, int[] labels){
+    if(symbols_ == null || symbols_.length == 0){
+      parse(traceGroups, labels);
+
+      return;
+    }
+
+    int numberOfTraceGroups = traceGroups.length;
+    int oldNumberOfSymbols = symbols_.length;
+    int numberOfSymbols = numberOfTraceGroups + oldNumberOfSymbols;
+
+    symbols_ = Arrays.copyOf(symbols_, numberOfSymbols);
+
+    // Transform traceGroups to symbols.
+    for(int i = 0;i < numberOfTraceGroups;i++){
+      symbols_[i + oldNumberOfSymbols] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
+    }
+
+    /* ===== Logs ===== */
+    if(!silent_){
+      System.out.println("Log: symbols... ===== Start =====");
+
+      for(int i = 0;i < numberOfSymbols;i++){
+        System.out.println("Symbol " + i + ": " + symbols_[i]);
+      }
+
+      System.out.println("Log: symbols... ===== End =======");
+    }
+    /* ===== Logs ===== */
+
+    if(numberOfSymbols <= 1){
+      return;
+    }
+
+    parse(symbols_);
+  }
+
   /**
    *  @brief Processes a pair of symbols to check if there is another symbol between them.
    *
@@ -271,7 +308,7 @@ public abstract class GrammarParser extends Parser{
   }
 
   /**
-   *  @see main.java.parsers.Parser#toString()
+   *
    */
   public String toString(){
     if(symbols_ != null && symbols_.length > 0){
@@ -313,6 +350,10 @@ public abstract class GrammarParser extends Parser{
    */
   public void setGrammarSilent(boolean silent){
     grammar_.setQuiet(silent);
+  }
+
+  public Symbol[] getSymbols(){
+    return symbols_;
   }
 
   public void reset(){
