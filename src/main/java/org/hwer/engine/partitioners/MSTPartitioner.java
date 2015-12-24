@@ -545,17 +545,70 @@ public class MSTPartitioner extends Partitioner {
    * @brief Checks if two main.java.utilities.traces.Trace create an equals symbol.
    */
   private boolean areEqualsSymbol (Trace trace1, Trace trace2) {
+    boolean classifierDecision = false;
+    boolean algebraicDecision = false;
+
     TraceGroup traceGroup = new TraceGroup().add(trace1).add(trace2);
 
     double rate = classifier_.classify(traceGroup, null, false, false);
     int label = classifier_.getClassificationLabel();
 
     if(label == SymbolFactory.getLabelByType(Operator.Types.EQUALS) && rate > 0.50){
-      return true;
+      classifierDecision = true;
     }
     else{
-      return false;
+      classifierDecision = false;
     }
+
+    trace1.calculateCorners();
+    trace2.calculateCorners();
+
+    double trace1Slope = Math.atan((trace1.getOutterRightPoint().y_ - trace1.getOutterLeftPoint().y_) / (trace1.getOutterRightPoint().x_ - trace1.getOutterLeftPoint().x_));
+    double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) / (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
+
+    if ((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ &&
+        trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
+        (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
+        (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
+        (trace1Slope >= - Math.PI / 4 && trace1Slope <= Math.PI / 4) && // About the slope of the line.
+        (trace2Slope >= - Math.PI / 4 && trace2Slope <= Math.PI / 4) && // About the slope of the line.
+        // About the distances between the two lines.
+        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) &&
+        // About the length of the two lines.
+        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))) {
+
+        // Check that between these 2 lines there is no other symbol.
+        Trace smaller;
+        Trace bigger;
+        if (trace1.getWidth() > trace2.getWidth()) {
+          smaller = trace2;
+          bigger = trace1;
+        }
+        else {
+          smaller = trace1;
+          bigger = trace2;
+        }
+
+        for (int i = 0; i < smaller.size(); i++) {
+          Trace connectionLine = new Trace();
+          connectionLine.add(new Point(smaller.get(i)));
+          connectionLine.add(new Point(bigger.closestPoint(smaller.get(i))));
+
+          for (int j = 0; j < expression_.size(); j++) {
+            if (expression_.get(j) == trace1 || expression_.get(j) == trace2) {
+              continue;
+            }
+
+            if (Trace.areOverlapped(connectionLine, expression_.get(j))) {
+              algebraicDecision = false;
+            }
+          }
+        }
+
+        algebraicDecision = true;
+      }
+
+    return (classifierDecision && algebraicDecision);
   }
 
   /**
