@@ -6,6 +6,9 @@ import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;
+import org.hwer.engine.utilities.symbols.Operator;
+import org.hwer.engine.utilities.symbols.Symbol;
+import org.hwer.engine.utilities.symbols.SymbolFactory;
 import org.hwer.engine.utilities.traces.Point;
 import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;
@@ -45,8 +48,20 @@ public class MSTPartitioner extends Partitioner {
     }
     else if (numberOfTraces == 1) {
       labels_ = new int[numberOfTraces];
-      classifier_.classify(expression, null, false, false);
+      double rate = classifier_.classify(expression, null, false, false);
       labels_[0] = classifier_.getClassificationLabel();
+
+      /* ===== Logs ===== */
+      if (! silent_) {
+        System.out.println("Log: path rate and label... ===== Start =====");
+
+        System.out.println("path " + 0 + " subSymbolCheck: " + false);
+        System.out.println("path " + 0 + " rate: " + rate);
+        System.out.println("path " + 0 + " label: " + labels_[0]);
+
+        System.out.println("Log: path rate and label... ===== End =======");
+      }
+      /* ===== Logs ===== */
 
       return (new TraceGroup[]{expression});
     }
@@ -319,6 +334,77 @@ public class MSTPartitioner extends Partitioner {
     return partition;
   }
 
+  public TraceGroup[] append(Symbol[] symbols, TraceGroup newTraces){
+    if(symbols == null || symbols.length == 0){
+      return partition(newTraces);
+    }
+
+    int numberOfSymbols = symbols.length;
+    int numberOfNewTraces = newTraces.size();
+
+    TraceGroup freeTraces = new TraceGroup();
+
+    boolean continueFlag = false;
+    for(int i = 0;i < numberOfNewTraces;i++){
+      for(int j = 0;j < numberOfSymbols;j++){
+        if(symbols[j].traceGroup_.isOverlappedBy(newTraces.get(i))){
+          symbols[j].traceGroup_.add(newTraces.get(i));
+
+          continueFlag = true;
+          break;
+        }
+        else{
+          TraceGroup combined = new TraceGroup(symbols[j].traceGroup_).add(newTraces.get(i));
+          System.out.println("rate: " + classifier_.classify(combined, null, false, false));
+          System.out.println("classification label: " + classifier_.getClassificationLabel());
+          System.out.println(i + ", " + j);
+
+          symbols[j].traceGroup_.calculateCorners();
+          newTraces.get(i).calculateCorners();
+
+          if((classifier_.getClassificationLabel() == SymbolFactory.getLabelByType(Operator.Types.EQUALS)) &&
+              (symbols[j].type_ != Operator.Types.FRACTION_LINE && symbols[j].type_ != Operator.Types.EQUALS) &&
+              (symbols[j].parent_ == null) &&
+              (symbols[j].traceGroup_.getWidth() >= 0.5 * newTraces.get(i).getWidth())){
+            symbols[j].traceGroup_.add(newTraces.get(i));
+
+              continueFlag = true;
+              break;
+          }
+        }
+      }
+
+      if(continueFlag){
+        continueFlag = false;
+        continue;
+      }
+      else{
+        freeTraces.add(newTraces.get(i));
+      }
+    }
+
+    for(int i = 0;i < numberOfSymbols;i++){
+      double rate = classifier_.classify(symbols[i].traceGroup_, null, false, false);
+      symbols[i] = SymbolFactory.createByLabel(symbols[i].traceGroup_, classifier_.getClassificationLabel());
+
+      /* ===== Logs ===== */
+      if (! silent_) {
+        System.out.println("Log: path rate and label... ===== Start =====");
+
+        System.out.println("path " + i + " subSymbolCheck: " + false);
+        System.out.println("path " + i + " rate: " + rate);
+        System.out.println("path " + i + " label: " + classifier_.getClassificationLabel());
+
+        System.out.println("Log: path rate and label... ===== End =======");
+      }
+      /* ===== Logs ===== */
+    }
+
+    return partition(freeTraces);
+  }
+
+
+
   /**
    * @return Returns the labels calculated by main.java.partitioners.MSTPartitioner.partition method.
    * @brief Getter method for the labels of each symbol.
@@ -459,57 +545,17 @@ public class MSTPartitioner extends Partitioner {
    * @brief Checks if two main.java.utilities.traces.Trace create an equals symbol.
    */
   private boolean areEqualsSymbol (Trace trace1, Trace trace2) {
-    trace1.calculateCorners();
-    trace2.calculateCorners();
+    TraceGroup traceGroup = new TraceGroup().add(trace1).add(trace2);
 
-    double trace1Slope = Math.atan((trace1.getOutterRightPoint().y_ - trace1.getOutterLeftPoint().y_) /
-        (trace1.getOutterRightPoint().x_ - trace1.getOutterLeftPoint().x_));
-    double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) /
-        (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
+    double rate = classifier_.classify(traceGroup, null, false, false);
+    int label = classifier_.getClassificationLabel();
 
-    if ((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ &&
-        trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
-        (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
-        (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
-        (trace1Slope >= - Math.PI / 4 && trace1Slope <= Math.PI / 4) && // About the slope of the line.
-        (trace2Slope >= - Math.PI / 4 && trace2Slope <= Math.PI / 4) && // About the slope of the line.
-        // About the distances between the two lines.
-        (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) &&
-        // About the length of the two lines.
-        (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))) {
-
-      // Check that between these 2 lines there is no other symbol.
-      Trace smaller;
-      Trace bigger;
-      if (trace1.getWidth() > trace2.getWidth()) {
-        smaller = trace2;
-        bigger = trace1;
-      }
-      else {
-        smaller = trace1;
-        bigger = trace2;
-      }
-
-      for (int i = 0; i < smaller.size(); i++) {
-        Trace connectionLine = new Trace();
-        connectionLine.add(new Point(smaller.get(i)));
-        connectionLine.add(new Point(bigger.closestPoint(smaller.get(i))));
-
-        for (int j = 0; j < expression_.size(); j++) {
-          if (expression_.get(j) == trace1 || expression_.get(j) == trace2) {
-            continue;
-          }
-
-          if (Trace.areOverlapped(connectionLine, expression_.get(j))) {
-            return false;
-          }
-        }
-      }
-
+    if(label == SymbolFactory.getLabelByType(Operator.Types.EQUALS) && rate > 0.50){
       return true;
     }
-
-    return false;
+    else{
+      return false;
+    }
   }
 
   /**

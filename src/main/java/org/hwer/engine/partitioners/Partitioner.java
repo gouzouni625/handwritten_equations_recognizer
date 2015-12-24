@@ -1,6 +1,7 @@
 package org.hwer.engine.partitioners;
 
 import org.hwer.engine.classifiers.Classifier;
+import org.hwer.engine.utilities.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /**
@@ -10,7 +11,6 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  */
 public abstract class Partitioner {
   public Partitioner() {
-
   }
 
   public Partitioner(Classifier classifier){
@@ -28,6 +28,8 @@ public abstract class Partitioner {
    * equation.
    */
   public abstract TraceGroup[] partition (TraceGroup expression);
+
+  public abstract TraceGroup[] append(Symbol[] symbols, TraceGroup expression);
 
   /**
    * @param silent The value for the silent mode of this Partitioner.
@@ -58,6 +60,6 @@ public abstract class Partitioner {
   protected Classifier classifier_; //!< The Classifier used by this Partitioner to partition the
   //!< given equation.
 
-  public static int MAX_TRACES_IN_SYMBOL = 3; //!< The maximum number of traces allowed in a symbol.
+  public static final int MAX_TRACES_IN_SYMBOL = 3; //!< The maximum number of traces allowed in a symbol.
 
 }
