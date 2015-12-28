@@ -55,6 +55,16 @@ public abstract class Partitioner {
     return classifier_;
   }
 
+  /**
+   * @return Returns the labels calculated by main.java.partitioners.MSTPartitioner.partition method.
+   * @brief Getter method for the labels of each symbol.
+   * <p>
+   * The labels are the ones calculated by main.java.partitioners.MSTPartitioner.partition method.
+   */
+  public int[] getLabels () {
+    return labels_;
+  }
+
   protected boolean silent_ = true; //!< Flag defining the silent mode of this Partitioner.
 
   protected Classifier classifier_; //!< The Classifier used by this Partitioner to partition the
@@ -62,4 +72,5 @@ public abstract class Partitioner {
 
   public static final int MAX_TRACES_IN_SYMBOL = 3; //!< The maximum number of traces allowed in a symbol.
 
+  protected int[] labels_; //!< The labels of the symbols that resulted from the partitioning.
 }

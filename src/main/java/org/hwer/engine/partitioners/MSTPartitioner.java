@@ -355,9 +355,7 @@ public class MSTPartitioner extends Partitioner {
         }
         else{
           TraceGroup combined = new TraceGroup(symbols[j].traceGroup_).add(newTraces.get(i));
-          System.out.println("rate: " + classifier_.classify(combined, null, false, false));
-          System.out.println("classification label: " + classifier_.getClassificationLabel());
-          System.out.println(i + ", " + j);
+          classifier_.classify(combined, null, false, false);
 
           symbols[j].traceGroup_.calculateCorners();
           newTraces.get(i).calculateCorners();
@@ -376,7 +374,6 @@ public class MSTPartitioner extends Partitioner {
 
       if(continueFlag){
         continueFlag = false;
-        continue;
       }
       else{
         freeTraces.add(newTraces.get(i));
@@ -401,18 +398,6 @@ public class MSTPartitioner extends Partitioner {
     }
 
     return partition(freeTraces);
-  }
-
-
-
-  /**
-   * @return Returns the labels calculated by main.java.partitioners.MSTPartitioner.partition method.
-   * @brief Getter method for the labels of each symbol.
-   * <p>
-   * The labels are the ones calculated by main.java.partitioners.MSTPartitioner.partition method.
-   */
-  public int[] getLabels () {
-    return labels_;
   }
 
   /**
@@ -553,12 +538,7 @@ public class MSTPartitioner extends Partitioner {
     double rate = classifier_.classify(traceGroup, null, false, false);
     int label = classifier_.getClassificationLabel();
 
-    if(label == SymbolFactory.getLabelByType(Operator.Types.EQUALS) && rate > 0.50){
-      classifierDecision = true;
-    }
-    else{
-      classifierDecision = false;
-    }
+    classifierDecision = ((label == SymbolFactory.getLabelByType(Operator.Types.EQUALS)) && rate > 0.50);
 
     trace1.calculateCorners();
     trace2.calculateCorners();
@@ -633,8 +613,6 @@ public class MSTPartitioner extends Partitioner {
 
     return true;
   }
-
-  private int[] labels_; //!< The labels of the symbols that resulted from the partitioning.
 
   /**
    * @class PartitionCheck

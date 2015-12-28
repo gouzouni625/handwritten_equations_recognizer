@@ -10,6 +10,7 @@
 
 # Build
 build/
+target/
 
 # Doxygen
 doxygen/html
