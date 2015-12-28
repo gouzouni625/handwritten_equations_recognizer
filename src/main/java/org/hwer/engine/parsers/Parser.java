@@ -43,6 +43,12 @@ public abstract class Parser{
 
   public abstract void reset();
 
+  public Symbol[] getSymbols(){
+    return symbols_;
+  }
+
   protected boolean silent_ = true; //!< Flag for the silent mode of this Parser.
+
+  protected Symbol[] symbols_; //!< All the symbols to be parsed by this GrammarParser.
 
 }

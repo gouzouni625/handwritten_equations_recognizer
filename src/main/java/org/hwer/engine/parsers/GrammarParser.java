@@ -352,15 +352,9 @@ public abstract class GrammarParser extends Parser{
     grammar_.setQuiet(silent);
   }
 
-  public Symbol[] getSymbols(){
-    return symbols_;
-  }
-
   public void reset(){
     symbols_ = null;
   }
-
-  protected Symbol[] symbols_; //!< All the symbols to be parsed by this GrammarParser.
 
   protected Grammar grammar_; //!< The main.java.utilities.grammars.Grammar to be used by this GrammarParser.
 
