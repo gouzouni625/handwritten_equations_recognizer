@@ -3,8 +3,8 @@ package org.hwer.custom_classifiers.neural_network_classifier.neural_network.ima
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
-public class CustomImage implements Image{
-  public CustomImage(BufferedImage bufferedImage){
+public class ImageImpl implements Image{
+  public ImageImpl (BufferedImage bufferedImage){
     bufferedImage_ = bufferedImage;
   }
 
@@ -14,7 +14,7 @@ public class CustomImage implements Image{
 
     bufferedImage.setData(bufferedImage_.getData());
 
-    return new CustomImage(bufferedImage);
+    return new ImageImpl(bufferedImage);
   }
 
   public double[] toVector (double min, double max) {

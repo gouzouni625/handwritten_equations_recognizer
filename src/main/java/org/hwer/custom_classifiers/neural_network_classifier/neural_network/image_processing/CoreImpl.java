@@ -9,8 +9,8 @@ import java.awt.geom.Line2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-public class ImageProcessor implements Core{
-  public ImageProcessor() {
+public class CoreImpl implements Core{
+  public CoreImpl () {
   }
 
   public BufferedImage printTrace (Trace trace, BufferedImage image, int thickness) {
@@ -109,6 +109,6 @@ public class ImageProcessor implements Core{
         AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
     resizedImage = affineTransformOp.filter(resizedImage, null);
 
-    return (new CustomImage(resizedImage));
+    return (new ImageImpl(resizedImage));
   }
 }

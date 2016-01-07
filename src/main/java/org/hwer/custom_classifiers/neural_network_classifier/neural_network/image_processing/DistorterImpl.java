@@ -5,8 +5,8 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class ImageDistorter implements Distorter {
-  public ImageDistorter(){
+public class DistorterImpl implements Distorter {
+  public DistorterImpl (){
 
   }
 
@@ -14,7 +14,7 @@ public class ImageDistorter implements Distorter {
     Random random = new Random();
     double distortionType = random.nextDouble();
 
-    BufferedImage bufferedImage = ((CustomImage) image).getImplementation();
+    BufferedImage bufferedImage = ((ImageImpl) image).getImplementation();
 
     BufferedImage transformedImage = new BufferedImage(bufferedImage.getWidth(),
         bufferedImage.getHeight(), bufferedImage.getType());
@@ -44,7 +44,7 @@ public class ImageDistorter implements Distorter {
           AffineTransformOp.TYPE_BILINEAR).filter(bufferedImage, transformedImage);
     }
 
-    return (new CustomImage(transformedImage));
+    return (new ImageImpl(transformedImage));
   }
 
 }
