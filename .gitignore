@@ -7,6 +7,7 @@
 
 # Gradle
 .gradle/
+build_for_android.gradle
 
 # Build
 build/
