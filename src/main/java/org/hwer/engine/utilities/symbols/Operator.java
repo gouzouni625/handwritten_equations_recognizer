@@ -156,6 +156,16 @@ public class Operator extends Symbol{
 
       return result;
     }
+    else if(type_ == Types.SQRT){
+      String result = new String(string);
+
+      for(ArgumentPosition argumentPosition : childrenPositions_){
+        result = result.replaceAll(Pattern.quote("^{") + argumentPosition + Pattern.quote("}"), "");
+        result = result.replaceAll(Pattern.quote("{") + argumentPosition + Pattern.quote("}"), "{}");
+      }
+
+      return result;
+    }
     else{
       return super.clearString(string);
     }
