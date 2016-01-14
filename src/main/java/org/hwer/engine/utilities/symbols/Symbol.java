@@ -160,7 +160,6 @@ public abstract class Symbol{
       result = result.replaceAll(Pattern.quote("^{") + argumentPosition + Pattern.quote("}"), "");
       result = result.replaceAll(Pattern.quote("_{") + argumentPosition + Pattern.quote("}"), "");
       result = result.replaceAll(Pattern.quote("{") + argumentPosition + Pattern.quote("}"), "");
-      result = result.replaceAll(Pattern.quote("{") + argumentPosition + Pattern.quote("}"), "");
     }
 
     return result;

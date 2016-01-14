@@ -219,6 +219,16 @@ public class UnrecognizedSymbol extends Symbol{
     }
   }
 
+  @Override
+  public String clearString(String string){
+    if(chosenSymbol_ != -1){
+      return possibleSymbols_[chosenSymbol_].clearString(string);
+    }
+    else{
+      return super.clearString(string);
+    }
+  }
+
   public Symbol[] possibleSymbols_; //!< An array of all the possible symbols for this UnrecognizedSymbol.
   public int chosenSymbol_ = -1; //!< The position of the chosen symbol inside possibleSymbols_ array.
 

@@ -2,6 +2,7 @@ package org.hwer.engine.utilities.symbols;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.hwer.engine.utilities.traces.TraceGroup;
 
@@ -142,6 +143,22 @@ public class Operator extends Symbol{
     }
 
     private String stringValue_; //!< The String value of this type.
+  }
+
+  @Override
+  public String clearString(String string){
+    if(type_ == Types.FRACTION_LINE){
+      String result = new String(string);
+
+      for(ArgumentPosition argumentPosition : childrenPositions_){
+        result = result.replaceAll(Pattern.quote("{") + argumentPosition + Pattern.quote("}"), "{}");
+      }
+
+      return result;
+    }
+    else{
+      return super.clearString(string);
+    }
   }
 
   /**
