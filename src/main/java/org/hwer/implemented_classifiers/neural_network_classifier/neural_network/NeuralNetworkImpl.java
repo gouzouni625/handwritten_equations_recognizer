@@ -1,9 +1,8 @@
-package org.hwer.custom_classifiers.neural_network_classifier.neural_network;
+package org.hwer.implemented_classifiers.neural_network_classifier.neural_network;
 
-import org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing.Core;
-import org.hwer.custom_classifiers.neural_network_classifier.neural_network.
-    image_processing.Distorter;
-import org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing.Image;
+import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Core;
+import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Distorter;
+import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Image;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
@@ -17,9 +16,9 @@ import java.io.InputStream;
  *
  *  The implementation includes the NeuralNetwork parameters, training and evaluating methods.
  */
-public class CustomNeuralNetwork implements NeuralNetwork{
+public class NeuralNetworkImpl implements NeuralNetwork{
 
-  public CustomNeuralNetwork (Core imageProcessor, Distorter imageDistorter){
+  public NeuralNetworkImpl (Core imageProcessor, Distorter imageDistorter){
     imageProcessor_ = imageProcessor;
     imageDistorter_ = imageDistorter;
   }

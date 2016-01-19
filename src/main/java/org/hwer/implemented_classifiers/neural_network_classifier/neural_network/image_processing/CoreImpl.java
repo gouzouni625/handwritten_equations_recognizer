@@ -1,4 +1,4 @@
-package org.hwer.custom_classifiers.neural_network_classifier.neural_network.image_processing;
+package org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing;
 
 
 import org.hwer.engine.utilities.traces.*;
@@ -30,7 +30,7 @@ public class CoreImpl implements Core{
     return image;
   }
 
-  public Image printTraceGroup (TraceGroup traceGroup, int width, int height, int thickness) {
+  public org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Image printTraceGroup (TraceGroup traceGroup, int width, int height, int thickness) {
     // Work on a copy of this trace group.
     TraceGroup traceGroupCopy = new TraceGroup(traceGroup);
 

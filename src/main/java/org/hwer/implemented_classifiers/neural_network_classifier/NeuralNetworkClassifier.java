@@ -1,6 +1,6 @@
-package org.hwer.custom_classifiers.neural_network_classifier;
+package org.hwer.implemented_classifiers.neural_network_classifier;
 
-import org.hwer.custom_classifiers.neural_network_classifier.neural_network.NeuralNetwork;
+import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.NeuralNetwork;
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.traces.TraceGroup;
 import org.hwer.engine.utilities.Utilities;
