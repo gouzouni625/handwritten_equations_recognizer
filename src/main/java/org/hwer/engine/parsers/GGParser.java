@@ -1,6 +1,6 @@
 package org.hwer.engine.parsers;
 
-import org.hwer.engine.utilities.grammars.GeometricalGrammar;
+import org.hwer.engine.parsers.grammars.GeometricalGrammar;
 
 /** @class GGParser
  *

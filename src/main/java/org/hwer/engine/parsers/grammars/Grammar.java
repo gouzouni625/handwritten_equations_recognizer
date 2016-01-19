@@ -1,8 +1,8 @@
-package org.hwer.engine.utilities.grammars;
+package org.hwer.engine.parsers.grammars;
 
 import java.io.PrintStream;
 
-import org.hwer.engine.utilities.symbols.Symbol;
+import org.hwer.engine.parsers.symbols.Symbol;
 
 /** @class Grammar
  *

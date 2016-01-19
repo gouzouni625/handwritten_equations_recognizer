@@ -1,7 +1,7 @@
 package org.hwer.engine.partitioners;
 
 import org.hwer.engine.classifiers.Classifier;
-import org.hwer.engine.utilities.symbols.Symbol;
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /**
