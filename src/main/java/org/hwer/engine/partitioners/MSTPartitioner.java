@@ -3,6 +3,7 @@ package org.hwer.engine.partitioners;
 import java.util.ArrayList;
 
 import org.hwer.engine.classifiers.Classifier;
+import org.hwer.engine.parsers.symbols.UnrecognizedSymbol;
 import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;
@@ -361,7 +362,9 @@ public class MSTPartitioner extends Partitioner {
           newTraces.get(i).calculateCorners();
 
           if((classifier_.getClassificationLabel() == SymbolFactory.getLabelByType(Operator.Types.EQUALS)) &&
-              (symbols[j].type_ != Operator.Types.FRACTION_LINE && symbols[j].type_ != Operator.Types.EQUALS) &&
+              (symbols[j].type_ != Operator.Types.FRACTION_LINE &&
+                  symbols[j].type_ != UnrecognizedSymbol.Types.HORIZONTAL_LINE &&
+                  symbols[j].type_ != Operator.Types.EQUALS) &&
               (symbols[j].parent_ == null) &&
               (symbols[j].traceGroup_.getWidth() >= 0.5 * newTraces.get(i).getWidth())){
             symbols[j].traceGroup_.add(newTraces.get(i));
