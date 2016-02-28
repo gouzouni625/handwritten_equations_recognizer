@@ -145,7 +145,7 @@ public class NeuralNetworkImpl implements NeuralNetwork{
    *  @return Returns the confidence of the main.java.base.NeuralNetwork for the classification.
    */
   public double[] evaluate (TraceGroup symbol, int times) {
-    Image image = imageProcessor_.printTraceGroup(symbol, imageSide_, imageSide_, 30);
+    Image image = imageProcessor_.printTraceGroup(symbol, imageSide_, imageSide_, 1);
 
     Image imageClone;
 

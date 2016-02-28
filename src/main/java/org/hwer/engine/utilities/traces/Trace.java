@@ -93,6 +93,14 @@ public class Trace{
     return this;
   }
 
+  public Trace multiplyBy(Point point){
+    for(int i = 0;i < points_.size();i++){
+      points_.get(i).multiplyBy(point);
+    }
+
+    return this;
+  }
+
   /**
    *  @brief Subtracts a Point from this Trace.
    *

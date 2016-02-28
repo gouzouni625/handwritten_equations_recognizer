@@ -133,6 +133,14 @@ public class TraceGroup{
     return this;
   }
 
+  public TraceGroup multiplyBy(Point point){
+    for(int i = 0;i < traces_.size();i++){
+      traces_.get(i).multiplyBy(point);
+    }
+
+    return this;
+  }
+
   /**
    *  @brief Subtracts a Point from this TraceGroup.
    *

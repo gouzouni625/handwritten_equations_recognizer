@@ -78,6 +78,13 @@ public class Point{
     return this;
   }
 
+  public Point multiplyBy(Point point){
+    x_ *= point.x_;
+    y_ *= point.y_;
+
+    return this;
+  }
+
   /**
    *  @brief Divides this Point by a double.
    *
