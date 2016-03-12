@@ -1,9 +1,10 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.symbols.letters;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
+import org.hwer.engine.symbols.SymbolFactory.Classes;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Letter
@@ -130,5 +131,9 @@ public abstract class Letter extends Symbol {
 
     return relativePosition;
   }
+
+    public Classes getClazz(){
+        return Classes.LETTER;
+    }
 
 }

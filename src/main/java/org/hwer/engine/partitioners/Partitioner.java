@@ -1,7 +1,7 @@
 package org.hwer.engine.partitioners;
 
 import org.hwer.engine.classifiers.Classifier;
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /**
@@ -10,8 +10,7 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  * symbol.
  */
 public abstract class Partitioner {
-  public Partitioner() {
-  }
+  public Partitioner() {}
 
   public Partitioner(Classifier classifier){
     classifier_ = classifier;
@@ -27,9 +26,9 @@ public abstract class Partitioner {
    * The result is an array of groups of ink traces each one of which represents a symbol of the
    * equation.
    */
-  public abstract TraceGroup[] partition (TraceGroup expression);
+  public abstract Symbol[] partition (TraceGroup expression);
 
-  public abstract TraceGroup[] append(Symbol[] symbols, TraceGroup expression);
+  public abstract Symbol[] append(Symbol[] symbols, TraceGroup expression);
 
   /**
    * @param silent The value for the silent mode of this Partitioner.
@@ -55,14 +54,12 @@ public abstract class Partitioner {
     return classifier_;
   }
 
-  /**
-   * @return Returns the labels calculated by main.java.partitioners.MSTPartitioner.partition method.
-   * @brief Getter method for the labels of each symbol.
-   * <p>
-   * The labels are the ones calculated by main.java.partitioners.MSTPartitioner.partition method.
-   */
-  public int[] getLabels () {
-    return labels_;
+  public int getMaxTracesInSymbol(){
+    return maxTracesInSymbol_;
+  }
+
+  public void setMaxTracesInSymbol(int maxTracesInSymbol){
+    maxTracesInSymbol_ = maxTracesInSymbol;
   }
 
   protected boolean silent_ = true; //!< Flag defining the silent mode of this Partitioner.
@@ -70,7 +67,6 @@ public abstract class Partitioner {
   protected Classifier classifier_; //!< The Classifier used by this Partitioner to partition the
   //!< given equation.
 
-  public static final int MAX_TRACES_IN_SYMBOL = 3; //!< The maximum number of traces allowed in a symbol.
+  protected int maxTracesInSymbol_ = 3; //!< The maximum number of traces allowed in a symbol.
 
-  protected int[] labels_; //!< The labels of the symbols that resulted from the partitioning.
 }

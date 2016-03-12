@@ -2,7 +2,7 @@ package org.hwer.engine.parsers.grammars;
 
 import java.io.PrintStream;
 
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
 
 /** @class Grammar
  *

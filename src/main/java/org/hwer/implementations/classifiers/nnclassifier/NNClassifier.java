@@ -1,11 +1,12 @@
 package org.hwer.implementations.classifiers.nnclassifier;
 
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
 import org.hwer.implementations.classifiers.nnclassifier.neural_network.NeuralNetwork;
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.traces.TraceGroup;
 import org.hwer.engine.utilities.Utilities;
-import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
+import org.hwer.engine.symbols.SymbolFactory;
+import org.hwer.engine.symbols.SymbolFactory.Labels;
 
 
 /** @class NeuralNetworkClassifier
@@ -23,8 +24,10 @@ public class NNClassifier extends Classifier {
     neuralNetwork_ = neuralNetwork;
   }
 
-  public void registerSymbol(Class<?> clazz){
-    symbolFactory_.registerSymbol(clazz);
+  public NNClassifier (NeuralNetwork neuralNetwork, Labels[] symbolLabels){
+    neuralNetwork_ = neuralNetwork;
+
+    symbolLabels_ = symbolLabels;
   }
 
   /**
@@ -54,7 +57,7 @@ public class NNClassifier extends Classifier {
 
     Symbol symbolObject = null;
     try {
-      symbolObject = symbolFactory_.createByLabel(symbol, classificationLabel);
+      symbolObject = symbolFactory_.create(symbolLabels_[classificationLabel], symbol);
 
       symbolObject.setConfidence(neuralNetworkOutput[classificationLabel]);
     }
@@ -83,10 +86,19 @@ public class NNClassifier extends Classifier {
     return silent_;
   }
 
+  public void setSymbolLabels(Labels[] symbolLabels){
+    symbolLabels_ = symbolLabels;
+  }
+
+  public Labels[] getSymbolLabels(){
+    return symbolLabels_;
+  }
 
   private SymbolFactory symbolFactory_ = SymbolFactory.getInstance();
 
   private NeuralNetwork neuralNetwork_ = null; //!< The NeuralNetwork of this NeuralNetworkClassifier.
+
+  private Labels[] symbolLabels_ = new Labels[] {};
 
   private boolean silent_ = true; //!< Flag for the silent mode of this NeuralNetworkClassifier.
 

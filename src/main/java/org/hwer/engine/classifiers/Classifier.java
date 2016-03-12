@@ -1,6 +1,6 @@
 package org.hwer.engine.classifiers;
 
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Classifier

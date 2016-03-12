@@ -1,10 +1,13 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.symbols.ambiguous;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hwer.engine.symbols.Symbol;
+import org.hwer.engine.symbols.operators.Operator;
 import org.hwer.engine.utilities.traces.TraceGroup;
-import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
+import org.hwer.engine.symbols.SymbolFactory;
+import org.hwer.engine.symbols.SymbolFactory.Classes;
 
 /** @class UnrecognizedSymbol
  *
@@ -228,6 +231,11 @@ public abstract class Ambiguous extends Symbol {
     else{
       return super.clearString(string);
     }
+  }
+
+  @Override
+  public Classes getClazz(){
+    return Classes.AMBIGUOUS;
   }
 
   public Symbol[] possibleSymbols_; //!< An array of all the possible symbols for this UnrecognizedSymbol.

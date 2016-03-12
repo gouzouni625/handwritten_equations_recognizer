@@ -3,13 +3,11 @@ package org.hwer.engine.partitioners;
 import java.util.ArrayList;
 
 import org.hwer.engine.classifiers.Classifier;
-import org.hwer.engine.parsers.symbols.Ambiguous;
 import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;
-import org.hwer.engine.parsers.symbols.Operator;
-import org.hwer.engine.parsers.symbols.Symbol;
-import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
+import org.hwer.engine.symbols.Symbol;
+import org.hwer.engine.symbols.SymbolFactory.Labels;
 import org.hwer.engine.utilities.traces.Point;
 import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;
@@ -35,7 +33,7 @@ public class MSTPartitioner extends Partitioner {
      * <p>
      * The result is an array of groups of ink traces each one of which represents a symbol of the equation.
      */
-    public TraceGroup[] partition (TraceGroup expression) throws IllegalArgumentException {
+    public Symbol[] partition (TraceGroup expression) throws IllegalArgumentException {
         if (expression == null) {
             throw new IllegalArgumentException();
         }
@@ -45,32 +43,28 @@ public class MSTPartitioner extends Partitioner {
         int numberOfTraces = expression.size();
 
         if (numberOfTraces == 0) {
-            return new TraceGroup[0];
+            return new Symbol[0];
         }
         else if (numberOfTraces == 1) {
-            labels_ = new int[numberOfTraces];
-            double rate = classifier_.classify(expression, null, false, false);
-            labels_[0] = classifier_.getClassificationLabel();
+            // /* ===== Logs ===== */
+            // if (! silent_) {
+            //     System.out.println("Log: path rate and label... ===== Start =====");
+            //
+            //     System.out.println("path " + 0 + " subSymbolCheck: " + false);
+            //     System.out.println("path " + 0 + " rate: " + rate);
+            //     System.out.println("path " + 0 + " label: " + labels_[0]);
+            //
+            //     System.out.println("Log: path rate and label... ===== End =======");
+            // }
+            // /* ===== Logs ===== */
 
-      /* ===== Logs ===== */
-            if (! silent_) {
-                System.out.println("Log: path rate and label... ===== Start =====");
-
-                System.out.println("path " + 0 + " subSymbolCheck: " + false);
-                System.out.println("path " + 0 + " rate: " + rate);
-                System.out.println("path " + 0 + " label: " + labels_[0]);
-
-                System.out.println("Log: path rate and label... ===== End =======");
-            }
-      /* ===== Logs ===== */
-
-            return (new TraceGroup[]{expression});
+            return (new Symbol[] {classifier_.classify(expression, null, false, false)});
         }
 
         // Calculate the distances between all the traces.
         double[] distances = this.calculateDistancesBetweenTraces(expression);
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: distances between traces... ===== Start =====");
 
@@ -80,12 +74,12 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: distances between traces... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         // Create a minimum spanning tree using the distances between the traces.
         MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(distances, numberOfTraces);
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: minimum spanning tree... ===== Start =====");
 
@@ -99,13 +93,13 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: minimum spanning tree... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         // Get all the unique paths upon the minimum spanning tree.
-        int[][] paths = minimumSpanningTree.getUniquePaths(MAX_TRACES_IN_SYMBOL);
+        int[][] paths = minimumSpanningTree.getUniquePaths(maxTracesInSymbol_);
         int numberOfPaths = paths.length;
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: paths upon the minimum spanning tree... ===== Start =====");
 
@@ -120,13 +114,13 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: paths upon the minimum spanning tree... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         // Find the overlapping traces.
         int[][] overlaps = Utilities.concatenateArrays(this.findOverlaps(expression), this.findEqualsSymbol(expression));
         int numberOfOverlaps = overlaps.length;
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: overlaps... ===== Start =====");
 
@@ -136,7 +130,7 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: overlaps... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         // Delete all the paths that do not comply with the overlaps. That is, a path that contains one symbol of an overlap
         // but not the other is removed.
@@ -174,7 +168,7 @@ public class MSTPartitioner extends Partitioner {
         paths = Utilities.removeRows(paths, pathsToClear);
         numberOfPaths = paths.length;
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: paths after removing those that didn't satisfy the overlaps... ===== Start =====");
 
@@ -189,10 +183,10 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: paths after removing those that didn't satisfy the overlaps... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         double[] pathsRates = new double[numberOfPaths];
-        int[] pathsLabels = new int[numberOfPaths];
+        Symbol[] pathSymbols = new Symbol[numberOfPaths];
 
         TraceGroup symbol;
         //TraceGroup context;
@@ -208,20 +202,20 @@ public class MSTPartitioner extends Partitioner {
 
             // Evaluate each path and discard garbage.
             //boolean subSymbolCheck = !Utilities.rowInArray(overlaps, paths[i], false);
-            pathsRates[i] = classifier_.classify(symbol, null, false, false);
-            pathsLabels[i] = classifier_.getClassificationLabel();
+            pathSymbols[i] = classifier_.classify(symbol, null, false, false);
+            pathsRates[i] = pathSymbols[i].getConfidence();
 
-      /* ===== Logs ===== */
-            if (! silent_) {
-                System.out.println("Log: path rate and label... ===== Start =====");
-
-                System.out.println("path " + i + " subSymbolCheck: " + false);
-                System.out.println("path " + i + " rate: " + pathsRates[i]);
-                System.out.println("path " + i + " label: " + pathsLabels[i]);
-
-                System.out.println("Log: path rate and label... ===== End =======");
-            }
-      /* ===== Logs ===== */
+            // /* ===== Logs ===== */
+            // if (! silent_) {
+            //     System.out.println("Log: path rate and label... ===== Start =====");
+            //
+            //     System.out.println("path " + i + " subSymbolCheck: " + false);
+            //     System.out.println("path " + i + " rate: " + pathsRates[i]);
+            //     System.out.println("path " + i + " label: " + pathsLabels[i]);
+            //
+            //     System.out.println("Log: path rate and label... ===== End =======");
+            // }
+            // /* ===== Logs ===== */
         }
 
         // Get all the possible partitions.
@@ -238,7 +232,7 @@ public class MSTPartitioner extends Partitioner {
         int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths, new PartitionCheck(paths, numberOfTraces));
         int numberOfPartitions = partitions.length;
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: all partitions... ===== Start =====");
 
@@ -252,7 +246,7 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: all partitions... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         // remove partitions that are not eligible(e.g. they contain the same trace more than once).
         ArrayList<Integer> partitionsToRemove = new ArrayList<Integer>();
@@ -264,7 +258,7 @@ public class MSTPartitioner extends Partitioner {
         partitions = Utilities.removeRows(partitions, partitionsToRemove);
         numberOfPartitions = partitions.length;
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: partitions after removing those that were not eligible... ===== Start =====");
 
@@ -279,7 +273,7 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: partitions after removing those that were not eligible... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         // Find the best partition.
         double currentRate = 0;
@@ -290,7 +284,7 @@ public class MSTPartitioner extends Partitioner {
         double maxRate = currentRate;
         int bestPartition = 0;
 
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
         if (! silent_) {
             System.out.println("Log: partition rate... ===== Start =====");
 
@@ -298,7 +292,7 @@ public class MSTPartitioner extends Partitioner {
 
             System.out.println("Log: partition rate... ===== End =======");
         }
-    /* ===== Logs ===== */
+        /* ===== Logs ===== */
 
         for (int partition = 1; partition < numberOfPartitions; partition++) {
             // Calculate the rate of this partition.
@@ -307,7 +301,7 @@ public class MSTPartitioner extends Partitioner {
                 currentRate += pathsRates[partitions[partition][path]];
             }
 
-      /* ===== Logs ===== */
+            /* ===== Logs ===== */
             if (! silent_) {
                 System.out.println("Log: partition rate... ===== Start =====");
 
@@ -315,7 +309,7 @@ public class MSTPartitioner extends Partitioner {
 
                 System.out.println("Log: partition rate... ===== End =======");
             }
-      /* ===== Logs ===== */
+            /* ===== Logs ===== */
 
             if (currentRate > maxRate) {
                 maxRate = currentRate;
@@ -325,17 +319,16 @@ public class MSTPartitioner extends Partitioner {
 
         // Collect the traces of the best partition into an array of trace groups.
         // Each trace group in the final array, constitutes a symbol.
-        TraceGroup[] partition = new TraceGroup[partitions[bestPartition].length];
-        labels_ = new int[partitions[bestPartition].length];
-        for (int i = 0; i < partition.length; i++) {
-            partition[i] = expression.subTraceGroup(paths[partitions[bestPartition][i]]);
-            labels_[i] = pathsLabels[partitions[bestPartition][i]];
+        int bestPartitionLength = partitions[bestPartition].length;
+        Symbol[] symbols = new Symbol[bestPartitionLength];
+        for (int i = 0; i < bestPartitionLength; i++) {
+            symbols[i] = pathSymbols[partitions[bestPartition][i]];
         }
 
-        return partition;
+        return symbols;
     }
 
-    public TraceGroup[] append (Symbol[] symbols, TraceGroup newTraces) {
+    public Symbol[] append (Symbol[] symbols, TraceGroup newTraces) {
         if (symbols == null || symbols.length == 0) {
             return partition(newTraces);
         }
@@ -356,15 +349,15 @@ public class MSTPartitioner extends Partitioner {
                 }
                 else {
                     TraceGroup combined = new TraceGroup(symbols[j].traceGroup_).add(newTraces.get(i));
-                    classifier_.classify(combined, null, false, false);
+                    Symbol symbol = classifier_.classify(combined, null, false, false);
 
                     symbols[j].traceGroup_.calculateCorners();
                     newTraces.get(i).calculateCorners();
 
-                    if ((classifier_.getClassificationLabel() == SymbolFactory.Labels.LABEL_EQUALS.getLabel()) &&
-                            (symbols[j].type_ != Operator.Types.FRACTION_LINE &&
-                                    symbols[j].type_ != Ambiguous.Types.HORIZONTAL_LINE &&
-                                    symbols[j].type_ != Operator.Types.EQUALS) &&
+                    if ((symbol.getLabel() == Labels.EQUALS) &&
+                            (symbols[j].getLabel() != Labels.FRACTION_LINE &&
+                                    symbols[j].getLabel() != Labels.HORIZONTAL_LINE &&
+                                    symbols[j].getLabel() != Labels.EQUALS) &&
                             (symbols[j].parent_ == null) &&
                             (symbols[j].traceGroup_.getWidth() >= 0.5 * newTraces.get(i).getWidth())) {
                         symbols[j].traceGroup_.add(newTraces.get(i));
@@ -384,30 +377,23 @@ public class MSTPartitioner extends Partitioner {
         }
 
         for (int i = 0; i < numberOfSymbols; i++) {
-            double rate = classifier_.classify(symbols[i].traceGroup_, null, false, false);
+            symbols[i] = classifier_.classify(symbols[i].traceGroup_, null, false, false);
 
-            try {
-                symbols[i] = SymbolFactory.createByLabel(symbols[i].traceGroup_, classifier_.getClassificationLabel());
-            }
-            catch (Exception exception){
-                exception.printStackTrace();
-            }
-
-                /* ===== Logs ===== */
-                if (! silent_) {
-                    System.out.println("Log: path rate and label... ===== Start =====");
-
-                    System.out.println("path " + i + " subSymbolCheck: " + false);
-                    System.out.println("path " + i + " rate: " + rate);
-                    System.out.println("path " + i + " label: " + classifier_.getClassificationLabel());
-
-                    System.out.println("Log: path rate and label... ===== End =======");
-                }
-                /* ===== Logs ===== */
-            }
+                // /* ===== Logs ===== */
+                // if (! silent_) {
+                //     System.out.println("Log: path rate and label... ===== Start =====");
+                //
+                //     System.out.println("path " + i + " subSymbolCheck: " + false);
+                //     System.out.println("path " + i + " rate: " + rate);
+                //     System.out.println("path " + i + " label: " + classifier_.getClassificationLabel());
+                //
+                //     System.out.println("Log: path rate and label... ===== End =======");
+                // }
+                // /* ===== Logs ===== */
+        }
 
             return partition(freeTraces);
-        }
+    }
 
         /**
          * @param partition      The partition to be checked.
@@ -545,10 +531,9 @@ public class MSTPartitioner extends Partitioner {
 
         TraceGroup traceGroup = new TraceGroup().add(trace1).add(trace2);
 
-        double rate = classifier_.classify(traceGroup, null, false, false);
-        int label = classifier_.getClassificationLabel();
+        Symbol symbol = classifier_.classify(traceGroup, null, false, false);
 
-        classifierDecision = ((label == SymbolFactory.Labels.LABEL_EQUALS.getLabel()) && rate > 0.50);
+        classifierDecision = ((symbol.getLabel() == Labels.EQUALS) && symbol.getConfidence() > 0.50);
 
         trace1.calculateCorners();
         trace2.calculateCorners();

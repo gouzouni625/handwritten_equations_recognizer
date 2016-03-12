@@ -1,9 +1,10 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.symbols.numbers;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
+import org.hwer.engine.symbols.SymbolFactory.Classes;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Number
@@ -120,6 +121,11 @@ public abstract class Number extends Symbol {
     }
 
     return relativePosition;
+  }
+
+  @Override
+  public Classes getClazz(){
+    return Classes.NUMBER;
   }
 
 }

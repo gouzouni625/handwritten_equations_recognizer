@@ -1,9 +1,12 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.symbols;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.hwer.engine.symbols.SymbolFactory.Labels;
+import org.hwer.engine.symbols.SymbolFactory.Classes;
+import org.hwer.engine.symbols.operators.Operator;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Symbol
@@ -406,6 +409,20 @@ public abstract class Symbol{
       }
     }
   };
+
+  public abstract Labels getLabel();
+
+  public abstract Classes getClazz();
+
+  public void setConfidence(double confidence){
+    confidence_ = confidence;
+  }
+
+  public double getConfidence(){
+    return confidence_;
+  }
+
+  protected double confidence_ = 0; // The confidence that this symbol is the symbol it says it is.
 
   public SymbolClass symbolClass_; //!< The class of this Symbol. Is set by every class that extends Symbol class.
 

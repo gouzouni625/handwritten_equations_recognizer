@@ -1,10 +1,11 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.symbols.operators;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.symbols.Symbol;
+import org.hwer.engine.symbols.SymbolFactory.Classes;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Operator
@@ -520,6 +521,11 @@ public abstract class Operator extends Symbol {
       default:
         return null;
     }
+  }
+
+  @Override
+  public Classes getClazz(){
+    return Classes.OPERATOR;
   }
 
 }
