@@ -15,9 +15,7 @@ public abstract class Classifier{
    *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
    *                           main.java.utilities.symbols.Symbol object.
    */
-  public Classifier(int maxTracesInSymbol){
-    maxTracesInSymbol_ = maxTracesInSymbol;
-  }
+  public Classifier(){}
 
   /**
    *  @brief Classifies a given main.java.utilities.symbols.Symbol.
@@ -47,11 +45,5 @@ public abstract class Classifier{
    *  @return Returns the chosen label.
    */
   public abstract int getClassificationLabel();
-
-  public static double MINIMUM_RATE = 0; //!< The minimum value of the confidence of the Classifier for a classification.
-  public static double MAXIMUM_RATE = 100; //!< The maximum value of the confidence of the Classifier for a classification.
-
-  protected int maxTracesInSymbol_; //!< The maximum number of main.java.utilities.traces.Trace objects in a
-                                    //!< main.java.utilities.symbols.Symbol object.
 
 }

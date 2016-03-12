@@ -32,7 +32,12 @@ public abstract class GrammarParser extends Parser{
     symbols_ = new Symbol[numberOfTraceGroups];
     int numberOfSymbols = numberOfTraceGroups;
     for(int i = 0;i < numberOfSymbols;i++){
-      symbols_[i] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
+      try{
+        symbols_[i] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
+      }
+      catch (Exception exception){
+        exception.printStackTrace();
+      }
     }
 
     /* ===== Logs ===== */
@@ -249,7 +254,12 @@ public abstract class GrammarParser extends Parser{
 
     // Transform traceGroups to symbols.
     for(int i = 0;i < numberOfTraceGroups;i++){
-      symbols_[i + oldNumberOfSymbols] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
+        try{
+            symbols_[i + oldNumberOfSymbols] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
+        }
+        catch (Exception exception){
+            exception.printStackTrace();
+        }
     }
 
     /* ===== Logs ===== */

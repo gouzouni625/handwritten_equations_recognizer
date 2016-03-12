@@ -19,9 +19,7 @@ public class NNClassifier extends Classifier {
    *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
    *                           main.java.utilities.symbols.Symbol object.
    */
-  public NNClassifier (NeuralNetwork neuralNetwork, int maxTracesInSymbol){
-    super(maxTracesInSymbol);
-
+  public NNClassifier (NeuralNetwork neuralNetwork){
     neuralNetwork_ = neuralNetwork;
   }
 
@@ -44,20 +42,13 @@ public class NNClassifier extends Classifier {
    *  @return Returns the confidence of this NeuralNetworkClassifier for the classification of the
    *          given main.java.utilities.symbols.Symbol.
    */
-  public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck,
-                         boolean subContextCheck){
-    int symbolSize = symbol.size();
-
-    if(symbolSize > maxTracesInSymbol_){
-      return MINIMUM_RATE;
-    }
-
+  @Override
+  public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
     double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 1);
 
     classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
-    double symbolRate = neuralNetworkOutput[classificationLabel_];
 
-    return symbolRate;
+    return neuralNetworkOutput[classificationLabel_];
   }
 
   /**
@@ -65,6 +56,7 @@ public class NNClassifier extends Classifier {
    *
    *  @return Returns the chosen label.
    */
+  @Override
   public int getClassificationLabel(){
     return classificationLabel_;
   }

@@ -10,15 +10,15 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *
  *  @brief Implements a Letter as a Symbol.
  */
-public class Letter extends Symbol {
+public abstract class Letter extends Symbol {
   /**
    *  @brief Constructor.
    *
    *  @param type The type of this Letter.
    *  @param traceGroup The TraceGroup of this Letter.
    */
-  public Letter(Letter.Types type, TraceGroup traceGroup){
-    super(traceGroup, SymbolClass.LETTER);
+  public Letter(TraceGroup traceGroup){
+    super(traceGroup);
 
     type_ = type;
 

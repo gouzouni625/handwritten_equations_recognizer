@@ -10,15 +10,15 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *
  *  @brief Implements a Number as a Symbol.
  */
-public class Number extends Symbol {
+public abstract class Number extends Symbol {
   /**
    *  @brief Constructor.
    *
    *  @param type The type of this Number.
    *  @param traceGroup The TraceGroup of this Number.
    */
-  public Number(Number.Types type, TraceGroup traceGroup){
-    super(traceGroup, SymbolClass.NUMBER);
+  public Number(TraceGroup traceGroup){
+    super(traceGroup);
 
     type_ = type;
 

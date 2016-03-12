@@ -11,15 +11,15 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *
  *  @brief Implements mathematical operators as Symbol objects.
  */
-public class Operator extends Symbol {
+public abstract class Operator extends Symbol {
   /**
    *  @brief Constructor.
    *
    *  @param type The type of this Operator.
    *  @param traceGroup The TraceGroup of this Operator.
    */
-  public Operator(Operator.Types type, TraceGroup traceGroup){
-    super(traceGroup, SymbolClass.OPERATOR);
+  public Operator(TraceGroup traceGroup){
+    super(traceGroup);
 
     type_ = type;
 

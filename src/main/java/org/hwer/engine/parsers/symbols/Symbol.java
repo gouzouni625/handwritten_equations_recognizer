@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.hwer.engine.parsers.symbols.operators.Operator;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Symbol
@@ -20,10 +21,8 @@ public abstract class Symbol{
    *  @param traceGroup The TraceGroup of this Symbol.
    *  @param symbolClass The SymbolClass of this Symbol.
    */
-  public Symbol(TraceGroup traceGroup, SymbolClass symbolClass){
+  public Symbol(TraceGroup traceGroup){
     traceGroup_ = traceGroup;
-
-    symbolClass_ = symbolClass;
   }
 
   /**
