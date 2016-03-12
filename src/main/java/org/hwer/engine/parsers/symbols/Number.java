@@ -1,4 +1,4 @@
-package org.hwer.engine.parsers.symbols.numbers;
+package org.hwer.engine.parsers.symbols;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,6 @@ public abstract class Number extends Symbol {
    */
   public Number(TraceGroup traceGroup){
     super(traceGroup);
-
-    type_ = type;
 
     // Initially the Number has no parent.
     parent_ = null;

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.hwer.engine.parsers.symbols.operators.Operator;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Symbol
@@ -424,9 +423,5 @@ public abstract class Symbol{
 
   public Symbol nextSymbol_; //!< The next Symbol after this Symbol. This is used when transforming the equation in TeX.
   public ArgumentPosition[] nextSymbolPositions_; //!< The positions where this Symbol accepts a next Symbol.
-
-  public Enum<?> type_; /**< The type of this Symbol. This variable is here to force each class that extends Symbol class
-                             to have an enumeration of all types of symbols it implements. For example, Number class
-                             implements symbols ZERO, ONE, TWO, ... */
 
 }

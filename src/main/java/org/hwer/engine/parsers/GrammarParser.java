@@ -9,7 +9,7 @@ import java.util.Comparator;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.parsers.grammars.Grammar;
 import org.hwer.engine.parsers.symbols.Symbol;
-import org.hwer.engine.parsers.symbols.SymbolFactory;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
 import org.hwer.engine.utilities.traces.Point;
 import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;

@@ -1,6 +1,11 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.implementations.classifiers.nnclassifier.symbols;
 
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.ambiguous.*;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.letters.*;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.numbers.*;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.operators.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -12,6 +17,15 @@ import java.lang.reflect.InvocationTargetException;
  * partitioner and the parser.
  */
 public class SymbolFactory {
+
+    // Symbol Factory is a Singleton. Make sure it cannot be instantiated.
+    private SymbolFactory(){}
+
+
+    public static SymbolFactory getInstance(){
+        return instance_;
+    }
+
     /**
      * @param traceGroup The TraceGroup of the Symbol to be created.
      * @param label      The label of the Symbol to be created.
@@ -31,33 +45,33 @@ public class SymbolFactory {
     }
 
     public enum Labels {
-        LABEL_CIRCLE(0, org.hwer.engine.parsers.symbols.ambiguous.Circle.class),
-        LABEL_ONE(1, org.hwer.engine.parsers.symbols.numbers.One.class),
-        LABEL_TWO(2, org.hwer.engine.parsers.symbols.numbers.Two.class),
-        LABEL_THREE(3, org.hwer.engine.parsers.symbols.numbers.Three.class),
-        LABEL_FOUR(4, org.hwer.engine.parsers.symbols.numbers.Four.class),
-        LABEL_S_LIKE(5, org.hwer.engine.parsers.symbols.ambiguous.SLike.class),
-        LABEL_SIX(6, org.hwer.engine.parsers.symbols.numbers.Six.class),
-        LABEL_SEVEN(7, org.hwer.engine.parsers.symbols.numbers.Seven.class),
-        LABEL_EIGHT(8, org.hwer.engine.parsers.symbols.numbers.Eight.class),
-        LABEL_G_LIKE(9, org.hwer.engine.parsers.symbols.ambiguous.GLike.class),
-        LABEL_PLUS(10, org.hwer.engine.parsers.symbols.operators.Plus.class),
-        LABEL_EQUALS(11, org.hwer.engine.parsers.symbols.operators.Equals.class),
-        LABEL_LOWER_X(12, org.hwer.engine.parsers.symbols.letters.LowerX.class),
-        LABEL_LOWER_Y(13, org.hwer.engine.parsers.symbols.letters.LowerY.class),
-        LABEL_HORIZONTAL_LINE(14, org.hwer.engine.parsers.symbols.ambiguous.HorizontalLine.class),
-        LABEL_SQRT(15, org.hwer.engine.parsers.symbols.operators.SquareRoot.class),
-        LABEL_C_LIKE(16, org.hwer.engine.parsers.symbols.ambiguous.CLike.class),
-        LABEL_RIGHT_PARENTHESIS(17, org.hwer.engine.parsers.symbols.operators.RightParenthesis.class),
-        LABEL_GREATER_THAN(18, org.hwer.engine.parsers.symbols.operators.GreaterThan.class),
-        LABEL_LESS_THAN(19, org.hwer.engine.parsers.symbols.operators.LessThan.class),
-        LABEL_VERTICAL_LINE(20, org.hwer.engine.parsers.symbols.ambiguous.VerticalLine.class),
-        LABEL_LOWER_A(21, org.hwer.engine.parsers.symbols.letters.LowerA.class),
-        LABEL_LOWER_E(22, org.hwer.engine.parsers.symbols.letters.LowerE.class),
-        LABEL_LOWER_I(23, org.hwer.engine.parsers.symbols.letters.LowerI.class),
-        LABEL_LOWER_L(24, org.hwer.engine.parsers.symbols.letters.LowerL.class),
-        LABEL_LOWER_N(25, org.hwer.engine.parsers.symbols.letters.LowerN.class),
-        LABEL_LOWER_T(26, org.hwer.engine.parsers.symbols.letters.LowerT.class);
+        LABEL_CIRCLE(0, Circle.class),
+        LABEL_ONE(1, One.class),
+        LABEL_TWO(2, Two.class),
+        LABEL_THREE(3, Three.class),
+        LABEL_FOUR(4, Four.class),
+        LABEL_S_LIKE(5, SLike.class),
+        LABEL_SIX(6, Six.class),
+        LABEL_SEVEN(7, Seven.class),
+        LABEL_EIGHT(8, Eight.class),
+        LABEL_G_LIKE(9, GLike.class),
+        LABEL_PLUS(10, Plus.class),
+        LABEL_EQUALS(11, Equals.class),
+        LABEL_LOWER_X(12, LowerX.class),
+        LABEL_LOWER_Y(13, LowerY.class),
+        LABEL_HORIZONTAL_LINE(14, HorizontalLine.class),
+        LABEL_SQRT(15, SquareRoot.class),
+        LABEL_C_LIKE(16, CLike.class),
+        LABEL_RIGHT_PARENTHESIS(17, RightParenthesis.class),
+        LABEL_GREATER_THAN(18, GreaterThan.class),
+        LABEL_LESS_THAN(19, LessThan.class),
+        LABEL_VERTICAL_LINE(20, VerticalLine.class),
+        LABEL_LOWER_A(21, LowerA.class),
+        LABEL_LOWER_E(22, LowerE.class),
+        LABEL_LOWER_I(23, LowerI.class),
+        LABEL_LOWER_L(24, LowerL.class),
+        LABEL_LOWER_N(25, LowerN.class),
+        LABEL_LOWER_T(26, LowerT.class);
 
         Labels (int label, Class<?> clazz) {
             label_ = label;
@@ -140,4 +154,5 @@ public class SymbolFactory {
 
     }
 
+    private static SymbolFactory instance_ = new SymbolFactory();
 }

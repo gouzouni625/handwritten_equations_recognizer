@@ -1,12 +1,10 @@
-package org.hwer.engine.parsers.symbols.ambiguous;
+package org.hwer.engine.parsers.symbols;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hwer.engine.parsers.symbols.Symbol;
-import org.hwer.engine.parsers.symbols.SymbolFactory;
-import org.hwer.engine.parsers.symbols.operators.Operator;
 import org.hwer.engine.utilities.traces.TraceGroup;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
 
 /** @class UnrecognizedSymbol
  *

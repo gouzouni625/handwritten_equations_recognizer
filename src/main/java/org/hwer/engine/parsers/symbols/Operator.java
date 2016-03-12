@@ -1,4 +1,4 @@
-package org.hwer.engine.parsers.symbols.operators;
+package org.hwer.engine.parsers.symbols;
 
 import java.util.List;
 import java.util.ArrayList;

@@ -3,13 +3,13 @@ package org.hwer.engine.partitioners;
 import java.util.ArrayList;
 
 import org.hwer.engine.classifiers.Classifier;
-import org.hwer.engine.parsers.symbols.ambiguous.Ambiguous;
+import org.hwer.engine.parsers.symbols.Ambiguous;
 import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;
-import org.hwer.engine.parsers.symbols.operators.Operator;
+import org.hwer.engine.parsers.symbols.Operator;
 import org.hwer.engine.parsers.symbols.Symbol;
-import org.hwer.engine.parsers.symbols.SymbolFactory;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
 import org.hwer.engine.utilities.traces.Point;
 import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;
