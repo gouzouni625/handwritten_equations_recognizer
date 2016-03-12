@@ -11,12 +11,10 @@ public abstract class Parser{
   /**
    *  @brief Parses a given set of groups of ink traces along with its labels.
    *
-   *  @param traceGroups An array with the main.java.utilities.traces.TraceGroup of ink traces.
-   *  @param labels The labels of the traces.
    */
-  public abstract void parse(TraceGroup[] traceGroups, int[] labels);
+  public abstract void parse(Symbol[] symbols);
 
-  public abstract void append(TraceGroup[] traceGroups, int[] labels);
+  public abstract void append(Symbol[] symbols);
 
   /**
    *  @brief Returns a String with the equation parsed in TeX format.

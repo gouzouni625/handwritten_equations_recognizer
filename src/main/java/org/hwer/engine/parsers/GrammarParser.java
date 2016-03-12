@@ -21,42 +21,24 @@ import org.hwer.engine.utilities.traces.TraceGroup;
 public abstract class GrammarParser extends Parser{
   /**
    *  @brief Parses a given set of groups of ink traces along with its labels.
-   *
-   *  @param traceGroups An array with the main.java.utilities.traces.TraceGroup of ink traces.
-   *  @param labels The labels of the traces.
    */
-  public void parse(TraceGroup[] traceGroups, int[] labels){
-    int numberOfTraceGroups = traceGroups.length;
+  @Override
+  public void parse(Symbol[] symbols){
+    symbols_ = symbols;
 
-    // Transform traceGroups to symbols.
-    symbols_ = new Symbol[numberOfTraceGroups];
-    int numberOfSymbols = numberOfTraceGroups;
-    for(int i = 0;i < numberOfSymbols;i++){
-      try{
-        symbols_[i] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
-      }
-      catch (Exception exception){
-        exception.printStackTrace();
-      }
-    }
+    // /* ===== Logs ===== */
+    // if(!silent_){
+    //   System.out.println("Log: symbols... ===== Start =====");
+    //
+    //   for(int i = 0;i < numberOfSymbols;i++){
+    //     System.out.println("Symbol " + i + ": " + symbols_[i]);
+    //   }
+    //
+    //   System.out.println("Log: symbols... ===== End =======");
+    // }
+    // /* ===== Logs ===== */
 
-    /* ===== Logs ===== */
-    if(!silent_){
-      System.out.println("Log: symbols... ===== Start =====");
-
-      for(int i = 0;i < numberOfSymbols;i++){
-        System.out.println("Symbol " + i + ": " + symbols_[i]);
-      }
-
-      System.out.println("Log: symbols... ===== End =======");
-    }
-    /* ===== Logs ===== */
-
-    if(numberOfSymbols <= 1){
-      return;
-    }
-
-    parse(symbols_);
+    parseRecursively(symbols_);
   }
 
   /**
@@ -64,7 +46,7 @@ public abstract class GrammarParser extends Parser{
    *
    *  @param symbols An array with the main.java.utilities.symbols.Symbol objects to parse.
    */
-  public void parse(Symbol[] symbols){
+  private void parseRecursively(Symbol[] symbols){
     int numberOfSymbols = symbols.length;
 
     if(symbols.length <= 1){
@@ -222,7 +204,7 @@ public abstract class GrammarParser extends Parser{
         }
 
         // Parse the children in the same position.
-        parse(samePositionChildrenArray);
+        parseRecursively(samePositionChildrenArray);
 
         // The parsing may result in some symbols changing parents, so, remove all the children from the symbol and
         // enter the parsed ones.
@@ -239,27 +221,23 @@ public abstract class GrammarParser extends Parser{
     }
   }
 
-  public void append(TraceGroup[] traceGroups, int[] labels){
+  @Override
+  public void append(Symbol[] symbols){
     if(symbols_ == null || symbols_.length == 0){
-      parse(traceGroups, labels);
+      parse(symbols);
 
       return;
     }
 
-    int numberOfTraceGroups = traceGroups.length;
     int oldNumberOfSymbols = symbols_.length;
-    int numberOfSymbols = numberOfTraceGroups + oldNumberOfSymbols;
+    int newNumberOfSymbols = symbols.length;
+    int numberOfSymbols = newNumberOfSymbols + oldNumberOfSymbols;
 
     symbols_ = Arrays.copyOf(symbols_, numberOfSymbols);
 
     // Transform traceGroups to symbols.
-    for(int i = 0;i < numberOfTraceGroups;i++){
-        try{
-            symbols_[i + oldNumberOfSymbols] = SymbolFactory.createByLabel(traceGroups[i], labels[i]);
-        }
-        catch (Exception exception){
-            exception.printStackTrace();
-        }
+    for(int i = 0;i < newNumberOfSymbols;i++){
+      symbols_[i + oldNumberOfSymbols] = symbols[i];
     }
 
     /* ===== Logs ===== */
