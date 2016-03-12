@@ -1,15 +1,16 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.parsers.symbols.numbers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Number
  *
  *  @brief Implements a Number as a Symbol.
  */
-public class Number extends Symbol{
+public class Number extends Symbol {
   /**
    *  @brief Constructor.
    *

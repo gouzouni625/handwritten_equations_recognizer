@@ -1,8 +1,8 @@
-package org.hwer.implemented_classifiers.neural_network_classifier.neural_network;
+package org.hwer.implementations.classifiers.nnclassifier.neural_network;
 
-import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Core;
-import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Distorter;
-import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.image_processing.Image;
+import org.hwer.implementations.classifiers.nnclassifier.neural_network.image_processing.Core;
+import org.hwer.implementations.classifiers.nnclassifier.neural_network.image_processing.Image;
+import org.hwer.implementations.classifiers.nnclassifier.neural_network.image_processing.Distorter;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.traces.TraceGroup;
 

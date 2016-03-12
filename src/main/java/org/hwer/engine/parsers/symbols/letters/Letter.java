@@ -1,15 +1,16 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.parsers.symbols.letters;
 
 import java.util.List;
 import java.util.ArrayList;
 
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Letter
  *
  *  @brief Implements a Letter as a Symbol.
  */
-public class Letter extends Symbol{
+public class Letter extends Symbol {
   /**
    *  @brief Constructor.
    *

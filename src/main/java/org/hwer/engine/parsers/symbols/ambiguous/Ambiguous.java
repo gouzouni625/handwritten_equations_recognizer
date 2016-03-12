@@ -1,8 +1,11 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.parsers.symbols.ambiguous;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hwer.engine.parsers.symbols.Symbol;
+import org.hwer.engine.parsers.symbols.SymbolFactory;
+import org.hwer.engine.parsers.symbols.operators.Operator;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class UnrecognizedSymbol
@@ -21,15 +24,15 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *  - If there are N possible symbols, then N-1 of them should accept at least 1 child.
  *  - All possible symbols should have the same implementation of relativePosition method.
  */
-public class UnrecognizedSymbol extends Symbol{
+public abstract class Ambiguous extends Symbol {
   /**
    *  @brief Constructor.
    *
    *  @param type The type of this UnrecognizedSymbol.
    *  @param traceGroup The TraceGroup of this UnrecognizedSymbol.
    */
-  public UnrecognizedSymbol(UnrecognizedSymbol.Types type, TraceGroup traceGroup){
-    super(traceGroup, SymbolClass.UNRECOGNIZED);
+  public Ambiguous (TraceGroup traceGroup){
+    super(traceGroup);
 
     type_ = type;
 

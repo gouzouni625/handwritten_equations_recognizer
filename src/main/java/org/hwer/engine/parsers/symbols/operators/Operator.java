@@ -1,16 +1,17 @@
-package org.hwer.engine.parsers.symbols;
+package org.hwer.engine.parsers.symbols.operators;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Operator
  *
  *  @brief Implements mathematical operators as Symbol objects.
  */
-public class Operator extends Symbol{
+public class Operator extends Symbol {
   /**
    *  @brief Constructor.
    *

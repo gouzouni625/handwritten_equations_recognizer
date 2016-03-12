@@ -1,6 +1,6 @@
-package org.hwer.implemented_classifiers.neural_network_classifier;
+package org.hwer.implementations.classifiers.nnclassifier;
 
-import org.hwer.implemented_classifiers.neural_network_classifier.neural_network.NeuralNetwork;
+import org.hwer.implementations.classifiers.nnclassifier.neural_network.NeuralNetwork;
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.traces.TraceGroup;
 import org.hwer.engine.utilities.Utilities;
@@ -11,7 +11,7 @@ import org.hwer.engine.utilities.Utilities;
  *  @brief Implements a Classifier using a main.java.base.NeuralNetwork as a classification
  *         algorithm.
  */
-public class NeuralNetworkClassifier extends Classifier {
+public class NNClassifier extends Classifier {
   /**
    *  @brief Constructor.
    *
@@ -19,7 +19,7 @@ public class NeuralNetworkClassifier extends Classifier {
    *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
    *                           main.java.utilities.symbols.Symbol object.
    */
-  public NeuralNetworkClassifier(NeuralNetwork neuralNetwork, int maxTracesInSymbol){
+  public NNClassifier (NeuralNetwork neuralNetwork, int maxTracesInSymbol){
     super(maxTracesInSymbol);
 
     neuralNetwork_ = neuralNetwork;
