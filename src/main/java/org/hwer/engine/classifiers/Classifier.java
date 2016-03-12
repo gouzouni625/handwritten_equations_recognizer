@@ -1,5 +1,6 @@
 package org.hwer.engine.classifiers;
 
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 /** @class Classifier
@@ -11,9 +12,6 @@ import org.hwer.engine.utilities.traces.TraceGroup;
 public abstract class Classifier{
   /**
    *  @brief Constructor
-   *
-   *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
-   *                           main.java.utilities.symbols.Symbol object.
    */
   public Classifier(){}
 
@@ -37,13 +35,6 @@ public abstract class Classifier{
    *  @return Returns the confidence of the Classifier for the classification of the given
    *          main.java.utilities.symbols.Symbol.
    */
-  public abstract double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck);
-
-  /**
-   *  @brief Getter method for the label chosen by the Classifier.
-   *
-   *  @return Returns the chosen label.
-   */
-  public abstract int getClassificationLabel();
+  public abstract Symbol classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck);
 
 }

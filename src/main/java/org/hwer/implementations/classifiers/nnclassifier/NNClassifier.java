@@ -1,9 +1,11 @@
 package org.hwer.implementations.classifiers.nnclassifier;
 
+import org.hwer.engine.parsers.symbols.Symbol;
 import org.hwer.implementations.classifiers.nnclassifier.neural_network.NeuralNetwork;
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.traces.TraceGroup;
 import org.hwer.engine.utilities.Utilities;
+import org.hwer.implementations.classifiers.nnclassifier.symbols.SymbolFactory;
 
 
 /** @class NeuralNetworkClassifier
@@ -16,11 +18,13 @@ public class NNClassifier extends Classifier {
    *  @brief Constructor.
    *
    *  @param neuralNetwork The main.java.base.NeuralNetwork to be used.
-   *  @param maxTracesInSymbol The maximum number of main.java.utilities.traces.Trace objects in a
-   *                           main.java.utilities.symbols.Symbol object.
    */
   public NNClassifier (NeuralNetwork neuralNetwork){
     neuralNetwork_ = neuralNetwork;
+  }
+
+  public void registerSymbol(Class<?> clazz){
+    symbolFactory_.registerSymbol(clazz);
   }
 
   /**
@@ -43,22 +47,22 @@ public class NNClassifier extends Classifier {
    *          given main.java.utilities.symbols.Symbol.
    */
   @Override
-  public double classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
+  public Symbol classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
     double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 1);
 
-    classificationLabel_ = Utilities.indexOfMax(neuralNetworkOutput);
+    int classificationLabel = Utilities.indexOfMax(neuralNetworkOutput);
 
-    return neuralNetworkOutput[classificationLabel_];
-  }
+    Symbol symbolObject = null;
+    try {
+      symbolObject = symbolFactory_.createByLabel(symbol, classificationLabel);
 
-  /**
-   *  @brief Getter method for the label chosen by this NeuralNetworkClassifier.
-   *
-   *  @return Returns the chosen label.
-   */
-  @Override
-  public int getClassificationLabel(){
-    return classificationLabel_;
+      symbolObject.setConfidence(neuralNetworkOutput[classificationLabel]);
+    }
+    catch (Exception exception){
+      exception.printStackTrace();
+    }
+
+    return symbolObject;
   }
 
   /**
@@ -80,10 +84,9 @@ public class NNClassifier extends Classifier {
   }
 
 
-  private NeuralNetwork neuralNetwork_; //!< The NeuralNetwork of this NeuralNetworkClassifier.
+  private SymbolFactory symbolFactory_ = SymbolFactory.getInstance();
 
-  private int classificationLabel_; //!< The label chosen by this NeuralNetworkClassifier during
-                                    //   the classification.
+  private NeuralNetwork neuralNetwork_ = null; //!< The NeuralNetwork of this NeuralNetworkClassifier.
 
   private boolean silent_ = true; //!< Flag for the silent mode of this NeuralNetworkClassifier.
 
