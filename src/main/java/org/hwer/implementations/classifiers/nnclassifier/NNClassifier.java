@@ -51,7 +51,7 @@ public class NNClassifier extends Classifier {
    */
   @Override
   public Symbol classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
-    double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 1);
+    double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 0);
 
     int classificationLabel = Utilities.indexOfMax(neuralNetworkOutput);
 
