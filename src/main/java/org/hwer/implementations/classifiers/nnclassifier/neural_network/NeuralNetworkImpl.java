@@ -108,7 +108,7 @@ public class NeuralNetworkImpl implements NeuralNetwork{
    *  @return The value of the activation function at z.
    */
   private double activationFunction(double z){
-    return (sigmoid(z));
+    return (relu(z));
   }
 
   /**
@@ -123,6 +123,8 @@ public class NeuralNetworkImpl implements NeuralNetwork{
   private double sigmoid(double z){
     return (1 / (1 + Math.exp(-z)));
   }
+
+  private double relu(double z) {return Math.max(0, z);}
 
   /**
    *  @brief Getter method for the sizes of layers of this independent.
