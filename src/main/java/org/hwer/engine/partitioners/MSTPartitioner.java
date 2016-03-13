@@ -356,7 +356,7 @@ public class MSTPartitioner extends Partitioner {
 
                     if ((symbol.getLabel() == Labels.EQUALS) &&
                             (symbols[j].getLabel() != Labels.FRACTION_LINE &&
-                                    // symbols[j].getLabel() != Labels.HORIZONTAL_LINE &&
+                                    symbols[j].getLabel() != Labels.HORIZONTAL_LINE &&
                                     symbols[j].getLabel() != Labels.EQUALS) &&
                             (symbols[j].getParent() == null) &&
                             (symbols[j].getTraceGroup().getWidth() >= 0.5 * newTraces.get(i).getWidth())) {

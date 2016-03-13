@@ -5,6 +5,7 @@ import org.hwer.engine.symbols.numbers.*;
 import org.hwer.engine.symbols.letters.*;
 import org.hwer.engine.symbols.operators.*;
 import org.hwer.engine.symbols.ambiguous.*;
+import org.hwer.engine.symbols.variables.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -36,9 +37,16 @@ public class SymbolFactory {
         return (Symbol) label.getClazz().getConstructor(TraceGroup.class).newInstance(traceGroup);
     }
 
+    public interface SymbolClass{
+        Classes getClazz();
+
+        String toString(String SymbolString);
+    }
+
     public enum Classes {
         NUMBER,
         LETTER,
+        VARIABLE,
         OPERATOR,
         AMBIGUOUS
     }
@@ -56,10 +64,14 @@ public class SymbolFactory {
         NINE(Nine.class),
 
         LOWER_A(LowerA.class),
+        LOWER_C(LowerC.class),
         LOWER_E(LowerE.class),
+        LOWER_G(LowerG.class),
         LOWER_I(LowerI.class),
         LOWER_L(LowerL.class),
         LOWER_N(LowerN.class),
+        LOWER_O(LowerO.class),
+        LOWER_S(LowerS.class),
         LOWER_T(LowerT.class),
         LOWER_X(LowerX.class),
         LOWER_Y(LowerY.class),
