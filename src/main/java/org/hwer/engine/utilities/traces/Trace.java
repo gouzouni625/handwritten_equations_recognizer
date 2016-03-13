@@ -358,13 +358,7 @@ public class Trace{
         traceGroup.getBottomRightCorner().y_));
 
     double width = traceGroup.getWidth();
-    if(width < 100){
-      width = 100;
-    }
     double height = traceGroup.getHeight();
-    if(height < 100){
-      height = 100;
-    }
 
     Image image1 = new Image((int)width, (int)height);
     Image image2 = new Image((int)width, (int)height);
