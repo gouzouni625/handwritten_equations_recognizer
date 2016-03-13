@@ -1,9 +1,12 @@
 package org.hwer.engine.symbols.letters;
 
+import org.hwer.engine.parsers.grammars.GeometricalGrammar.ArgumentPosition;
 import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.symbols.SymbolFactory.Classes;
-import org.hwer.engine.symbols.SymbolFactory.SymbolClass;
 import org.hwer.engine.utilities.traces.TraceGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** @class Letter
  *
@@ -17,6 +20,13 @@ public abstract class Letter extends Symbol {
    */
   public Letter(TraceGroup traceGroup){
     super(traceGroup);
+
+      children_ = new ArrayList<List<Symbol>>();
+      childrenPositions_ = new ArgumentPosition[] {};
+      childrenClass_ = new Classes[][] {};
+      nextSymbol_ = null;
+      nextSymbolPositions_ = new ArgumentPosition[] {};
+      childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
  }
 
     public Classes getClazz(){

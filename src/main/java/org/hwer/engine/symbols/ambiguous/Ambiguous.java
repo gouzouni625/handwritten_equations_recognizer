@@ -5,6 +5,9 @@ import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 import org.hwer.engine.symbols.SymbolFactory.Classes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @class UnrecognizedSymbol
@@ -29,6 +32,13 @@ public abstract class Ambiguous extends Symbol {
      */
     public Ambiguous (TraceGroup traceGroup) {
         super(traceGroup);
+
+        children_ = new ArrayList<List<Symbol>>();
+        childrenPositions_ = new ArgumentPosition[] {};
+        childrenClass_ = new Classes[][] {};
+        nextSymbol_ = null;
+        nextSymbolPositions_ = new ArgumentPosition[] {};
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
 
         chosenSymbol_ = this;
     }
