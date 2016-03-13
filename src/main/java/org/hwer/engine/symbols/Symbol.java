@@ -6,8 +6,9 @@ import java.util.regex.Pattern;
 
 import org.hwer.engine.symbols.SymbolFactory.Labels;
 import org.hwer.engine.symbols.SymbolFactory.Classes;
-import org.hwer.engine.symbols.operators.Operator;
+import org.hwer.engine.symbols.SymbolFactory.SymbolClass;
 import org.hwer.engine.utilities.traces.TraceGroup;
+import org.hwer.engine.parsers.grammars.GeometricalGrammar.ArgumentPosition;
 
 /** @class Symbol
  *
@@ -16,12 +17,11 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *  A Symbol can be though as a wrapper for a TraceGroup that implements a suitable set of methods for easier parsing
  *  of equations.
  */
-public abstract class Symbol{
+public abstract class Symbol implements SymbolClass {
   /**
    *  @brief Constructor.
    *
    *  @param traceGroup The TraceGroup of this Symbol.
-   *  @param symbolClass The SymbolClass of this Symbol.
    */
   public Symbol(TraceGroup traceGroup){
     traceGroup_ = traceGroup;
@@ -43,8 +43,8 @@ public abstract class Symbol{
       int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
 
       // Check if this Symbol accepts a child of the given Symbol's class at the given relative position.
-      if(Arrays.asList(childrenClass_[index]).contains(symbol.symbolClass_)){
-        int index2 = Arrays.asList(childrenClass_[index]).indexOf(symbol.symbolClass_);
+      if(Arrays.asList(childrenClass_[index]).contains(symbol.getClazz())){
+        int index2 = Arrays.asList(childrenClass_[index]).indexOf(symbol.getClazz());
 
         // Evaluate all the child acceptance criteria of this Symbol for the given relative position.
         if(childrenAcceptanceCriteria_[index][index2].accept(this, symbol, relativePosition)){
@@ -101,42 +101,27 @@ public abstract class Symbol{
   }
 
   /**
-   *  @brief Sets the parent of this Symbol.
-   *
-   *  @param symbol The Symbol to be set as parent for this Symbol.
-   */
-  public void setParent(Symbol symbol){
-    // If this Symbol has already a parent and the new parent is different that the current one(meaning that the parent is
-    // being changed), then, the old parent should remove this Symbol from being a child.
-    if(parent_ != null && parent_ != symbol){
-      parent_.removeChild(this);
-    }
-
-    parent_ = symbol;
-  }
-
-  /**
    *  @brief Returns the String representation of this Symbol.
    *
    *  @return Returns the String representation of this Symbol.
    */
-  public String toString(){
-    String stringValue = type_.toString();
+  public String buildExpression(){
+    String stringValue = this.toString();
 
     for(int i = 0;i < childrenPositions_.length;i++){
       if(children_.get(i).size() == 0){
         continue;
       }
 
-      String childrenValue = children_.get(i).get(0).toString();
+      String childrenValue = children_.get(i).get(0).buildExpression();
 
       for(int j = 0;j < children_.get(i).size() - 1;j++){
         if(children_.get(i).get(j).nextSymbol_ != null){
-          childrenValue += children_.get(i).get(j).nextSymbol_.toString();
+          childrenValue += children_.get(i).get(j).nextSymbol_.buildExpression();
         }
         else{
           if(j <= children_.get(i).size() - 2){
-            childrenValue += children_.get(i).get(j + 1).toString();
+            childrenValue += children_.get(i).get(j + 1).buildExpression();
           }
         }
       }
@@ -166,18 +151,6 @@ public abstract class Symbol{
     return result;
   }
 
-  /** @class SymbolClass
-   *
-   *  @brief Holds all the possible types of Symbols. Concretely, for each class extending Symbol class, a new entry
-   *  should be added in SymbolClass.
-   */
-  public enum SymbolClass{
-    NUMBER, //!< Number class entry.
-    LETTER, //!< Letter class entry.
-    OPERATOR, //!< Operator class entry.
-    UNRECOGNIZED; //!< UnrecognizedSymbol class entry.
-  }
-
   /** @class ArgumentType
    *
    *  @brief Holds all the possible types of argument that a Symbol can be to another.
@@ -186,58 +159,6 @@ public abstract class Symbol{
     NONE, //!< A Symbol has no relation with another Symbol.
     CHILD, //!< A Symbol is a child of another Symbol.
     NEXT_SYMBOL; //!< A Symbol is the next Symbol of another Symbol.
-  }
-
-  /** @class ArgumentPosition
-   *
-   *  @brief Holds all the possible relative positions between two Symbol objects.
-   */
-  public enum ArgumentPosition{
-    ABOVE, //!< A Symbol is above another Symbol.
-    ABOVE_RIGHT, //!< A Symbol is above and right of another Symbol.
-    RIGHT, //!< A Symbol is right of another Symbol.
-    BELOW_RIGHT, //!< A Symbol is below and right of another Symbol.
-    BELOW, //!< A Symbol is below another Symbol.
-    BELOW_LEFT, //!< A Symbol is below and left of another Symbol.
-    LEFT, //!< A Symbol is left of another Symbol.
-    ABOVE_LEFT, //!< A Symbol is above and left of another Symbol.
-    INSIDE, //!< A Symbol is inside another Symbol.
-    OUTSIDE; //!< A Symbol is outside of another Symbol.
-
-    /**
-     *  @brief Returns the opposite of a given ArgumentPosition.
-     *
-     *  @param position The given ArgumentPosition.
-     *
-     *  @return Returns the opposite of the given ArgumentPosition.
-     */
-    public static ArgumentPosition oppositePosition(ArgumentPosition position){
-      switch(position){
-        case ABOVE:
-          return ArgumentPosition.BELOW;
-        case ABOVE_RIGHT:
-          return ArgumentPosition.BELOW_LEFT;
-        case RIGHT:
-          return ArgumentPosition.LEFT;
-        case BELOW_RIGHT:
-          return ArgumentPosition.ABOVE_LEFT;
-        case BELOW:
-          return ArgumentPosition.ABOVE;
-        case BELOW_LEFT:
-          return ArgumentPosition.ABOVE_RIGHT;
-        case LEFT:
-          return ArgumentPosition.RIGHT;
-        case ABOVE_LEFT:
-          return ArgumentPosition.BELOW_RIGHT;
-        case INSIDE:
-          return ArgumentPosition.OUTSIDE;
-        case OUTSIDE:
-          return ArgumentPosition.INSIDE;
-        default:
-          return position;
-      }
-    }
-
   }
 
   /**
@@ -292,10 +213,10 @@ public abstract class Symbol{
       }
       else if(xPosition == 0){
         if(symbol.traceGroup_.getArea() > traceGroup_.getArea()){
-          return Symbol.ArgumentPosition.OUTSIDE;
+          return ArgumentPosition.OUTSIDE;
         }
         else{
-          return Symbol.ArgumentPosition.INSIDE;
+          return ArgumentPosition.INSIDE;
         }
       }
       else{
@@ -400,7 +321,7 @@ public abstract class Symbol{
    */
   public ChildAcceptanceCriterion widthSizeExceptSQRTFractionLine = new ChildAcceptanceCriterion(){
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
-      if(child.type_ == Operator.Types.SQRT || child.type_ == Operator.Types.FRACTION_LINE){
+      if(child.getLabel() == Labels.SQUARE_ROOT || child.getLabel() == Labels.FRACTION_LINE){
         return true;
       }
       else{
@@ -412,7 +333,7 @@ public abstract class Symbol{
 
   public abstract Labels getLabel();
 
-  public abstract Classes getClazz();
+  public abstract String toString();
 
   public void setConfidence(double confidence){
     confidence_ = confidence;
@@ -422,23 +343,53 @@ public abstract class Symbol{
     return confidence_;
   }
 
+  public TraceGroup getTraceGroup(){
+    return traceGroup_;
+  }
+
+  /**
+   *  @brief Sets the parent of this Symbol.
+   *
+   *  @param parent The Symbol to be set as parent for this Symbol.
+   */
+  public void setParent(Symbol parent){
+    // If this Symbol has already a parent and the new parent is different that the current one(meaning that the parent is
+    // being changed), then, the old parent should remove this Symbol from being a child.
+    if(parent_ != null && parent_ != parent){
+      parent_.removeChild(this);
+    }
+
+    parent_ = parent;
+  }
+
+  public Symbol getParent(){
+    return parent_;
+  }
+
+  public void setNextSymbol(Symbol nextSymbol){
+    nextSymbol_ = nextSymbol;
+  }
+
+  public Symbol getNextSymbol(){
+    return nextSymbol_;
+  }
+
   protected double confidence_ = 0; // The confidence that this symbol is the symbol it says it is.
 
-  public SymbolClass symbolClass_; //!< The class of this Symbol. Is set by every class that extends Symbol class.
+  protected TraceGroup traceGroup_ = null; //!< The TraceGroup of this Symbol.
 
-  public TraceGroup traceGroup_; //!< The TraceGroup of this Symbol.
+  protected Symbol parent_ = null; //!< The parent of this Symbol.
 
-  public Symbol parent_; //!< The parent of this Symbol.
+  protected Symbol nextSymbol_ = null; //!< The next Symbol after this Symbol. This is used when transforming the equation in TeX.
+
+  protected ArgumentPosition[] nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
 
   public List<List<Symbol>> children_; //!< The children of this Symbol. A List of children for every children Position.
   public ArgumentPosition[] childrenPositions_; //!< The positions where this Symbol accepts children.
-  public SymbolClass[][] childrenClass_; /**< The accepted class for children of this Symbol.
+  public Classes[][] childrenClass_; /**< The accepted class for children of this Symbol.
                                               Each children position can have multiple accepted classes.*/
   public ChildAcceptanceCriterion[][] childrenAcceptanceCriteria_; /**< Acceptance criteria for children. One acceptance
                                                                         criterion for each accepted children class at a
                                                                         specific children position. */
-
-  public Symbol nextSymbol_; //!< The next Symbol after this Symbol. This is used when transforming the equation in TeX.
-  public ArgumentPosition[] nextSymbolPositions_; //!< The positions where this Symbol accepts a next Symbol.
 
 }

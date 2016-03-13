@@ -55,13 +55,13 @@ public abstract class GrammarParser extends Parser{
 
     // Sort symbols by abscissa.
     for(int i = 0;i < numberOfSymbols;i++){
-      symbols[i].traceGroup_.calculateCorners();
+      symbols[i].getTraceGroup().calculateCorners();
     }
 
     Arrays.sort(symbols, new Comparator<Symbol>(){
       public int compare(Symbol symbol1, Symbol symbol2){
-        double x1 = symbol1.traceGroup_.getTopLeftCorner().x_;
-        double x2 = symbol2.traceGroup_.getTopLeftCorner().x_;
+        double x1 = symbol1.getTraceGroup().getTopLeftCorner().x_;
+        double x2 = symbol2.getTraceGroup().getTopLeftCorner().x_;
 
         if(x1 > x2){
           return 1;
@@ -176,7 +176,7 @@ public abstract class GrammarParser extends Parser{
 
     // Reevaluate each unrecognized symbol to determine its type.
     for(Symbol symbol : symbols){
-      if(symbol.symbolClass_ == Symbol.SymbolClass.UNRECOGNIZED){
+      if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
         symbol.reEvaluate();
       }
     }
@@ -213,7 +213,7 @@ public abstract class GrammarParser extends Parser{
           // If symbol is still the parent of samePositionChildrenArray[i], then add it.
           // If not, it will be some other symbol in samePositionChildrenArray so it should
           // not be added to symbol's children.
-          if(samePositionChildrenArray[i].parent_ == symbol){
+          if(samePositionChildrenArray[i].getParent() == symbol){
             samePositionChildrenList.add(samePositionChildrenArray[i]);
           }
         }
@@ -272,7 +272,7 @@ public abstract class GrammarParser extends Parser{
    */
   public int[][] processPath(Symbol[] symbols, Symbol symbol1, int index1, Symbol symbol2, int index2){
     Trace connectionLine = new Trace();
-    Point[] closestPoints = TraceGroup.closestPoints(symbol1.traceGroup_, symbol2.traceGroup_);
+    Point[] closestPoints = TraceGroup.closestPoints(symbol1.getTraceGroup(), symbol2.getTraceGroup());
     connectionLine.add(new Point(closestPoints[0]));
     connectionLine.add(new Point(closestPoints[1]));
 
@@ -281,11 +281,11 @@ public abstract class GrammarParser extends Parser{
         continue;
       }
 
-      for(int j = 0;j < symbols[i].traceGroup_.size();j++){
-        if(Trace.areOverlapped(connectionLine, symbols[i].traceGroup_.get(j))){
-          int[] path1 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol1.traceGroup_.getTopLeftCorner().x_ ?
+      for(int j = 0;j < symbols[i].getTraceGroup().size();j++){
+        if(Trace.areOverlapped(connectionLine, symbols[i].getTraceGroup().get(j))){
+          int[] path1 = symbols[i].getTraceGroup().getTopLeftCorner().x_ < symbol1.getTraceGroup().getTopLeftCorner().x_ ?
                         new int[] {i, index1} : new int[] {index1, i};
-          int[] path2 = symbols[i].traceGroup_.getTopLeftCorner().x_ < symbol2.traceGroup_.getTopLeftCorner().x_ ?
+          int[] path2 = symbols[i].getTraceGroup().getTopLeftCorner().x_ < symbol2.getTraceGroup().getTopLeftCorner().x_ ?
                         new int[] {i, index2} : new int[] {index2, i};
           return (new int[][] {path1, path2});
         }
@@ -300,15 +300,15 @@ public abstract class GrammarParser extends Parser{
    */
   public String toString(){
     if(symbols_ != null && symbols_.length > 0){
-      String equation = symbols_[0].toString();
+      String equation = symbols_[0].buildExpression();
 
       for(int i = 0;i < symbols_.length - 1;i++){
-        if(symbols_[i].nextSymbol_ != null){
+        if(symbols_[i].getNextSymbol() != null){
           // Print the next symbol only if it has no parent. If there is
           // a parent for this symbol, then, it should be print through
           // the parent.
-          if(symbols_[i].nextSymbol_.parent_ == null){
-            equation += symbols_[i].nextSymbol_.toString();
+          if(symbols_[i].getNextSymbol().getParent() == null){
+            equation += symbols_[i].getNextSymbol().buildExpression();
           }
         }
       }

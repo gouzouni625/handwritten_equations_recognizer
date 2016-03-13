@@ -341,26 +341,26 @@ public class MSTPartitioner extends Partitioner {
         boolean continueFlag = false;
         for (int i = 0; i < numberOfNewTraces; i++) {
             for (int j = 0; j < numberOfSymbols; j++) {
-                if (symbols[j].traceGroup_.isOverlappedBy(newTraces.get(i))) {
-                    symbols[j].traceGroup_.add(newTraces.get(i));
+                if (symbols[j].getTraceGroup().isOverlappedBy(newTraces.get(i))) {
+                    symbols[j].getTraceGroup().add(newTraces.get(i));
 
                     continueFlag = true;
                     break;
                 }
                 else {
-                    TraceGroup combined = new TraceGroup(symbols[j].traceGroup_).add(newTraces.get(i));
+                    TraceGroup combined = new TraceGroup(symbols[j].getTraceGroup()).add(newTraces.get(i));
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
-                    symbols[j].traceGroup_.calculateCorners();
+                    symbols[j].getTraceGroup().calculateCorners();
                     newTraces.get(i).calculateCorners();
 
                     if ((symbol.getLabel() == Labels.EQUALS) &&
                             (symbols[j].getLabel() != Labels.FRACTION_LINE &&
-                                    symbols[j].getLabel() != Labels.HORIZONTAL_LINE &&
+                                    // symbols[j].getLabel() != Labels.HORIZONTAL_LINE &&
                                     symbols[j].getLabel() != Labels.EQUALS) &&
-                            (symbols[j].parent_ == null) &&
-                            (symbols[j].traceGroup_.getWidth() >= 0.5 * newTraces.get(i).getWidth())) {
-                        symbols[j].traceGroup_.add(newTraces.get(i));
+                            (symbols[j].getParent() == null) &&
+                            (symbols[j].getTraceGroup().getWidth() >= 0.5 * newTraces.get(i).getWidth())) {
+                        symbols[j].getTraceGroup().add(newTraces.get(i));
 
                         continueFlag = true;
                         break;
@@ -377,7 +377,7 @@ public class MSTPartitioner extends Partitioner {
         }
 
         for (int i = 0; i < numberOfSymbols; i++) {
-            symbols[i] = classifier_.classify(symbols[i].traceGroup_, null, false, false);
+            symbols[i] = classifier_.classify(symbols[i].getTraceGroup(), null, false, false);
 
                 // /* ===== Logs ===== */
                 // if (! silent_) {
