@@ -5,32 +5,30 @@ import java.util.List;
 
 import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.symbols.SymbolFactory.Classes;
+import org.hwer.engine.symbols.SymbolFactory.SymbolClass;
 import org.hwer.engine.utilities.traces.TraceGroup;
+import org.hwer.engine.parsers.grammars.GeometricalGrammar.ArgumentPosition;
 
 /** @class Number
  *
  *  @brief Implements a Number as a Symbol.
  */
-public abstract class Number extends Symbol {
+public abstract class Number extends Symbol implements SymbolClass{
   /**
    *  @brief Constructor.
    *
-   *  @param type The type of this Number.
    *  @param traceGroup The TraceGroup of this Number.
    */
   public Number(TraceGroup traceGroup){
     super(traceGroup);
-
-    // Initially the Number has no parent.
-    parent_ = null;
 
     children_ = new ArrayList<List<Symbol>>();
     children_.add(new ArrayList<Symbol>());
     // A Number accepts children only on ABOVE_RIGHT position, as an exponent.
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
     // A Number can accept as exponent another Number, a Letter, an Operator or an UnrecognizedSymbol.
-    childrenClass_ = new SymbolClass[][] {{SymbolClass.NUMBER, SymbolClass.LETTER, SymbolClass.OPERATOR,
-                                           SymbolClass.UNRECOGNIZED}};
+    childrenClass_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
+                                           Classes.AMBIGUOUS}};
     // - Use sizeChildAcceptanceCriterion for accepting another Number in ABOVE_RIGHT position. That means that, when
     //     drawing an equation, a Number, as an exponent, should have, at max, half the size of the base Number.
     // - Use sizeChildAcceptanceCriterion for accepting a Letter in ABOVE_RIGHT position. That means that, when drawing
@@ -49,50 +47,6 @@ public abstract class Number extends Symbol {
                                                                      sizeChildAcceptanceCriterion,
                                                                      widthSizeExceptSQRTFractionLine,
                                                                      sizeWidthChildAcceptanceCriterion}};
-
-    // Initially the Number has no next symbol.
-    nextSymbol_ = null;
-    // A Number accepts next symbols only at RIGHT position.
-    nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
-
-  }
-
-  /** @class Types
-   *
-   *  @brief Contains all the different types of Number objects.
-   *
-   *  The TeX format for every Number is saved as the String representation of the type.
-   */
-  public enum Types{
-    ZERO("0^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number ZERO 0.
-    ONE("1^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number ONE 1.
-    TWO("2^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number TWO 2.
-    THREE("3^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number THREE 3.
-    FOUR("4^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number FOUR 4.
-    FIVE("5^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number FIVE 5.
-    SIX("6^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number SIX 6.
-    SEVEN("7^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number SEVEN 7.
-    EIGHT("8^{" + ArgumentPosition.ABOVE_RIGHT + "}"), //!< Number EIGHT 8.
-    NINE("9^{" + ArgumentPosition.ABOVE_RIGHT + "}"); //!< Number NINE 9.
-
-    /**
-     *  @brief Constructor.
-     *
-     *  @param stringValue The String value for this Type.
-     */
-    private Types(String stringValue){
-      stringValue_ = stringValue;
-    }
-
-    /**
-     *  @brief Returns the string value of this Type.
-     */
-    @Override
-    public String toString(){
-      return stringValue_;
-    }
-
-    private String stringValue_; //!< The string value of this Type.
   }
 
   /**
@@ -123,9 +77,12 @@ public abstract class Number extends Symbol {
     return relativePosition;
   }
 
-  @Override
   public Classes getClazz(){
     return Classes.NUMBER;
+  }
+
+  public String toString(String symbolString){
+    return (symbolString + "^{" + ArgumentPosition.ABOVE_RIGHT + "}");
   }
 
 }
