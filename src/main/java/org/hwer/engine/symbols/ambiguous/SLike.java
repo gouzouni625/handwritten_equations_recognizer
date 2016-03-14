@@ -346,6 +346,11 @@ public class SLike extends Ambiguous {
 
     @Override
     public Labels getLabel () {
-        return Labels.S_LIKE;
+        if (chosenSymbol_ != this) {
+            return chosenSymbol_.getLabel();
+        }
+        else{
+            return Labels.S_LIKE;
+        }
     }
 }

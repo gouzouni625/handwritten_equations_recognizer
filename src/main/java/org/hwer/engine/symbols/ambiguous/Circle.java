@@ -185,6 +185,11 @@ public class Circle extends Ambiguous {
 
     @Override
     public Labels getLabel () {
-        return Labels.CIRCLE;
+        if (chosenSymbol_ != this) {
+            return chosenSymbol_.getLabel();
+        }
+        else{
+            return Labels.CIRCLE;
+        }
     }
 }

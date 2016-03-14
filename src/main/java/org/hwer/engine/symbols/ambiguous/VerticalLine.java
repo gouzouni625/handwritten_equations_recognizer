@@ -260,6 +260,11 @@ public class VerticalLine extends Ambiguous {
 
     @Override
     public Labels getLabel () {
-        return Labels.VERTICAL_LINE;
+        if (chosenSymbol_ != this) {
+            return chosenSymbol_.getLabel();
+        }
+        else{
+            return Labels.VERTICAL_LINE;
+        }
     }
 }

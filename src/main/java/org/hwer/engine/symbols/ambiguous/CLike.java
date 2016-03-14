@@ -75,6 +75,11 @@ public class CLike extends Ambiguous {
 
     @Override
     public Labels getLabel () {
-        return Labels.C_LIKE;
+        if (chosenSymbol_ != this) {
+            return chosenSymbol_.getLabel();
+        }
+        else{
+            return Labels.C_LIKE;
+        }
     }
 }

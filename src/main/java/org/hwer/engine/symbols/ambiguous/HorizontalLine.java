@@ -42,6 +42,11 @@ public class HorizontalLine extends Ambiguous {
 
     @Override
     public Labels getLabel () {
-        return Labels.HORIZONTAL_LINE;
+        if (chosenSymbol_ != this) {
+            return chosenSymbol_.getLabel();
+        }
+        else{
+            return Labels.HORIZONTAL_LINE;
+        }
     }
 }
