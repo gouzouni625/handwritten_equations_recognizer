@@ -19,7 +19,7 @@ import java.util.List;
  * FRACTION_LINE. On the contrary, if no arguments are found, then, the horizontal line is a MINUS Operator. \n\n
  * <p>
  * An UnrecognizedSymbol has an array of possible symbols. These possible symbols should comply with the following rules:
- * - The possible symbols of an UnrecognizedSymbol should all have the same nextSymbol places.
+ * - The possible symbols of an UnrecognizfedSymbol should all have the same nextSymbol places.
  * - The possible symbols should have totally different children positions. For example, if there are five possible
  * symbols and one of them accepts a child ABOVE, then non of the other four symbols should accept a child ABOVE.
  * - If there are N possible symbols, then N-1 of them should accept at least 1 child.
@@ -35,9 +35,7 @@ public abstract class Ambiguous extends Symbol {
 
         children_ = new ArrayList<List<Symbol>>();
         childrenPositions_ = new ArgumentPosition[] {};
-        childrenClass_ = new Classes[][] {};
-        nextSymbol_ = null;
-        nextSymbolPositions_ = new ArgumentPosition[] {};
+        childrenClasses_ = new Classes[][] {};
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
 
         chosenSymbol_ = this;
@@ -71,10 +69,12 @@ public abstract class Ambiguous extends Symbol {
                 return (ArgumentType.CHILD);
             }
 
-            nextArgumentFlag = (argumentType == ArgumentType.NEXT_SYMBOL);
+            nextArgumentFlag = (argumentType == ArgumentType.NEXT_SYMBOL) || nextArgumentFlag;
         }
 
         if (nextArgumentFlag) {
+            setNextSymbol(symbol);
+
             return ArgumentType.NEXT_SYMBOL;
         }
         else {
@@ -89,53 +89,10 @@ public abstract class Ambiguous extends Symbol {
     @Override
     public void removeChild (Symbol symbol) {
         // If one of the possible symbols has been chosen, use default removeChild implementation.
+        // If no symbol has been chosen, this means that no child has been attached to this symbol,
+        // so it is ok to do nothing.
         if (chosenSymbol_ != this) {
             chosenSymbol_.removeChild(symbol);
-        }
-        else {
-            // Call removeChild for every possible symbol.
-            for (Symbol symbolIterator : possibleSymbols_) {
-                symbolIterator.removeChild(symbol);
-            }
-        }
-    }
-
-    /**
-     * @param parent The Symbol to be set as parent for this Symbol.
-     * @brief Sets the parent of this Symbol.
-     */
-    @Override
-    public void setParent (Symbol parent) {
-        // If one of the possible symbols has been chosen, use the default setParent implementation.
-        if (chosenSymbol_ != this) {
-            chosenSymbol_.setParent(parent);
-        }
-        else{
-            // Call setParent for every possible symbol.
-            for (Symbol symbolIterator : possibleSymbols_) {
-                symbolIterator.setParent(parent);
-            }
-        }
-    }
-
-    /**
-     * @brief Chooses the type of this UnrecognizedSymbol.
-     */
-    @Override
-    public void reEvaluate () {
-        if (chosenSymbol_ != this) {
-            return;
-        }
-
-        // Came here means that no child has been assigned to any of the possible symbols.
-        // That is because, if at least 1 child had been assigned in setArgument method,
-        // then the symbol accepting the child would have become the chosen symbol. So, now,
-        // choose the symbol that accepts no children.
-        for (Symbol possibleSymbol : possibleSymbols_) {
-            if (possibleSymbol.childrenPositions_.length == 0) {
-                this.choose(possibleSymbol);
-                return;
-            }
         }
     }
 
@@ -180,6 +137,16 @@ public abstract class Ambiguous extends Symbol {
         }
         else{
             return Classes.AMBIGUOUS;
+        }
+    }
+
+    @Override
+    public String buildExpression(){
+        if(chosenSymbol_ != this){
+            return chosenSymbol_.buildExpression();
+        }
+        else{
+            return super.buildExpression();
         }
     }
 

@@ -24,6 +24,22 @@ public class HorizontalLine extends Ambiguous {
         }
     }
 
+    /**
+     * @brief Chooses the type of this UnrecognizedSymbol.
+     */
+    @Override
+    public void reEvaluate () {
+        if (chosenSymbol_ != this) {
+            return;
+        }
+
+        // Came here means that no child has been assigned to any of the possible symbols.
+        // That is because, if at least 1 child had been assigned in setArgument method,
+        // then the symbol accepting the child would have become the chosen symbol. So, now,
+        // choose the symbol that accepts no children. In our case, choose MINUS.
+        this.choose(possibleSymbols_[0]);
+    }
+
     @Override
     public Labels getLabel () {
         return Labels.HORIZONTAL_LINE;
