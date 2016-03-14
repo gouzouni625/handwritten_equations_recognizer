@@ -23,7 +23,7 @@ public class SquareRoot extends Operator {
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.INSIDE, ArgumentPosition.ABOVE_RIGHT};
         // Symbols accepted as children in ABOVE position: Number, Operator, Letter, UnrecognizedSymbol.
         // Symbols accepted as children in ABOVE_RIGHT position: Number, Operator, Letter, UnrecognizedSymbol.
-        childrenClass_ = new Classes[][] {{Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
+        childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
                 Classes.AMBIGUOUS},
                 {Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
                         Classes.AMBIGUOUS}};

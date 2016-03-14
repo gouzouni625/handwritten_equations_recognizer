@@ -24,7 +24,7 @@ public abstract  class Variable extends Symbol{
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
         // Accept as exponent a Number, or another Letter, or an Operator or an UnrecognizedSymbol.
         // Accept as index a Number or a Letter.
-        childrenClass_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
+        childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
                 Classes.AMBIGUOUS}, {Classes.NUMBER, Classes.LETTER}};
         // - Use sizeChildAcceptanceCriterion for accepting a Number in ABOVE_RIGHT position. That means that, when
         //     drawing an equation, a Number, as an exponent, should have, at max, half the size of the base Letter.

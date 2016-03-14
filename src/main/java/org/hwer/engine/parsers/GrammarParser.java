@@ -188,6 +188,13 @@ public abstract class GrammarParser extends Parser{
       previousState = this.toString();
       for(int i = 0;i < numberOfPaths;i++){
         grammar_.parse(symbols[paths[i][0]], symbols[paths[i][1]]);
+
+        // Reevaluate each unrecognized symbol to determine its type.
+        for(Symbol symbol : symbols){
+          if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
+            symbol.reEvaluate();
+          }
+        }
       }
     }while(!previousState.equals(this.toString()));
 
@@ -195,7 +202,8 @@ public abstract class GrammarParser extends Parser{
     // equation. This makes it possible to have arbitrary depth in an equation. Concretely, equations like
     // x^{2^{3}^{4}^...^{N}} can be parsed.
     for(Symbol symbol : symbols){
-      for(List<Symbol> samePositionChildrenList : symbol.children_){
+      List<List<Symbol>> children = symbol.getChildren();
+      for(List<Symbol> samePositionChildrenList : children){
 
         // Create an array of all the children on the same position.
         Symbol[] samePositionChildrenArray = new Symbol[samePositionChildrenList.size()];

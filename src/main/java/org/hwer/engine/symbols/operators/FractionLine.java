@@ -22,7 +22,7 @@ public class FractionLine extends Operator {
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
         // Symbols accepted as children in ABOVE position: Number, Operator, Letter, UnrecognizedSymbol.
         // Symbols accepted as children in BELOW position: Number, Operator, Letter, UnrecognizedSymbol.
-        childrenClass_ = new Classes[][] {{Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
+        childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
                 Classes.AMBIGUOUS},
                 {Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
                         Classes.AMBIGUOUS}};

@@ -17,7 +17,7 @@ public class GreaterThan extends Operator {
 
         children_ = new ArrayList<List<Symbol>>();
         childrenPositions_ = new ArgumentPosition[] {};
-        childrenClass_ = new Classes[][] {};
+        childrenClasses_ = new Classes[][] {};
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
     }
 

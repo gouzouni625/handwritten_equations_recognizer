@@ -27,7 +27,7 @@ public abstract class Number extends Symbol implements SymbolClass{
     // A Number accepts children only on ABOVE_RIGHT position, as an exponent.
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
     // A Number can accept as exponent another Number, a Letter, an Operator or an UnrecognizedSymbol.
-    childrenClass_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
+    childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
                                            Classes.AMBIGUOUS}};
     // - Use sizeChildAcceptanceCriterion for accepting another Number in ABOVE_RIGHT position. That means that, when
     //     drawing an equation, a Number, as an exponent, should have, at max, half the size of the base Number.

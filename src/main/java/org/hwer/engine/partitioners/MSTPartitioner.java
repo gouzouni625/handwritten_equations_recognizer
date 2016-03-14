@@ -205,17 +205,17 @@ public class MSTPartitioner extends Partitioner {
             pathSymbols[i] = classifier_.classify(symbol, null, false, false);
             pathsRates[i] = pathSymbols[i].getConfidence();
 
-            // /* ===== Logs ===== */
-            // if (! silent_) {
-            //     System.out.println("Log: path rate and label... ===== Start =====");
-            //
-            //     System.out.println("path " + i + " subSymbolCheck: " + false);
-            //     System.out.println("path " + i + " rate: " + pathsRates[i]);
-            //     System.out.println("path " + i + " label: " + pathsLabels[i]);
-            //
-            //     System.out.println("Log: path rate and label... ===== End =======");
-            // }
-            // /* ===== Logs ===== */
+            /* ===== Logs ===== */
+            if (! silent_) {
+                System.out.println("Log: path rate and label... ===== Start =====");
+
+                System.out.println("path " + i + " subSymbolCheck: " + false);
+                System.out.println("path " + i + " rate: " + pathsRates[i]);
+                System.out.println("path " + i + " label: " + pathSymbols[i].getLabel());
+
+                System.out.println("Log: path rate and label... ===== End =======");
+            }
+            /* ===== Logs ===== */
         }
 
         // Get all the possible partitions.

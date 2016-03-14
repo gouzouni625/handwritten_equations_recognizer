@@ -43,8 +43,8 @@ public abstract class Symbol implements SymbolClass {
       int index = Arrays.asList(childrenPositions_).indexOf(relativePosition);
 
       // Check if this Symbol accepts a child of the given Symbol's class at the given relative position.
-      if(Arrays.asList(childrenClass_[index]).contains(symbol.getClazz())){
-        int index2 = Arrays.asList(childrenClass_[index]).indexOf(symbol.getClazz());
+      if(Arrays.asList(childrenClasses_[index]).contains(symbol.getClazz())){
+        int index2 = Arrays.asList(childrenClasses_[index]).indexOf(symbol.getClazz());
 
         // Evaluate all the child acceptance criteria of this Symbol for the given relative position.
         if(childrenAcceptanceCriteria_[index][index2].accept(this, symbol, relativePosition)){
@@ -70,7 +70,7 @@ public abstract class Symbol implements SymbolClass {
     }
     // If this Symbol doesn't accept a child at the given relative position, check the next Symbol position(s).
     else if(Arrays.asList(nextSymbolPositions_).contains(relativePosition)){
-      nextSymbol_ = symbol;
+      setNextSymbol(symbol);
 
       return ArgumentType.NEXT_SYMBOL;
     }
@@ -89,8 +89,8 @@ public abstract class Symbol implements SymbolClass {
         if(childrenList.get(child) == symbol){
           childrenList.remove(symbol);
 
-          if(child > 0 && childrenList.get(child - 1).nextSymbol_ == symbol){
-            childrenList.get(child - 1).nextSymbol_ = null;
+          if(child > 0 && childrenList.get(child - 1).getNextSymbol() == symbol){
+            childrenList.get(child - 1).setNextSymbol(null);
           }
 
           break;
@@ -116,8 +116,8 @@ public abstract class Symbol implements SymbolClass {
       String childrenValue = children_.get(i).get(0).buildExpression();
 
       for(int j = 0;j < children_.get(i).size() - 1;j++){
-        if(children_.get(i).get(j).nextSymbol_ != null){
-          childrenValue += children_.get(i).get(j).nextSymbol_.buildExpression();
+        if(children_.get(i).get(j).getNextSymbol() != null){
+          childrenValue += children_.get(i).get(j).getNextSymbol().buildExpression();
         }
         else{
           if(j <= children_.get(i).size() - 2){
@@ -140,7 +140,7 @@ public abstract class Symbol implements SymbolClass {
    *  @return Returns the cleared String.
    */
   public String clearString(String string){
-    String result = new String(string);
+    String result = string;
 
     for(ArgumentPosition argumentPosition : childrenPositions_){
       result = result.replaceAll(Pattern.quote("^{") + argumentPosition + Pattern.quote("}"), "");
@@ -158,7 +158,7 @@ public abstract class Symbol implements SymbolClass {
   public enum ArgumentType{
     NONE, //!< A Symbol has no relation with another Symbol.
     CHILD, //!< A Symbol is a child of another Symbol.
-    NEXT_SYMBOL; //!< A Symbol is the next Symbol of another Symbol.
+    NEXT_SYMBOL //!< A Symbol is the next Symbol of another Symbol.
   }
 
   /**
@@ -263,7 +263,7 @@ public abstract class Symbol implements SymbolClass {
      *
      *  @return Returns true if symbol should accept child as a child.
      */
-    public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition);
+     boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition);
   };
 
   /**
@@ -366,29 +366,52 @@ public abstract class Symbol implements SymbolClass {
     return parent_;
   }
 
+  public void setPreviousSymbol(Symbol previousSymbol){
+    previousSymbol_ = previousSymbol;
+
+    if(previousSymbol != null && previousSymbol.getNextSymbol() != this){
+      previousSymbol.setNextSymbol(this);
+    }
+  }
+
+  public Symbol getPreviousSymbol(){
+    return previousSymbol_;
+  }
+
   public void setNextSymbol(Symbol nextSymbol){
     nextSymbol_ = nextSymbol;
+
+    if(nextSymbol != null && nextSymbol.getPreviousSymbol() != this){
+      nextSymbol.setPreviousSymbol(this);
+    }
   }
 
   public Symbol getNextSymbol(){
     return nextSymbol_;
   }
 
+  public List<List<Symbol>> getChildren(){
+    return children_;
+  }
+
+
   protected double confidence_ = 0; // The confidence that this symbol is the symbol it says it is.
 
   protected TraceGroup traceGroup_ = null; //!< The TraceGroup of this Symbol.
 
-  protected Symbol parent_ = null; //!< The parent of this Symbol.
+  // Make these private to force access only through the setters and getters in inheriting classes.
+  private Symbol parent_ = null; //!< The parent of this Symbol.
+  private Symbol previousSymbol_ = null;
+  private Symbol nextSymbol_ = null; //!< The next Symbol after this Symbol. This is used when transforming the equation in TeX.
 
-  protected Symbol nextSymbol_ = null; //!< The next Symbol after this Symbol. This is used when transforming the equation in TeX.
+  protected final ArgumentPosition[] nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
 
-  protected ArgumentPosition[] nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
+  protected List<List<Symbol>> children_; //!< The children of this Symbol. A List of children for every children Position.
 
-  public List<List<Symbol>> children_; //!< The children of this Symbol. A List of children for every children Position.
-  public ArgumentPosition[] childrenPositions_; //!< The positions where this Symbol accepts children.
-  public Classes[][] childrenClass_; /**< The accepted class for children of this Symbol.
+  protected ArgumentPosition[] childrenPositions_; //!< The positions where this Symbol accepts children.
+  protected Classes[][] childrenClasses_; /**< The accepted class for children of this Symbol.
                                               Each children position can have multiple accepted classes.*/
-  public ChildAcceptanceCriterion[][] childrenAcceptanceCriteria_; /**< Acceptance criteria for children. One acceptance
+  protected ChildAcceptanceCriterion[][] childrenAcceptanceCriteria_; /**< Acceptance criteria for children. One acceptance
                                                                         criterion for each accepted children class at a
                                                                         specific children position. */
 
