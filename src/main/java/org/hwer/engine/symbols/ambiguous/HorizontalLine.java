@@ -28,7 +28,7 @@ public class HorizontalLine extends Ambiguous {
      * @brief Chooses the type of this UnrecognizedSymbol.
      */
     @Override
-    public void reEvaluate () {
+    public void reEvaluate (boolean force) {
         if (chosenSymbol_ != this) {
             return;
         }

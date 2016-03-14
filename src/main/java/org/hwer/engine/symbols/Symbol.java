@@ -239,14 +239,6 @@ public abstract class Symbol implements SymbolClass {
     }
   }
 
-  /**
-   *  @brief Re evaluates the type of this Symbol.
-   *
-   *  This method is used by the UnrecognizedSymbol class to determine the type of the Symbol after some children have
-   *  been found.
-   */
-  public void reEvaluate(){}
-
   /** @class ChildAcceptanceCriterion
    *
    *  @brief An Interface that describes a criterion on whether to accept a child or not.
@@ -334,6 +326,9 @@ public abstract class Symbol implements SymbolClass {
   public abstract Labels getLabel();
 
   public abstract String toString();
+
+  // Use this method to give the ability to symbols for internal changes.
+  public abstract void reEvaluate(boolean force);
 
   public void setConfidence(double confidence){
     confidence_ = confidence;

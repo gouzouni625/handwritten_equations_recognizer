@@ -177,7 +177,7 @@ public abstract class GrammarParser extends Parser{
     // Reevaluate each unrecognized symbol to determine its type.
     for(Symbol symbol : symbols){
       if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
-        symbol.reEvaluate();
+        symbol.reEvaluate(false);
       }
     }
 
@@ -192,11 +192,19 @@ public abstract class GrammarParser extends Parser{
         // Reevaluate each unrecognized symbol to determine its type.
         for(Symbol symbol : symbols){
           if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
-            symbol.reEvaluate();
+            symbol.reEvaluate(false);
           }
         }
       }
     }while(!previousState.equals(this.toString()));
+
+    // Check if there are still AMBIGUOUS symbols on the top level of the equation(those that do
+    // not have a parent).
+    for(Symbol symbol : symbols){
+      if(symbol.getParent() == null && symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
+        symbol.reEvaluate(true);
+      }
+    }
 
     // At this point, "first level" parsing is done. Now, parse the children of each symbols as if they where a new
     // equation. This makes it possible to have arbitrary depth in an equation. Concretely, equations like

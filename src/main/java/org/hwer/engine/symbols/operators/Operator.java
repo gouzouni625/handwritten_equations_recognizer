@@ -28,4 +28,7 @@ public abstract class Operator extends Symbol implements SymbolClass{
     return symbolString;
   }
 
+  @Override
+  public void reEvaluate(boolean force){}
+
 }

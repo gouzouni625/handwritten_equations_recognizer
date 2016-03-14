@@ -35,4 +35,6 @@ public abstract class Letter extends Symbol {
         return symbolString;
     }
 
+    @Override
+    public void reEvaluate(boolean force){}
 }

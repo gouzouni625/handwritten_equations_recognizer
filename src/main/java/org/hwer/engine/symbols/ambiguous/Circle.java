@@ -29,7 +29,7 @@ public class Circle extends Ambiguous {
      * @brief Chooses the type of this UnrecognizedSymbol.
      */
     @Override
-    public void reEvaluate () {
+    public void reEvaluate (boolean force) {
         if (chosenSymbol_ != this) {
             return;
         }
@@ -69,8 +69,12 @@ public class Circle extends Ambiguous {
                                     break;
                                 case AMBIGUOUS:
                                     switch(nextLabel){
-                                        case S_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case S_LIKE:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);
@@ -96,8 +100,12 @@ public class Circle extends Ambiguous {
                                     break;
                                 case AMBIGUOUS:
                                     switch(nextLabel){
-                                        case G_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case G_LIKE:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);
@@ -121,8 +129,12 @@ public class Circle extends Ambiguous {
                                 case LETTER:
                                     switch(nextLabel){
                                         case LOWER_S:
-                                        case LOWER_T: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case LOWER_T:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);
@@ -131,8 +143,12 @@ public class Circle extends Ambiguous {
                                     break;
                                 case AMBIGUOUS:
                                     switch(nextLabel){
-                                        case S_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case S_LIKE:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);
@@ -148,8 +164,12 @@ public class Circle extends Ambiguous {
                             switch(nextClass){
                                 case LETTER:
                                     switch(nextLabel){
-                                        case LOWER_G: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case LOWER_G:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);
@@ -158,8 +178,12 @@ public class Circle extends Ambiguous {
                                     break;
                                 case AMBIGUOUS:
                                     switch(nextLabel){
-                                        case G_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case G_LIKE:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);

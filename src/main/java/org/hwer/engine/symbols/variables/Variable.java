@@ -89,4 +89,7 @@ public abstract  class Variable extends Symbol{
         return Classes.VARIABLE;
     }
 
+    @Override
+    public void reEvaluate(boolean force){}
+
 }

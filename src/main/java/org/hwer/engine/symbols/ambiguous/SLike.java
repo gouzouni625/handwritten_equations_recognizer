@@ -29,7 +29,7 @@ public class SLike extends Ambiguous {
      * @brief Chooses the type of this UnrecognizedSymbol.
      */
     @Override
-    public void reEvaluate () {
+    public void reEvaluate (boolean force) {
         if (chosenSymbol_ != this) {
             return;
         }
@@ -92,8 +92,12 @@ public class SLike extends Ambiguous {
                                 switch(nextNextClass){
                                     case LETTER:
                                         switch(nextNextLabel){
-                                            case LOWER_N: // Don't choose yet, 'i' is AMBIGUOUS...
-                                                // this.choose(possibleSymbols_[0]);
+                                            case LOWER_N:
+                                                // Don't choose yet, it is AMBIGUOUS...
+                                                // unless you are force to do so...
+                                                if(force) {
+                                                    this.choose(possibleSymbols_[0]);
+                                                }
                                                 break;
                                             default:
                                                 this.choose(possibleSymbols_[1]);
@@ -147,8 +151,12 @@ public class SLike extends Ambiguous {
                                         break;
                                     case AMBIGUOUS:
                                         switch(previousPreviousLabel){
-                                            case C_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                                // this.choose(possibleSymbols_[0]);
+                                            case C_LIKE:
+                                                // Don't choose yet, it is AMBIGUOUS...
+                                                // unless you are force to do so...
+                                                if(force) {
+                                                    this.choose(possibleSymbols_[0]);
+                                                }
                                                 break;
                                             default:
                                                 this.choose(possibleSymbols_[1]);
@@ -180,8 +188,12 @@ public class SLike extends Ambiguous {
                                 switch(previousPreviousClass){
                                     case LETTER:
                                         switch(previousPreviousLabel){
-                                            case LOWER_C: // Don't choose yet, 'o' is AMBIGUOUS...
-                                                // this.choose(possibleSymbols_[0]);
+                                            case LOWER_C:
+                                                // Don't choose yet, it is AMBIGUOUS...
+                                                // unless you are force to do so...
+                                                if(force) {
+                                                    this.choose(possibleSymbols_[0]);
+                                                }
                                                 break;
                                             default:
                                                 this.choose(possibleSymbols_[1]);
@@ -190,8 +202,12 @@ public class SLike extends Ambiguous {
                                         break;
                                     case AMBIGUOUS:
                                         switch(previousPreviousLabel){
-                                            case C_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                                // this.choose(possibleSymbols_[0]);
+                                            case C_LIKE:
+                                                // Don't choose yet, it is AMBIGUOUS...
+                                                // unless you are force to do so...
+                                                if(force) {
+                                                    this.choose(possibleSymbols_[0]);
+                                                }
                                                 break;
                                             default:
                                                 this.choose(possibleSymbols_[1]);
@@ -227,7 +243,7 @@ public class SLike extends Ambiguous {
                         case LOWER_I:
                             // We have an 'i'. Check if there is an 'n' after that.
                             if(getNextSymbol().getNextSymbol() == null){
-                                checkForCos(previousClass, previousLabel);
+                                checkForCos(previousClass, previousLabel, force);
                             }
                             else{
                                 Classes nextNextClass = getNextSymbol().getNextSymbol().getClazz();
@@ -242,20 +258,20 @@ public class SLike extends Ambiguous {
                                                 break;
                                             default:
                                                 // It is definitely not sin, check for cos.
-                                                checkForCos(previousClass, previousLabel);
+                                                checkForCos(previousClass, previousLabel, force);
                                                 break;
                                         }
                                         break;
                                     default:
                                         // It is definitely not sin, check for cos.
-                                        checkForCos(previousClass, previousLabel);
+                                        checkForCos(previousClass, previousLabel, force);
                                         break;
                                 }
                             }
                             break;
                         default:
                             // It is definitely not sin, check for cos.
-                            checkForCos(previousClass, previousLabel);
+                            checkForCos(previousClass, previousLabel, force);
                             break;
                     }
                     break;
@@ -263,23 +279,23 @@ public class SLike extends Ambiguous {
                     switch(nextLabel){
                         case VERTICAL_LINE:
                             // It might be sin, but also check for cos.
-                            checkForCos(previousClass, previousLabel);
+                            checkForCos(previousClass, previousLabel, force);
                             break;
                         default:
                             // It is definitely not sin, check for cos.
-                            checkForCos(previousClass, previousLabel);
+                            checkForCos(previousClass, previousLabel, force);
                             break;
                     }
                     break;
                 default:
                     // It is definitely not sin, check for cos.
-                    checkForCos(previousClass, previousLabel);
+                    checkForCos(previousClass, previousLabel, force);
                     break;
             }
         }
     }
 
-    private void checkForCos(Classes previousClass, Labels previousLabel){
+    private void checkForCos(Classes previousClass, Labels previousLabel, boolean force){
         switch(previousClass){
             case LETTER:
                 switch(previousLabel){
@@ -306,8 +322,12 @@ public class SLike extends Ambiguous {
                                     break;
                                 case AMBIGUOUS:
                                     switch(previousPreviousLabel){
-                                        case C_LIKE: // Don't choose yet, it is AMBIGUOUS...
-                                            // this.choose(possibleSymbols_[0]);
+                                        case C_LIKE:
+                                            // Don't choose yet, it is AMBIGUOUS...
+                                            // unless you are force to do so...
+                                            if(force) {
+                                                this.choose(possibleSymbols_[0]);
+                                            }
                                             break;
                                         default:
                                             this.choose(possibleSymbols_[1]);
@@ -327,11 +347,15 @@ public class SLike extends Ambiguous {
                 break;
             case AMBIGUOUS:
                 switch(previousLabel){
-                    case CIRCLE: // Don't choose yet, it is AMBIGUOUS...
+                    case CIRCLE:
                         // At this point it has no meaning to check the previousPrevious symbol
                         // since it can't be decisive for selecting cos ('o' is ambiguous) but also
                         // it cannot be decisive for 5 since it might be a sin.
-                        // this.choose(possibleSymbols_[0]);
+                        // Don't choose yet, it is AMBIGUOUS...
+                        // unless you are force to do so...
+                        if(force) {
+                            this.choose(possibleSymbols_[0]);
+                        }
                         break;
                     default:
                         this.choose(possibleSymbols_[1]);

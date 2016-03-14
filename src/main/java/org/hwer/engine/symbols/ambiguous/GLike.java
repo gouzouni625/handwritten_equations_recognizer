@@ -28,7 +28,7 @@ public class GLike extends Ambiguous {
      * @brief Chooses the type of this UnrecognizedSymbol.
      */
     @Override
-    public void reEvaluate () {
+    public void reEvaluate (boolean force) {
         if (chosenSymbol_ != this) {
             return;
         }
@@ -55,8 +55,12 @@ public class GLike extends Ambiguous {
                     break;
                 case AMBIGUOUS:
                     switch(previousLabel){
-                        case CIRCLE: // Don't choose yet, it is AMBIGUOUS...
-                            // this.choose(possibleSymbols_[0]);
+                        case CIRCLE:
+                            // Don't choose yet, it is AMBIGUOUS...
+                            // unless you are force to do so...
+                            if(force) {
+                                this.choose(possibleSymbols_[0]);
+                            }
                             break;
                         default:
                             this.choose(possibleSymbols_[1]);

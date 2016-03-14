@@ -85,4 +85,7 @@ public abstract class Number extends Symbol implements SymbolClass{
     return (symbolString + "^{" + ArgumentPosition.ABOVE_RIGHT + "}");
   }
 
+  @Override
+  public void reEvaluate(boolean force){}
+
 }
