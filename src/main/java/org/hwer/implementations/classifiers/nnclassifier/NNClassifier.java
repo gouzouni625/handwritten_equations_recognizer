@@ -18,14 +18,16 @@ public class NNClassifier extends Classifier {
   /**
    *  @brief Constructor.
    *
-   *  @param neuralNetwork The main.java.base.NeuralNetwork to be used.
    */
-  public NNClassifier (NeuralNetwork neuralNetwork){
-    neuralNetwork_ = neuralNetwork;
+  public NNClassifier (NeuralNetwork cascadeNeuralNetwork, NeuralNetwork[] neuralNetworks){
+    cascadeNeuralNetwork_ = cascadeNeuralNetwork;
+    neuralNetworks_ = neuralNetworks;
   }
 
-  public NNClassifier (NeuralNetwork neuralNetwork, Labels[] symbolLabels){
-    neuralNetwork_ = neuralNetwork;
+  public NNClassifier (NeuralNetwork cascadeNeuralNetwork, NeuralNetwork[] neuralNetworks,
+                       Labels[][] symbolLabels){
+    cascadeNeuralNetwork_ = cascadeNeuralNetwork;
+    neuralNetworks_ = neuralNetworks;
 
     symbolLabels_ = symbolLabels;
   }
@@ -51,15 +53,19 @@ public class NNClassifier extends Classifier {
    */
   @Override
   public Symbol classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck){
-    double[] neuralNetworkOutput = neuralNetwork_.evaluate(symbol, 0);
+    double[] cascadeNeuralNetworkOutput = cascadeNeuralNetwork_.evaluate(symbol, 0);
+
+    int classLabel = Utilities.indexOfMax(cascadeNeuralNetworkOutput);
+
+    double[] neuralNetworkOutput = neuralNetworks_[classLabel].evaluate(symbol, 0);
 
     int classificationLabel = Utilities.indexOfMax(neuralNetworkOutput);
 
     Symbol symbolObject = null;
     try {
-      symbolObject = symbolFactory_.create(symbolLabels_[classificationLabel], symbol);
+      symbolObject = symbolFactory_.create(symbolLabels_[classLabel][classificationLabel], symbol);
 
-      symbolObject.setConfidence(neuralNetworkOutput[classificationLabel]);
+      symbolObject.setConfidence(0.6 * cascadeNeuralNetworkOutput[classLabel] + 0.4 * neuralNetworkOutput[classificationLabel]);
     }
     catch (Exception exception){
       exception.printStackTrace();
@@ -86,19 +92,20 @@ public class NNClassifier extends Classifier {
     return silent_;
   }
 
-  public void setSymbolLabels(Labels[] symbolLabels){
+  public void setSymbolLabels(Labels[][] symbolLabels){
     symbolLabels_ = symbolLabels;
   }
 
-  public Labels[] getSymbolLabels(){
+  public Labels[][] getSymbolLabels(){
     return symbolLabels_;
   }
 
   private SymbolFactory symbolFactory_ = SymbolFactory.getInstance();
 
-  private NeuralNetwork neuralNetwork_ = null; //!< The NeuralNetwork of this NeuralNetworkClassifier.
+  private NeuralNetwork cascadeNeuralNetwork_ = null;
+  private NeuralNetwork[] neuralNetworks_ = null;
 
-  private Labels[] symbolLabels_ = new Labels[] {};
+  private Labels[][] symbolLabels_ = new Labels[][] {};
 
   private boolean silent_ = true; //!< Flag for the silent mode of this NeuralNetworkClassifier.
 
