@@ -25,7 +25,7 @@ public abstract  class Variable extends Symbol{
         // Accept as exponent a Number, or another Letter, or an Operator or an UnrecognizedSymbol.
         // Accept as index a Number or a Letter.
         childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
-                Classes.AMBIGUOUS}, {Classes.NUMBER, Classes.LETTER}};
+                Classes.AMBIGUOUS, Classes.VARIABLE}, {Classes.NUMBER}};
         // - Use sizeChildAcceptanceCriterion for accepting a Number in ABOVE_RIGHT position. That means that, when
         //     drawing an equation, a Number, as an exponent, should have, at max, half the size of the base Letter.
         // - Use sizeChildAcceptanceCriterion for accepting a Letter in ABOVE_RIGHT position. That means that, when drawing
@@ -48,9 +48,9 @@ public abstract  class Variable extends Symbol{
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion,
                 sizeChildAcceptanceCriterion,
                 widthSizeExceptSQRTFractionLine,
-                sizeWidthChildAcceptanceCriterion},
-                {sizeChildAcceptanceCriterion,
-                        sizeChildAcceptanceCriterion}};
+                sizeWidthChildAcceptanceCriterion,
+                sizeChildAcceptanceCriterion},
+                {sizeChildAcceptanceCriterion}};
     }
 
     /**

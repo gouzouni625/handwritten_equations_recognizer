@@ -23,15 +23,17 @@ public class FractionLine extends Operator {
         // Symbols accepted as children in ABOVE position: Number, Operator, Letter, UnrecognizedSymbol.
         // Symbols accepted as children in BELOW position: Number, Operator, Letter, UnrecognizedSymbol.
         childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
-                Classes.AMBIGUOUS},
+                Classes.AMBIGUOUS, Classes.VARIABLE},
                 {Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
-                        Classes.AMBIGUOUS}};
+                        Classes.AMBIGUOUS, Classes.VARIABLE}};
         // Use no criteria for accepting any child.
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion,
                 allChildAcceptanceCriterion,
                 allChildAcceptanceCriterion,
+                allChildAcceptanceCriterion,
                 allChildAcceptanceCriterion},
                 {allChildAcceptanceCriterion,
+                        allChildAcceptanceCriterion,
                         allChildAcceptanceCriterion,
                         allChildAcceptanceCriterion,
                         allChildAcceptanceCriterion}};
