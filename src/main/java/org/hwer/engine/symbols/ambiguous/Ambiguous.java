@@ -52,7 +52,15 @@ public abstract class Ambiguous extends Symbol {
     public ArgumentType setArgument (ArgumentPosition relativePosition, Symbol symbol) {
         // If one of the possible symbols has been chosen, use default relativePosion implementation.
         if (chosenSymbol_ != this) {
-            return chosenSymbol_.setArgument(relativePosition, symbol);
+            ArgumentType argumentType = chosenSymbol_.setArgument(relativePosition, symbol);
+
+            switch(argumentType){
+                case NEXT_SYMBOL:
+                    setNextSymbol(symbol);
+                    break;
+            }
+
+            return argumentType;
         }
 
         // Find the relative position for each one of the possible symbols. If at least one of these symbols accepts the
