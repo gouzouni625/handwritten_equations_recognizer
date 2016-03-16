@@ -187,6 +187,16 @@ public abstract class Ambiguous extends Symbol {
         chosenSymbol_ = this;
     }
 
+    @Override
+    public List<List<Symbol>> getChildren(){
+        if(chosenSymbol_ != this){
+            return chosenSymbol_.getChildren();
+        }
+        else {
+            return super.getChildren();
+        }
+    }
+
     public String toString(String symbolString){
         return toString();
     }
