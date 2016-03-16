@@ -65,7 +65,7 @@ public class NNClassifier extends Classifier {
     try {
       symbolObject = symbolFactory_.create(symbolLabels_[classLabel][classificationLabel], symbol);
 
-      symbolObject.setConfidence(0.6 * cascadeNeuralNetworkOutput[classLabel] + 0.4 * neuralNetworkOutput[classificationLabel]);
+      symbolObject.setConfidence(cascadeNeuralNetworkOutput[classLabel] * neuralNetworkOutput[classificationLabel]);
     }
     catch (Exception exception){
       exception.printStackTrace();
