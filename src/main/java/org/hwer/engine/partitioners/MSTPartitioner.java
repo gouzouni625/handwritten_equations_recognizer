@@ -1,6 +1,8 @@
 package org.hwer.engine.partitioners;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.PathExtentionCheck;
@@ -329,8 +331,20 @@ public class MSTPartitioner extends Partitioner {
     }
 
     public Symbol[] append (Symbol[] symbols, TraceGroup newTraces) {
-        if (symbols == null || symbols.length == 0) {
+        if (symbols == null) {
             return partition(newTraces);
+        }
+
+        if(symbols.length == 0){
+            return partition(newTraces);
+        }
+
+        if(newTraces == null){
+            return symbols;
+        }
+
+        if(newTraces.size() == 0){
+            return symbols;
         }
 
         int numberOfSymbols = symbols.length;
@@ -338,11 +352,14 @@ public class MSTPartitioner extends Partitioner {
 
         TraceGroup freeTraces = new TraceGroup();
 
+        HashSet<Integer> changedSymbols = new HashSet<Integer>();
+
         boolean continueFlag = false;
         for (int i = 0; i < numberOfNewTraces; i++) {
             for (int j = 0; j < numberOfSymbols; j++) {
                 if (symbols[j].getTraceGroup().isOverlappedBy(newTraces.get(i))) {
                     symbols[j].getTraceGroup().add(newTraces.get(i));
+                    changedSymbols.add(j);
 
                     continueFlag = true;
                     break;
@@ -351,16 +368,8 @@ public class MSTPartitioner extends Partitioner {
                     TraceGroup combined = new TraceGroup(symbols[j].getTraceGroup()).add(newTraces.get(i));
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
-                    symbols[j].getTraceGroup().calculateCorners();
-                    newTraces.get(i).calculateCorners();
-
-                    if ((symbol.getLabel() == Labels.EQUALS) &&
-                            (symbols[j].getLabel() != Labels.FRACTION_LINE &&
-                                    symbols[j].getLabel() != Labels.HORIZONTAL_LINE &&
-                                    symbols[j].getLabel() != Labels.EQUALS) &&
-                            (symbols[j].getParent() == null) &&
-                            (symbols[j].getTraceGroup().getWidth() >= 0.5 * newTraces.get(i).getWidth())) {
-                        symbols[j].getTraceGroup().add(newTraces.get(i));
+                    if (symbol.getLabel() == Labels.EQUALS && symbols[j].getLabel() == Labels.MINUS) {
+                        symbols[j] = symbol;
 
                         continueFlag = true;
                         break;
@@ -376,23 +385,19 @@ public class MSTPartitioner extends Partitioner {
             }
         }
 
-        for (int i = 0; i < numberOfSymbols; i++) {
-            symbols[i] = classifier_.classify(symbols[i].getTraceGroup(), null, false, false);
-
-                // /* ===== Logs ===== */
-                // if (! silent_) {
-                //     System.out.println("Log: path rate and label... ===== Start =====");
-                //
-                //     System.out.println("path " + i + " subSymbolCheck: " + false);
-                //     System.out.println("path " + i + " rate: " + rate);
-                //     System.out.println("path " + i + " label: " + classifier_.getClassificationLabel());
-                //
-                //     System.out.println("Log: path rate and label... ===== End =======");
-                // }
-                // /* ===== Logs ===== */
+        for (Integer index : changedSymbols) {
+            symbols[index] = classifier_.classify(symbols[index].getTraceGroup(), null, false, false);
         }
 
-            return partition(freeTraces);
+        Symbol[] newSymbols = partition(freeTraces);
+        int numberOfNewSymbols = newSymbols.length;
+
+        Symbol[] allSymbols = new Symbol[numberOfSymbols + numberOfNewSymbols];
+
+        System.arraycopy(symbols, 0, allSymbols, 0, numberOfSymbols);
+        System.arraycopy(newSymbols, 0, allSymbols, numberOfSymbols, numberOfNewSymbols);
+
+        return allSymbols;
     }
 
         /**

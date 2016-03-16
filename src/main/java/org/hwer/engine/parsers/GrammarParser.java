@@ -49,8 +49,14 @@ public abstract class GrammarParser extends Parser{
   private void parseRecursively(Symbol[] symbols){
     int numberOfSymbols = symbols.length;
 
-    if(symbols.length <= 1){
-      return;
+    switch(numberOfSymbols){
+      case 0:
+        return;
+      case 1:
+        symbols[0].reEvaluate(true);
+        return;
+      default:
+        break;
     }
 
     // Sort symbols by abscissa.
@@ -235,44 +241,6 @@ public abstract class GrammarParser extends Parser{
         }
       }
     }
-  }
-
-  @Override
-  public void append(Symbol[] symbols){
-    if(symbols_ == null || symbols_.length == 0){
-      parse(symbols);
-
-      return;
-    }
-
-    int oldNumberOfSymbols = symbols_.length;
-    int newNumberOfSymbols = symbols.length;
-    int numberOfSymbols = newNumberOfSymbols + oldNumberOfSymbols;
-
-    symbols_ = Arrays.copyOf(symbols_, numberOfSymbols);
-
-    // Transform traceGroups to symbols.
-    for(int i = 0;i < newNumberOfSymbols;i++){
-      symbols_[i + oldNumberOfSymbols] = symbols[i];
-    }
-
-    /* ===== Logs ===== */
-    if(!silent_){
-      System.out.println("Log: symbols... ===== Start =====");
-
-      for(int i = 0;i < numberOfSymbols;i++){
-        System.out.println("Symbol " + i + ": " + symbols_[i]);
-      }
-
-      System.out.println("Log: symbols... ===== End =======");
-    }
-    /* ===== Logs ===== */
-
-    if(numberOfSymbols <= 1){
-      return;
-    }
-
-    parse(symbols_);
   }
 
   /**

@@ -14,8 +14,6 @@ public abstract class Parser{
    */
   public abstract void parse(Symbol[] symbols);
 
-  public abstract void append(Symbol[] symbols);
-
   /**
    *  @brief Returns a String with the equation parsed in TeX format.
    */
