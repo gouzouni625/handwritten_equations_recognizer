@@ -7,7 +7,7 @@ import org.hwer.engine.utilities.traces.TraceGroup;
 public class LowerA extends Letter {
 
     public LowerA(TraceGroup traceGroup){
-        super(traceGroup);
+        super(traceGroup, true);
     }
 
     @Override
