@@ -39,6 +39,13 @@ public abstract class GrammarParser extends Parser{
     // /* ===== Logs ===== */
 
     parseRecursively(symbols_);
+
+    // Check if there are still AMBIGUOUS symbols and force them to decide.
+    for(Symbol symbol : symbols_){
+      if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
+        symbol.reEvaluate(true);
+      }
+    }
   }
 
   /**
@@ -180,13 +187,6 @@ public abstract class GrammarParser extends Parser{
       grammar_.parse(symbols[paths[i][0]], symbols[paths[i][1]]);
     }
 
-    // Reevaluate each unrecognized symbol to determine its type.
-    for(Symbol symbol : symbols){
-      if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
-        symbol.reEvaluate(false);
-      }
-    }
-
     // Parse the equation again and again until there is no change. This is done to propagate
     // the properties of each symbol to every other.
     String previousState;
@@ -194,23 +194,8 @@ public abstract class GrammarParser extends Parser{
       previousState = this.toString();
       for(int i = 0;i < numberOfPaths;i++){
         grammar_.parse(symbols[paths[i][0]], symbols[paths[i][1]]);
-
-        // Reevaluate each unrecognized symbol to determine its type.
-        for(Symbol symbol : symbols){
-          if(symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
-            symbol.reEvaluate(false);
-          }
-        }
       }
     }while(!previousState.equals(this.toString()));
-
-    // Check if there are still AMBIGUOUS symbols on the top level of the equation(those that do
-    // not have a parent).
-    for(Symbol symbol : symbols){
-      if(symbol.getParent() == null && symbol.getClazz() == SymbolFactory.Classes.AMBIGUOUS){
-        symbol.reEvaluate(true);
-      }
-    }
 
     // At this point, "first level" parsing is done. Now, parse the children of each symbols as if they where a new
     // equation. This makes it possible to have arbitrary depth in an equation. Concretely, equations like
