@@ -24,16 +24,18 @@ public class SquareRoot extends Operator {
         // Symbols accepted as children in ABOVE position: Number, Operator, Letter, UnrecognizedSymbol.
         // Symbols accepted as children in ABOVE_RIGHT position: Number, Operator, Letter, UnrecognizedSymbol.
         childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
-                Classes.AMBIGUOUS},
+                Classes.AMBIGUOUS, Classes.VARIABLE},
                 {Classes.NUMBER, Classes.OPERATOR, Classes.LETTER,
-                        Classes.AMBIGUOUS}};
+                        Classes.AMBIGUOUS, Classes.VARIABLE}};
         // Use sizeChildAcceptanceCriterion for accepting a child. That means that, when drawing an equation, a child
         // of an SQRT Symbol should have, at most, half the size of the SQRT Symbol.
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion,
                 sizeChildAcceptanceCriterion,
                 sizeChildAcceptanceCriterion,
+                sizeChildAcceptanceCriterion,
                 sizeChildAcceptanceCriterion},
                 {sizeChildAcceptanceCriterion,
+                        sizeChildAcceptanceCriterion,
                         sizeChildAcceptanceCriterion,
                         sizeChildAcceptanceCriterion,
                         sizeChildAcceptanceCriterion}};

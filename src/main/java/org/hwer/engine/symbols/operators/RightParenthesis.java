@@ -20,9 +20,10 @@ public class RightParenthesis extends Operator {
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
         // SymbolClass Accepted as ABOVE_RIGHT child: Number, Operator, Letter, UnrecognizedSymbol.
         childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
-                Classes.AMBIGUOUS}};
+                Classes.AMBIGUOUS, Classes.VARIABLE}};
         // Use no criteria for accepting any child.
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion,
+                allChildAcceptanceCriterion,
                 allChildAcceptanceCriterion,
                 allChildAcceptanceCriterion,
                 allChildAcceptanceCriterion}};
