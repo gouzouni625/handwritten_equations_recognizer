@@ -18,7 +18,7 @@ public abstract class Operator extends Symbol implements SymbolClass{
    */
   public Operator(TraceGroup traceGroup){
     super(traceGroup);
-    }
+  }
 
   public Classes getClazz(){
     return Classes.OPERATOR;
@@ -30,5 +30,12 @@ public abstract class Operator extends Symbol implements SymbolClass{
 
   @Override
   public void reEvaluate(boolean force){}
+
+  @Override
+  public void reset(){
+    setParent(null);
+    setPreviousSymbol(null);
+    setNextSymbol(null);
+  }
 
 }

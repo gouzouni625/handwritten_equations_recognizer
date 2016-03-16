@@ -22,8 +22,6 @@ public abstract class Number extends Symbol implements SymbolClass{
   public Number(TraceGroup traceGroup){
     super(traceGroup);
 
-    children_ = new ArrayList<List<Symbol>>();
-    children_.add(new ArrayList<Symbol>());
     // A Number accepts children only on ABOVE_RIGHT position, as an exponent.
     childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
     // A Number can accept as exponent another Number, a Letter, an Operator or an UnrecognizedSymbol.
@@ -47,7 +45,7 @@ public abstract class Number extends Symbol implements SymbolClass{
                                                                      sizeChildAcceptanceCriterion,
                                                                      widthSizeExceptSQRTFractionLine,
                                                                      sizeWidthChildAcceptanceCriterion,
-            sizeChildAcceptanceCriterion,}};
+            sizeChildAcceptanceCriterion}};
   }
 
   /**
@@ -84,6 +82,16 @@ public abstract class Number extends Symbol implements SymbolClass{
 
   public String toString(String symbolString){
     return (symbolString + "^{" + ArgumentPosition.ABOVE_RIGHT + "}");
+  }
+
+  @Override
+  public void reset(){
+    setParent(null);
+    setPreviousSymbol(null);
+    setNextSymbol(null);
+
+    children_ = new ArrayList<List<Symbol>>();
+    children_.add(new ArrayList<Symbol>());
   }
 
   @Override

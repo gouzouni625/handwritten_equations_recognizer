@@ -17,9 +17,6 @@ public abstract  class Variable extends Symbol{
     public Variable (TraceGroup traceGroup) {
         super(traceGroup);
 
-        children_ = new ArrayList<List<Symbol>>();
-        children_.add(new ArrayList<Symbol>());
-        children_.add(new ArrayList<Symbol>());
         // Accept children only on ABOVE_RIGHT(exponent) and BELOW_RIGHT(index) position.
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT, ArgumentPosition.BELOW_RIGHT};
         // Accept as exponent a Number, or another Letter, or an Operator or an UnrecognizedSymbol.
@@ -91,5 +88,16 @@ public abstract  class Variable extends Symbol{
 
     @Override
     public void reEvaluate(boolean force){}
+
+    @Override
+    public void reset(){
+        setParent(null);
+        setPreviousSymbol(null);
+        setNextSymbol(null);
+
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+        children_.add(new ArrayList<Symbol>());
+    }
 
 }

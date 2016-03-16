@@ -16,10 +16,6 @@ public class SquareRoot extends Operator {
     public SquareRoot(TraceGroup traceGroup){
         super(traceGroup);
 
-        // SQRT operator accept children in positions INSIDE and ABOVE_RIGHT.
-        children_ = new ArrayList<List<Symbol>>();
-        children_.add(new ArrayList<Symbol>());
-        children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.INSIDE, ArgumentPosition.ABOVE_RIGHT};
         // Symbols accepted as children in ABOVE position: Number, Operator, Letter, UnrecognizedSymbol.
         // Symbols accepted as children in ABOVE_RIGHT position: Number, Operator, Letter, UnrecognizedSymbol.
@@ -77,4 +73,14 @@ public class SquareRoot extends Operator {
     public String toString(){
         return toString("\\sqrt{" + ArgumentPosition.INSIDE + "}^{" + ArgumentPosition.ABOVE_RIGHT + "}");
     }
+
+    @Override
+    public void reset(){
+        super.reset();
+
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+        children_.add(new ArrayList<Symbol>());
+    }
+
 }

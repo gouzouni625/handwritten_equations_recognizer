@@ -37,8 +37,6 @@ public abstract class Ambiguous extends Symbol {
         childrenPositions_ = new ArgumentPosition[] {};
         childrenClasses_ = new Classes[][] {};
         childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {};
-
-        chosenSymbol_ = this;
     }
 
     /**
@@ -172,6 +170,21 @@ public abstract class Ambiguous extends Symbol {
         else {
             return Classes.AMBIGUOUS.toString();
         }
+    }
+
+    @Override
+    public void reset(){
+        setParent(null);
+        setPreviousSymbol(null);
+        setNextSymbol(null);
+
+        if(possibleSymbols_ != null) {
+            for (Symbol possibleSymbol : possibleSymbols_) {
+                possibleSymbol.reset();
+            }
+        }
+
+        chosenSymbol_ = this;
     }
 
     public String toString(String symbolString){

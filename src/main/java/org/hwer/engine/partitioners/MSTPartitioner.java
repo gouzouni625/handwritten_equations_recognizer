@@ -347,6 +347,10 @@ public class MSTPartitioner extends Partitioner {
             return symbols;
         }
 
+        for(Symbol symbol : symbols){
+            symbol.reset();
+        }
+
         int numberOfSymbols = symbols.length;
         int numberOfNewTraces = newTraces.size();
 

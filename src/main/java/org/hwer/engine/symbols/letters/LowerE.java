@@ -15,9 +15,6 @@ public class LowerE extends Letter {
     public LowerE(TraceGroup traceGroup){
         super(traceGroup, false);
 
-        children_ = new ArrayList<List<Symbol>>();
-        children_.add(new ArrayList<Symbol>());
-
         // Accept children only on ABOVE_RIGHT(exponent).
         childrenPositions_ = new ArgumentPosition[]
                 {
@@ -45,6 +42,16 @@ public class LowerE extends Letter {
                                 sizeChildAcceptanceCriterion
                         }
                 };
+    }
+
+    @Override
+    public void reset(){
+        setParent(null);
+        setPreviousSymbol(null);
+        setNextSymbol(null);
+
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
     }
 
     @Override

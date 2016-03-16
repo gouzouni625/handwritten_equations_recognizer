@@ -25,6 +25,8 @@ public abstract class Symbol implements SymbolClass {
    */
   public Symbol(TraceGroup traceGroup){
     traceGroup_ = traceGroup;
+
+    reset();
   }
 
   /**
@@ -327,6 +329,8 @@ public abstract class Symbol implements SymbolClass {
 
   public abstract String toString();
 
+  public abstract void reset();
+
   // Use this method to give the ability to symbols for internal changes.
   public abstract void reEvaluate(boolean force);
 
@@ -401,7 +405,7 @@ public abstract class Symbol implements SymbolClass {
 
   protected final ArgumentPosition[] nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
 
-  protected List<List<Symbol>> children_; //!< The children of this Symbol. A List of children for every children Position.
+  protected List<List<Symbol>> children_ = null; //!< The children of this Symbol. A List of children for every children Position.
 
   protected ArgumentPosition[] childrenPositions_; //!< The positions where this Symbol accepts children.
   protected Classes[][] childrenClasses_; /**< The accepted class for children of this Symbol.

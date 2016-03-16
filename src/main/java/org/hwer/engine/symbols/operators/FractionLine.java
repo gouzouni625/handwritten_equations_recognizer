@@ -15,10 +15,6 @@ public class FractionLine extends Operator {
     public FractionLine(TraceGroup traceGroup){
         super(traceGroup);
 
-        // FRACTION_LINE operator accepts children in positions ABOVE and BELOW.
-        children_ = new ArrayList<List<Symbol>>();
-        children_.add(new ArrayList<Symbol>());
-        children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE, ArgumentPosition.BELOW};
         // Symbols accepted as children in ABOVE position: Number, Operator, Letter, UnrecognizedSymbol.
         // Symbols accepted as children in BELOW position: Number, Operator, Letter, UnrecognizedSymbol.
@@ -203,4 +199,14 @@ public class FractionLine extends Operator {
     public String toString(){
         return toString("\\frac{" + ArgumentPosition.ABOVE + "}{" + ArgumentPosition.BELOW + "}");
     }
+
+    @Override
+    public void reset(){
+        super.reset();
+
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+        children_.add(new ArrayList<Symbol>());
+    }
+
 }

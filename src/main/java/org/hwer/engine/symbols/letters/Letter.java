@@ -37,6 +37,13 @@ public abstract class Letter extends Symbol {
     }
 
     @Override
+    public void reset(){
+        setParent(null);
+        setPreviousSymbol(null);
+        setNextSymbol(null);
+    }
+
+    @Override
     public void reEvaluate (boolean force) {
     }
 }

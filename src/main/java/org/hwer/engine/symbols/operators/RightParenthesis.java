@@ -14,9 +14,6 @@ public class RightParenthesis extends Operator {
     public RightParenthesis(TraceGroup traceGroup){
         super(traceGroup);
 
-        // RIGHT_PARENTHESIS Operator objects accept children ABOVE_RIGHT.
-        children_ = new ArrayList<List<Symbol>>();
-        children_.add(new ArrayList<Symbol>());
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
         // SymbolClass Accepted as ABOVE_RIGHT child: Number, Operator, Letter, UnrecognizedSymbol.
         childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
@@ -58,4 +55,13 @@ public class RightParenthesis extends Operator {
     public String toString(){
         return toString(")^{" + ArgumentPosition.ABOVE_RIGHT + "}");
     }
+
+    @Override
+    public void reset(){
+        super.reset();
+
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+    }
+
 }
