@@ -27,7 +27,7 @@ public class TraceGroup {
         traces_ = new ArrayList<Trace>();
 
         for (int i = 0; i < traceGroup.size(); i++) {
-            this.add(traceGroup.get(i));
+            traces_.add(new Trace(traceGroup.get(i)));
         }
     }
 
@@ -41,7 +41,7 @@ public class TraceGroup {
      * Trace changes, the Trace inside this TraceGroup will not change.
      */
     public TraceGroup add (Trace trace) {
-        traces_.add(new Trace(trace));
+        traces_.add(trace);
 
         return this;
     }
@@ -56,7 +56,7 @@ public class TraceGroup {
      */
     public TraceGroup add (TraceGroup traceGroup) {
         for (int i = 0; i < traceGroup.size(); i++) {
-            this.add(traceGroup.get(i));
+            traces_.add(traceGroup.get(i));
         }
 
         return this;
@@ -351,7 +351,7 @@ public class TraceGroup {
             }
         }
 
-        return (new Trace[]{traceGroup1.get(index1), traceGroup2.get(index2)});
+        return (new Trace[]{new Trace(traceGroup1.get(index1)), new Trace(traceGroup2.get(index2))});
     }
 
     /**
@@ -371,12 +371,6 @@ public class TraceGroup {
         return (Trace.closestPoints(closestTraces[0], closestTraces[1]));
     }
 
-    public void reset () {
-        traces_.clear();
-        topLeftCorner_ = null;
-        bottomRightCorner_ = null;
-    }
-
     public boolean isOverlappedBy (Trace trace) {
         int numberOfTraces = traces_.size();
 
@@ -389,12 +383,8 @@ public class TraceGroup {
         return false;
     }
 
-    public void remove (int index) {
-        traces_.remove(index);
-    }
-
-    public void remove (Trace trace) {
-        traces_.remove(trace);
+    public boolean remove (Trace trace) {
+        return traces_.remove(trace);
     }
 
     public boolean contains (Trace trace) {

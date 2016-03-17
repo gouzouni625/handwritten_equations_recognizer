@@ -30,7 +30,7 @@ public class Trace {
         points_ = new ArrayList<Point>();
 
         for (int i = 0; i < trace.size(); i++) {
-            this.add(trace.get(i));
+            points_.add(new Point(trace.get(i)));
         }
     }
 
@@ -44,7 +44,7 @@ public class Trace {
      * input Point changes, the Point inside the Trace will not change.
      */
     public Trace add (Point point) {
-        points_.add(new Point(point));
+        points_.add(point);
 
         return this;
     }
@@ -318,6 +318,7 @@ public class Trace {
     public static boolean areOverlapped (Trace trace1, Trace trace2) {
         Trace trace1Copy = new Trace(trace1);
         Trace trace2Copy = new Trace(trace2);
+
         trace1Copy.calculateCorners();
         trace2Copy.calculateCorners();
 
@@ -409,7 +410,7 @@ public class Trace {
             }
         }
 
-        return (new Point[]{trace1.get(index1), trace2.get(index2)});
+        return (new Point[]{new Point(trace1.get(index1)), new Point(trace2.get(index2))});
     }
 
     /**
@@ -431,7 +432,7 @@ public class Trace {
             }
         }
 
-        return (points_.get(minIndex));
+        return (new Point(points_.get(minIndex)));
     }
 
     /**
@@ -439,7 +440,7 @@ public class Trace {
      * @brief Constructs an InkML representation of this Trace.
      */
     public String toInkMLFormat () {
-        String inkMLRepresentation = new String("<trace>");
+        String inkMLRepresentation = "<trace>";
 
         for (Point point : points_) {
             inkMLRepresentation += point.x_ + " " + point.y_ + ", ";
@@ -450,24 +451,6 @@ public class Trace {
         inkMLRepresentation += "</trace>";
 
         return inkMLRepresentation;
-    }
-
-    public void reset () {
-        points_.clear();
-        topLeftCorner_ = null;
-        bottomRightCorner_ = null;
-    }
-
-    public void remove (int index) {
-        points_.remove(index);
-    }
-
-    public void remove (Point point) {
-        points_.remove(point);
-    }
-
-    public boolean contains (Point point) {
-        return points_.contains(point);
     }
 
     private ArrayList<Point> points_; //!< The Point objects of this Trace.
