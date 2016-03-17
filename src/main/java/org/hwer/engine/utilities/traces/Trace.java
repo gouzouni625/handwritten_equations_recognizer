@@ -464,10 +464,8 @@ public class Trace {
         traceGroup.add(trace1Copy);
         traceGroup.add(trace2Copy);
 
-        trace1Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_,
-                traceGroup.getBottomRightCorner().y_));
-        trace2Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_,
-                traceGroup.getBottomRightCorner().y_));
+        // Note that the subtraction will have efect on trace1Copy and trace2Copy since they
+        // are inside the traceGroup.
         traceGroup.subtract(new Point(traceGroup.getTopLeftCorner().x_,
                 traceGroup.getBottomRightCorner().y_));
 

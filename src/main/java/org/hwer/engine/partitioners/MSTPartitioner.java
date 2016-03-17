@@ -372,7 +372,8 @@ public class MSTPartitioner extends Partitioner {
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
                     if (symbol.getLabel() == Labels.EQUALS && symbols[j].getLabel() == Labels.MINUS) {
-                        symbols[j] = symbol;
+                        symbols[j].getTraceGroup().add(newTraces.get(i));
+                        changedSymbols.add(j);
 
                         continueFlag = true;
                         break;
@@ -403,6 +404,60 @@ public class MSTPartitioner extends Partitioner {
         return allSymbols;
     }
 
+    public Symbol[] remove (Symbol[] symbols, TraceGroup tracesToBeRemoved){
+        if(symbols == null){
+            return new Symbol[] {};
+        }
+
+        if(symbols.length == 0){
+            return symbols;
+        }
+
+        if(tracesToBeRemoved == null){
+            return symbols;
+        }
+
+        if(tracesToBeRemoved.size() == 0){
+            return symbols;
+        }
+
+        for(Symbol symbol : symbols){
+            symbol.reset();
+        }
+
+        HashSet<Integer> changedSymbols = new HashSet<Integer>();
+
+        for(int i = 0, n = symbols.length;i < n;i++){
+            for(int j = 0, m = tracesToBeRemoved.size();j < m;j++){
+                if(symbols[i].getTraceGroup().contains(tracesToBeRemoved.get(j))){
+                    symbols[i].getTraceGroup().remove(tracesToBeRemoved.get(j));
+                    changedSymbols.add(i);
+                }
+            }
+        }
+
+        int numberOfNullSymbols = 0;
+        for (Integer index : changedSymbols) {
+            if(symbols[index].getTraceGroup().size() != 0){
+                symbols[index] = classifier_.classify(symbols[index].getTraceGroup(), null, false, false);
+            }
+            else{
+                symbols[index] = null;
+                numberOfNullSymbols++;
+            }
+        }
+
+        Symbol[] finalSymbols = new Symbol[symbols.length - numberOfNullSymbols];
+        int index = 0;
+        for(Symbol symbol : symbols){
+            if(symbol != null){
+                finalSymbols[index] = symbol;
+                index++;
+            }
+        }
+
+        return finalSymbols;
+    }
         /**
          * @param partition      The partition to be checked.
          * @param paths          All the paths upon the minimum spanning tree.
