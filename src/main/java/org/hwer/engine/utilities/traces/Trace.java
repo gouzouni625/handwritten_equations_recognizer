@@ -18,6 +18,8 @@ public class Trace {
      */
     public Trace () {
         points_ = new ArrayList<Point>();
+
+        calculateAll();
     }
 
     /**
@@ -32,6 +34,8 @@ public class Trace {
         for (int i = 0; i < trace.size(); i++) {
             points_.add(new Point(trace.get(i)));
         }
+
+        calculateAll();
     }
 
     /**
@@ -45,6 +49,8 @@ public class Trace {
      */
     public Trace add (Point point) {
         points_.add(point);
+
+        calculateAll();
 
         return this;
     }
@@ -82,6 +88,8 @@ public class Trace {
             points_.get(i).multiplyBy(factor);
         }
 
+        calculateAll();
+
         return this;
     }
 
@@ -89,6 +97,8 @@ public class Trace {
         for (int i = 0; i < points_.size(); i++) {
             points_.get(i).multiplyBy(point);
         }
+
+        calculateAll();
 
         return this;
     }
@@ -106,6 +116,8 @@ public class Trace {
             points_.get(i).subtract(point);
         }
 
+        calculateAll();
+
         return this;
     }
 
@@ -118,7 +130,11 @@ public class Trace {
      * Bottom Left Corner : minimum abscissa(x), maximum ordinate(y).
      * Bottom Right Corner: maximum abscissa(x), maximum ordinate(y).
      */
-    public void calculateCorners () {
+    private void calculateCorners () {
+        if(! calculateCorners_){
+            return;
+        }
+
         double minX = points_.get(0).x_;
         double maxX = points_.get(0).x_;
         double minY = points_.get(0).y_;
@@ -145,7 +161,11 @@ public class Trace {
         }
 
         topLeftCorner_ = new Point(minX, maxY);
+        topRightCorner_ = new Point(maxX, maxY);
+        bottomLeftCorner_ = new Point(minX, minY);
         bottomRightCorner_ = new Point(maxX, minY);
+
+        calculateCorners_ = false;
     }
 
     /**
@@ -156,6 +176,10 @@ public class Trace {
      * if the returned Point is changed, topLeftCorner will not be changed.
      */
     public Point getTopLeftCorner () {
+        if (calculateCorners_){
+            calculateCorners();
+        }
+
         return (new Point(topLeftCorner_));
     }
 
@@ -167,6 +191,10 @@ public class Trace {
      * if the returned Point is changed, bottomRightCorner will not be changed.
      */
     public Point getBottomRightCorner () {
+        if (calculateCorners_){
+            calculateCorners();
+        }
+
         return (new Point(bottomRightCorner_));
     }
 
@@ -178,7 +206,11 @@ public class Trace {
      * if the returned Point is changed, bottomLeftCorner will not be changed.
      */
     public Point getBottomLeftCorner () {
-        return (new Point(topLeftCorner_.x_, bottomRightCorner_.y_));
+        if (calculateCorners_){
+            calculateCorners();
+        }
+
+        return (new Point(bottomLeftCorner_));
     }
 
     /**
@@ -189,47 +221,11 @@ public class Trace {
      * if the returned Point is changed, topRightCorner will not be changed.
      */
     public Point getTopRightCorner () {
-        return (new Point(bottomRightCorner_.x_, topLeftCorner_.y_));
-    }
-
-    /**
-     * @return Returns the Point inside this Trace with the minimum abscissa(x).
-     * @brief Calculates and returns the Point of this Trace with the minimum abscissa(x).
-     * <p>
-     * The Point returned is not the actual Point with the minimum abscissa(x) but a copy of it.
-     * That is, if the Point returned is changed, the Point inside the Trace will not be changed.
-     */
-    public Point getOutterLeftPoint () {
-        double minX = points_.get(0).x_;
-        int index = 0;
-        for (int i = 0; i < points_.size(); i++) {
-            if (points_.get(i).x_ < minX) {
-                minX = points_.get(i).x_;
-                index = i;
-            }
+        if (calculateCorners_){
+            calculateCorners();
         }
 
-        return (new Point(points_.get(index)));
-    }
-
-    /**
-     * @return Returns the Point inside this Trace with the maximum abscissa(x).
-     * @brief Calculates and returns the Point of this Trace with the maximum abscissa(x).
-     * <p>
-     * The Point returned is not the actual Point with the maximum abscissa(x) but a copy of it.
-     * That is, if the Point returned is changed, the Point inside the Trace will not be changed.
-     */
-    public Point getOutterRightPoint () {
-        double maxX = points_.get(0).x_;
-        int index = 0;
-        for (int i = 0; i < points_.size(); i++) {
-            if (points_.get(i).x_ > maxX) {
-                maxX = points_.get(i).x_;
-                index = i;
-            }
-        }
-
-        return (new Point(points_.get(index)));
+        return (new Point(topRightCorner_));
     }
 
     /**
@@ -239,6 +235,10 @@ public class Trace {
      * The width is calculated as width = bottomRightCorner.x - topLeftCorner.x .
      */
     public double getWidth () {
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
         return (bottomRightCorner_.x_ - topLeftCorner_.x_);
     }
 
@@ -249,27 +249,11 @@ public class Trace {
      * The height is calculated as height = topLeftCorner.y - bottomRightCorner.y .
      */
     public double getHeight () {
-        return (topLeftCorner_.y_ - bottomRightCorner_.y_);
-    }
-
-    /**
-     * @param image The OpenCV Mat that is used as an image.
-     * @return Returns the image so that the method can be used in chain commands
-     * (e.g. tr2.print(tr1.print(image, thickness1), thickness2);).
-     * @brief Prints this Trace to an image.
-     * <p>
-     * Using OpenCV Core.line method, draws this Trace on an image.
-     */
-    public Image print (Image image) {
-        int height = image.getHeight();
-        int numberOfLines = points_.size() - 1;
-
-        for (int i = 0; i < numberOfLines; i++) {
-            Drawer.drawLine(image, (int) points_.get(i).x_, (int) (height - points_.get(i).y_),
-                    (int) (points_.get(i + 1).x_), (int) (height - points_.get(i + 1).y_));
+        if(calculateCorners_){
+            calculateCorners();
         }
 
-        return image;
+        return (topLeftCorner_.y_ - bottomRightCorner_.y_);
     }
 
     /**
@@ -281,12 +265,82 @@ public class Trace {
      * center.y = bottomRightCorner.y + traceHeight / 2;
      */
     public Point getCentroid () {
-        this.calculateCorners();
+        if(calculateCorners_){
+            calculateCorners();
+        }
 
-        double centroidX = topLeftCorner_.x_ + this.getWidth() / 2;
-        double centroidY = bottomRightCorner_.y_ + this.getHeight() / 2;
+        double centroidX = topLeftCorner_.x_ + getWidth() / 2;
+        double centroidY = bottomRightCorner_.y_ + getHeight() / 2;
 
         return (new Point(centroidX, centroidY));
+    }
+
+    /**
+     * @return Returns the Point inside this Trace with the minimum abscissa(x).
+     * @brief Calculates and returns the Point of this Trace with the minimum abscissa(x).
+     * <p>
+     * The Point returned is not the actual Point with the minimum abscissa(x) but a copy of it.
+     * That is, if the Point returned is changed, the Point inside the Trace will not be changed.
+     */
+    public Point getOuterLeftPoint () {
+        if(calculateOuterLeftPoint_){
+            calculateOuterLeftPoint();
+        }
+
+        return new Point(outerLeftPoint_);
+    }
+
+    private void calculateOuterLeftPoint(){
+        if(! calculateOuterLeftPoint_){
+            return;
+        }
+
+        double minX = points_.get(0).x_;
+        int index = 0;
+        for (int i = 0; i < points_.size(); i++) {
+            if (points_.get(i).x_ < minX) {
+                minX = points_.get(i).x_;
+                index = i;
+            }
+        }
+
+        outerLeftPoint_ = points_.get(index);
+
+        calculateOuterLeftPoint_ = false;
+    }
+
+    /**
+     * @return Returns the Point inside this Trace with the maximum abscissa(x).
+     * @brief Calculates and returns the Point of this Trace with the maximum abscissa(x).
+     * <p>
+     * The Point returned is not the actual Point with the maximum abscissa(x) but a copy of it.
+     * That is, if the Point returned is changed, the Point inside the Trace will not be changed.
+     */
+    public Point getOuterRightPoint () {
+        if(calculateOuterRightPoint_){
+            calculateOuterRightPoint();
+        }
+
+        return new Point(outerRightPoint_);
+    }
+
+    private void calculateOuterRightPoint(){
+        if(! calculateOuterRightPoint_){
+            return;
+        }
+
+        double maxX = points_.get(0).x_;
+        int index = 0;
+        for (int i = 0; i < points_.size(); i++) {
+            if (points_.get(i).x_ > maxX) {
+                maxX = points_.get(i).x_;
+                index = i;
+            }
+        }
+
+        outerRightPoint_ = points_.get(index);
+
+        calculateOuterRightPoint_ = false;
     }
 
     /**
@@ -297,14 +351,101 @@ public class Trace {
      * centerOfMass = sum{pointsInTrace} / traceSize;
      */
     public Point getCenterOfMass () {
-        Point centerOfMass = new Point(0, 0);
-
-        for (Point point : points_) {
-            centerOfMass.add(point);
+        if(calculateCenterOfMass_){
+            calculateCenterOfMass();
         }
-        centerOfMass.divideBy(this.size());
 
-        return centerOfMass;
+        return new Point(centerOfMass_);
+    }
+
+    private void calculateCenterOfMass(){
+        if(! calculateCenterOfMass_){
+            return;
+        }
+
+        centerOfMass_ = new Point(0, 0);
+        for (Point point : points_) {
+            centerOfMass_.add(point);
+        }
+        centerOfMass_.divideBy(this.size());
+
+        calculateCenterOfMass_ = false;
+    }
+
+    /**
+     *
+     */
+    public Image print (int width, int height) {
+        if(drawImage_){
+            drawImage(width, height);
+        }
+
+        return new Image(image_);
+    }
+
+    private void drawImage(int width, int height){
+        if(!drawImage_ && image_.getWidth() == width && image_.getHeight() == height){
+            return;
+        }
+
+        image_ = new Image(width, height);
+
+        for (int i = 0, n = points_.size() - 1; i < n; i++) {
+            Drawer.drawLine(image_, (int) points_.get(i).x_, (int) (height - points_.get(i).y_),
+                    (int) (points_.get(i + 1).x_), (int) (height - points_.get(i + 1).y_));
+        }
+
+        drawImage_ = false;
+    }
+
+    /**
+     * @return Returns the InkML representation of this Trace.
+     * @brief Constructs an InkML representation of this Trace.
+     */
+    public String toInkMLFormat () {
+        if(calculateInkML_){
+            calculateInkML();
+        }
+
+        return inkML_;
+    }
+
+    private void calculateInkML(){
+        if(! calculateInkML_){
+            return;
+        }
+
+        inkML_ = "<trace>";
+        for (Point point : points_) {
+            inkML_ += point.x_ + " " + point.y_ + ", ";
+        }
+        // Remove last comma and the following space.
+        inkML_ = inkML_.substring(0, inkML_.length() - 2);
+        inkML_ += "</trace>";
+
+        calculateInkML_ = false;
+    }
+
+    /**
+     * @param point The Point to find the closest to.
+     * @return Returns the Point of this Trace that is the closest to the specified Point.
+     * The Point returned is the actual Point. That is, if the returned Point is changed, then, the
+     * actual Point inside the Trace will also be changed.
+     * @brief Calculates and returns the closest point from this Trace to a specific Point.
+     */
+    public Point closestPoint (Point point) {
+        double minDistance = Point.distance(points_.get(0), point);
+        int minIndex = 0;
+        for (int i = 0; i < points_.size(); i++) {
+            double distance = Point.distance(points_.get(i), point);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                minIndex = i;
+            }
+        }
+
+        return (new Point(points_.get(minIndex)));
     }
 
     /**
@@ -319,13 +460,9 @@ public class Trace {
         Trace trace1Copy = new Trace(trace1);
         Trace trace2Copy = new Trace(trace2);
 
-        trace1Copy.calculateCorners();
-        trace2Copy.calculateCorners();
-
         TraceGroup traceGroup = new TraceGroup();
         traceGroup.add(trace1Copy);
         traceGroup.add(trace2Copy);
-        traceGroup.calculateCorners();
 
         trace1Copy.subtract(new Point(traceGroup.getTopLeftCorner().x_,
                 traceGroup.getBottomRightCorner().y_));
@@ -337,11 +474,8 @@ public class Trace {
         double width = traceGroup.getWidth();
         double height = traceGroup.getHeight();
 
-        Image image1 = new Image((int) width, (int) height);
-        Image image2 = new Image((int) width, (int) height);
-
-        trace1Copy.print(image1);
-        trace2Copy.print(image2);
+        Image image1 = trace1Copy.print((int)width, (int)height);
+        Image image2 = trace2Copy.print((int)width, (int)height);
 
         int white = Drawer.WHITE;
         for (int x = 0; x < (int) width; x++) {
@@ -413,49 +547,39 @@ public class Trace {
         return (new Point[]{new Point(trace1.get(index1)), new Point(trace2.get(index2))});
     }
 
-    /**
-     * @param point The Point to find the closest to.
-     * @return Returns the Point of this Trace that is the closest to the specified Point.
-     * The Point returned is the actual Point. That is, if the returned Point is changed, then, the
-     * actual Point inside the Trace will also be changed.
-     * @brief Calculates and returns the closest point from this Trace to a specific Point.
-     */
-    public Point closestPoint (Point point) {
-        double minDistance = Point.distance(points_.get(0), point);
-        int minIndex = 0;
-        for (int i = 0; i < points_.size(); i++) {
-            double distance = Point.distance(points_.get(i), point);
+    private void calculateAll (){
+        calculateCorners_ = true;
 
-            if (distance < minDistance) {
-                minDistance = distance;
-                minIndex = i;
-            }
-        }
+        calculateOuterLeftPoint_ = true;
+        calculateOuterRightPoint_ = true;
 
-        return (new Point(points_.get(minIndex)));
-    }
+        calculateCenterOfMass_ = true;
 
-    /**
-     * @return Returns the InkML representation of this Trace.
-     * @brief Constructs an InkML representation of this Trace.
-     */
-    public String toInkMLFormat () {
-        String inkMLRepresentation = "<trace>";
-
-        for (Point point : points_) {
-            inkMLRepresentation += point.x_ + " " + point.y_ + ", ";
-        }
-        // Remove last comma and the following space.
-        inkMLRepresentation = inkMLRepresentation.substring(0, inkMLRepresentation.length() - 2);
-
-        inkMLRepresentation += "</trace>";
-
-        return inkMLRepresentation;
+        drawImage_ = true;
+        calculateInkML_ = true;
     }
 
     private ArrayList<Point> points_; //!< The Point objects of this Trace.
 
     private Point topLeftCorner_; //!< The top left corner of this Trace.
+    private Point topRightCorner_;
+    private Point bottomLeftCorner_;
     private Point bottomRightCorner_; //!< The bottom right corner of this Trace.
+    private boolean calculateCorners_;
+
+    private Point outerLeftPoint_;
+    private boolean calculateOuterLeftPoint_;
+
+    private Point outerRightPoint_;
+    private boolean calculateOuterRightPoint_;
+
+    private Point centerOfMass_;
+    private boolean calculateCenterOfMass_;
+
+    private Image image_;
+    private boolean drawImage_;
+
+    private String inkML_;
+    private boolean calculateInkML_;
 
 }
