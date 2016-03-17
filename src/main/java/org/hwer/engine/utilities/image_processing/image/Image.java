@@ -15,6 +15,18 @@ public class Image{
     }
   }
 
+  public Image(Image image){
+    width_ = image.getWidth();
+    height_ = image.getHeight();
+
+    pixels_ = new byte[width_][height_];
+    for(int i = 0;i < width_;i++){
+      for(int j = 0;j < height_;j++){
+        pixels_[i][j] = image.getPixel(i, j);
+      }
+    }
+  }
+
   public void setPixel(int x, int y, byte value){
     if (x >= 0 && x < width_ && y >= 0 && y < height_) {
       pixels_[x][y] = value;
