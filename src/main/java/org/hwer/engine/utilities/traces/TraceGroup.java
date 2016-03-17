@@ -15,6 +15,8 @@ public class TraceGroup {
      */
     public TraceGroup () {
         traces_ = new ArrayList<Trace>();
+
+        calculateAll();
     }
 
     /**
@@ -29,6 +31,8 @@ public class TraceGroup {
         for (int i = 0; i < traceGroup.size(); i++) {
             traces_.add(new Trace(traceGroup.get(i)));
         }
+
+        calculateAll();
     }
 
     /**
@@ -42,6 +46,8 @@ public class TraceGroup {
      */
     public TraceGroup add (Trace trace) {
         traces_.add(trace);
+
+        calculateAll();
 
         return this;
     }
@@ -59,7 +65,19 @@ public class TraceGroup {
             traces_.add(traceGroup.get(i));
         }
 
+        calculateAll();
+
         return this;
+    }
+
+    public boolean remove (Trace trace) {
+        boolean removed = traces_.remove(trace);
+
+        if(removed){
+            calculateAll();
+        }
+
+        return removed;
     }
 
     /**
@@ -72,14 +90,6 @@ public class TraceGroup {
      */
     public Trace get (int index) {
         return traces_.get(index);
-    }
-
-    /**
-     * @return Returns the number of Trace objects in this TraceGroup.
-     * @brief Returns the number of Trace objects in this TraceGroup.
-     */
-    public int size () {
-        return traces_.size();
     }
 
     /**
@@ -105,6 +115,14 @@ public class TraceGroup {
     }
 
     /**
+     * @return Returns the number of Trace objects in this TraceGroup.
+     * @brief Returns the number of Trace objects in this TraceGroup.
+     */
+    public int size () {
+        return traces_.size();
+    }
+
+    /**
      * @param factor The double that this TraceGroup should be multiplied with.
      * @return Returns this TraceGroup in order for chain commands to be
      * possible(e.g. tg1.multiplyBy(3).multiplyBy(4);).
@@ -118,6 +136,8 @@ public class TraceGroup {
             traces_.get(i).multiplyBy(factor);
         }
 
+        calculateAll();
+
         return this;
     }
 
@@ -125,6 +145,8 @@ public class TraceGroup {
         for (int i = 0; i < traces_.size(); i++) {
             traces_.get(i).multiplyBy(point);
         }
+
+        calculateAll();
 
         return this;
     }
@@ -143,6 +165,8 @@ public class TraceGroup {
             traces_.get(i).subtract(point);
         }
 
+        calculateAll();
+
         return this;
     }
 
@@ -155,12 +179,10 @@ public class TraceGroup {
      * Bottom Left Corner : minimum abscissa(x), maximum ordinate(y).
      * Bottom Right Corner: maximum abscissa(x), maximum ordinate(y).
      */
-    public void calculateCorners () {
-        if (traces_ == null || traces_.size() == 0) {
+    private void calculateCorners () {
+        if(!calculateCorners_){
             return;
         }
-
-        traces_.get(0).calculateCorners();
 
         double minX = traces_.get(0).getTopLeftCorner().x_;
         double maxX = traces_.get(0).getBottomRightCorner().x_;
@@ -168,8 +190,6 @@ public class TraceGroup {
         double maxY = traces_.get(0).getTopLeftCorner().y_;
 
         for (int i = 0; i < traces_.size(); i++) {
-            traces_.get(i).calculateCorners();
-
             Point topLeftCorner = traces_.get(i).getTopLeftCorner();
             Point bottomRightCorner = traces_.get(i).getBottomRightCorner();
 
@@ -191,7 +211,11 @@ public class TraceGroup {
         }
 
         topLeftCorner_ = new Point(minX, maxY);
+        topRightCorner_ = new Point(maxX, maxY);
+        bottomLeftCorner_ = new Point(minX, minY);
         bottomRightCorner_ = new Point(maxX, minY);
+
+        calculateCorners_ = false;
     }
 
     /**
@@ -202,6 +226,10 @@ public class TraceGroup {
      * Point is changed, topLeftCorner will not be changed.
      */
     public Point getTopLeftCorner () {
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
         return (new Point(topLeftCorner_));
     }
 
@@ -213,6 +241,10 @@ public class TraceGroup {
      * returned Point is changed, bottomRightCorner will not be changed.
      */
     public Point getBottomRightCorner () {
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
         return (new Point(bottomRightCorner_));
     }
 
@@ -224,7 +256,11 @@ public class TraceGroup {
      * returned Point is changed, bottomLeftCorner will not be changed.
      */
     public Point getBottomLeftCorner () {
-        return (new Point(topLeftCorner_.x_, bottomRightCorner_.y_));
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
+        return (new Point(bottomLeftCorner_));
     }
 
     /**
@@ -235,7 +271,11 @@ public class TraceGroup {
      * returned Point is changed, topRightCorner will not be changed.
      */
     public Point getTopRightCorner () {
-        return (new Point(bottomRightCorner_.x_, topLeftCorner_.y_));
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
+        return (new Point(topRightCorner_));
     }
 
     /**
@@ -245,6 +285,10 @@ public class TraceGroup {
      * The width is calculated as width = bottomRightCorner.x - topLeftCorner.x .
      */
     public double getWidth () {
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
         return (bottomRightCorner_.x_ - topLeftCorner_.x_);
     }
 
@@ -255,6 +299,10 @@ public class TraceGroup {
      * The height is calculated as height = topLeftCorner.y - bottomRightCorner.y .
      */
     public double getHeight () {
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
         return (topLeftCorner_.y_ - bottomRightCorner_.y_);
     }
 
@@ -267,12 +315,28 @@ public class TraceGroup {
      * center.y = bottomRightCorner.y + traceHeight / 2;
      */
     public Point getCentroid () {
-        this.calculateCorners();
+        if(calculateCorners_){
+            calculateCorners();
+        }
 
-        double centroidX = topLeftCorner_.x_ + this.getWidth() / 2;
-        double centroidY = bottomRightCorner_.y_ + this.getHeight() / 2;
+        double centroidX = topLeftCorner_.x_ + getWidth() / 2;
+        double centroidY = bottomRightCorner_.y_ + getHeight() / 2;
 
         return (new Point(centroidX, centroidY));
+    }
+
+    /**
+     * @return
+     * @brief Calculates and returns the area covered by this TraceGroup.
+     * <p>
+     * The area is calculated as: area = width * height .
+     */
+    public double getArea () {
+        if(calculateCorners_){
+            calculateCorners();
+        }
+
+        return (getWidth() * getHeight());
     }
 
     /**
@@ -283,27 +347,44 @@ public class TraceGroup {
      * centerOfMass = sum{pointsInTrace} / traceSize;
      */
     public Point getCenterOfMass () {
-        Point centerOfMass = new Point(0, 0);
+        if(calculateCenterOfMass_){
+            calculateCenterOfMass();
+        }
 
+        return new Point(centerOfMass_);
+    }
+
+    private void calculateCenterOfMass(){
+        if(!calculateCenterOfMass_){
+            return;
+        }
+
+        centerOfMass_ = new Point(0, 0);
         int numberOfPoints = 0;
         for (Trace trace : traces_) {
-            centerOfMass.add(trace.getCenterOfMass().multiplyBy(trace.size()));
+            centerOfMass_.add(trace.getCenterOfMass().multiplyBy(trace.size()));
 
             numberOfPoints += trace.size();
         }
-        centerOfMass.divideBy(numberOfPoints);
+        centerOfMass_.divideBy(numberOfPoints);
 
-        return centerOfMass;
+        calculateCenterOfMass_ = false;
     }
 
-    /**
-     * @return
-     * @brief Calculates and returns the area covered by this TraceGroup.
-     * <p>
-     * The area is calculated as: area = width * height .
-     */
-    public double getArea () {
-        return (this.getWidth() * this.getHeight());
+    public boolean isOverlappedBy (Trace trace) {
+        int numberOfTraces = traces_.size();
+
+        for (int i = 0; i < numberOfTraces; i++) {
+            if (Trace.areOverlapped(traces_.get(i), trace)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean contains (Trace trace) {
+        return traces_.contains(trace);
     }
 
     /**
@@ -371,29 +452,21 @@ public class TraceGroup {
         return (Trace.closestPoints(closestTraces[0], closestTraces[1]));
     }
 
-    public boolean isOverlappedBy (Trace trace) {
-        int numberOfTraces = traces_.size();
+    private void calculateAll (){
+        calculateCorners_ = true;
 
-        for (int i = 0; i < numberOfTraces; i++) {
-            if (Trace.areOverlapped(traces_.get(i), trace)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean remove (Trace trace) {
-        return traces_.remove(trace);
-    }
-
-    public boolean contains (Trace trace) {
-        return traces_.contains(trace);
+        calculateCenterOfMass_ = true;
     }
 
     private ArrayList<Trace> traces_; //!< The Trace objects of this TraceGroup.
 
     private Point topLeftCorner_; //!< The top left corner of this TraceGroup.
+    private Point topRightCorner_;
+    private Point bottomLeftCorner_;
     private Point bottomRightCorner_; //!< The bottom right corner of this TraceGroup.
+    private boolean calculateCorners_;
+
+    private Point centerOfMass_;
+    private boolean calculateCenterOfMass_;
 
 }
