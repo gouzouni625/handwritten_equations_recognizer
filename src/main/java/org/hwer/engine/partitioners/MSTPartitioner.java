@@ -2,7 +2,6 @@ package org.hwer.engine.partitioners;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.utilities.PathExtentionCheck;
@@ -447,7 +446,7 @@ public class MSTPartitioner extends Partitioner {
         int index = 0;
         for (int i = 0; i < numberOfTraces; i++) {
             for (int j = i + 1; j < numberOfTraces; j++) {
-                distances[index] = this.distanceOfTraces(expression.get(i), expression.get(j));
+                distances[index] = distanceOfTraces(expression.get(i), expression.get(j));
                 index++;
             }
         }
@@ -512,7 +511,7 @@ public class MSTPartitioner extends Partitioner {
 
         for (int i = 0; i < numberOfTraces; i++) {
             for (int j = i + 1; j < numberOfTraces; j++) {
-                if (this.areEqualsSymbol(expression.get(i), expression.get(j))) {
+                if (areEqualsSymbol(expression.get(i), expression.get(j))) {
                     equals.add(new int[]{i, j});
                 }
             }
@@ -535,7 +534,7 @@ public class MSTPartitioner extends Partitioner {
      * @brief Checks if two main.java.utilities.traces.Trace create an equals symbol.
      */
     private boolean areEqualsSymbol (Trace trace1, Trace trace2) {
-        boolean classifierDecision = false;
+        boolean classifierDecision;
         boolean algebraicDecision = false;
 
         TraceGroup traceGroup = new TraceGroup().add(trace1).add(trace2);
@@ -544,11 +543,8 @@ public class MSTPartitioner extends Partitioner {
 
         classifierDecision = ((symbol.getLabel() == Labels.EQUALS) && symbol.getConfidence() > 0.50);
 
-        trace1.calculateCorners();
-        trace2.calculateCorners();
-
-        double trace1Slope = Math.atan((trace1.getOutterRightPoint().y_ - trace1.getOutterLeftPoint().y_) / (trace1.getOutterRightPoint().x_ - trace1.getOutterLeftPoint().x_));
-        double trace2Slope = Math.atan((trace2.getOutterRightPoint().y_ - trace2.getOutterLeftPoint().y_) / (trace2.getOutterRightPoint().x_ - trace2.getOutterLeftPoint().x_));
+        double trace1Slope = Math.atan((trace1.getOuterRightPoint().y_ - trace1.getOuterLeftPoint().y_) / (trace1.getOuterRightPoint().x_ - trace1.getOuterLeftPoint().x_));
+        double trace2Slope = Math.atan((trace2.getOuterRightPoint().y_ - trace2.getOuterLeftPoint().y_) / (trace2.getOuterRightPoint().x_ - trace2.getOuterLeftPoint().x_));
 
         if ((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ &&
                 trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
@@ -576,7 +572,7 @@ public class MSTPartitioner extends Partitioner {
             for (int i = 0; i < smaller.size(); i++) {
                 Trace connectionLine = new Trace();
                 connectionLine.add(new Point(smaller.get(i)));
-                connectionLine.add(new Point(bigger.closestPoint(smaller.get(i))));
+                connectionLine.add(bigger.closestPoint(smaller.get(i)));
 
                 for (int j = 0; j < expression_.size(); j++) {
                     if (expression_.get(j) == trace1 || expression_.get(j) == trace2) {

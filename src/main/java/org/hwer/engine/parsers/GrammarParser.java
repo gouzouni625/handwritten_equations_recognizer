@@ -66,11 +66,6 @@ public abstract class GrammarParser extends Parser{
         break;
     }
 
-    // Sort symbols by abscissa.
-    for(int i = 0;i < numberOfSymbols;i++){
-      symbols[i].getTraceGroup().calculateCorners();
-    }
-
     Arrays.sort(symbols, new Comparator<Symbol>(){
       public int compare(Symbol symbol1, Symbol symbol2){
         double x1 = symbol1.getTraceGroup().getTopLeftCorner().x_;
@@ -242,8 +237,8 @@ public abstract class GrammarParser extends Parser{
   public int[][] processPath(Symbol[] symbols, Symbol symbol1, int index1, Symbol symbol2, int index2){
     Trace connectionLine = new Trace();
     Point[] closestPoints = TraceGroup.closestPoints(symbol1.getTraceGroup(), symbol2.getTraceGroup());
-    connectionLine.add(new Point(closestPoints[0]));
-    connectionLine.add(new Point(closestPoints[1]));
+    connectionLine.add(closestPoints[0]);
+    connectionLine.add(closestPoints[1]);
 
     for(int i = 0;i < symbols.length;i++){
       if(i == index1 || i == index2){

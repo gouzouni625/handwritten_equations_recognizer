@@ -36,8 +36,6 @@ public class CoreImpl implements Core{
     // Work on a copy of this trace group.
     TraceGroup traceGroupCopy = new TraceGroup(traceGroup);
 
-    traceGroupCopy.calculateCorners();
-
     double traceGroupWidth = traceGroupCopy.getWidth();
     double traceGroupHeight = traceGroupCopy.getHeight();
 
@@ -47,8 +45,6 @@ public class CoreImpl implements Core{
     double divisionFactor = Math.max(traceGroupWidth, traceGroupHeight);
 
     traceGroupCopy.multiplyBy(new Point(0.6 * width / divisionFactor, 0.6 * height / divisionFactor));
-
-    traceGroupCopy.calculateCorners();
 
     Point traceGroupCentroid = traceGroupCopy.getCentroid();
 

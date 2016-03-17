@@ -171,13 +171,14 @@ public abstract class Symbol implements SymbolClass {
    *  @return Returns the relative position between this Symbol and the given one.
    */
   public ArgumentPosition relativePosition(Symbol symbol){
-    traceGroup_.calculateCorners();
+    TraceGroup traceGroup = getTraceGroup();
+    TraceGroup symbolTraceGroup = symbol.getTraceGroup();
 
     int yPosition;
-    if(symbol.traceGroup_.getCenterOfMass().y_ < traceGroup_.getBottomRightCorner().y_){
+    if(symbolTraceGroup.getCenterOfMass().y_ < traceGroup.getBottomRightCorner().y_){
       yPosition = -1;
     }
-    else if(symbol.traceGroup_.getCenterOfMass().y_ <= traceGroup_.getTopLeftCorner().y_){
+    else if(symbolTraceGroup.getCenterOfMass().y_ <= traceGroup.getTopLeftCorner().y_){
       yPosition = 0;
     }
     else{
@@ -185,10 +186,10 @@ public abstract class Symbol implements SymbolClass {
     }
 
     int xPosition;
-    if(symbol.traceGroup_.getCenterOfMass().x_ < traceGroup_.getTopLeftCorner().x_){
+    if(symbolTraceGroup.getCenterOfMass().x_ < traceGroup.getTopLeftCorner().x_){
       xPosition = -1;
     }
-    else if(symbol.traceGroup_.getCenterOfMass().x_ <= traceGroup_.getBottomRightCorner().x_){
+    else if(symbolTraceGroup.getCenterOfMass().x_ <= traceGroup.getBottomRightCorner().x_){
       xPosition = 0;
     }
     else{
@@ -214,7 +215,7 @@ public abstract class Symbol implements SymbolClass {
         return ArgumentPosition.LEFT;
       }
       else if(xPosition == 0){
-        if(symbol.traceGroup_.getArea() > traceGroup_.getArea()){
+        if(symbolTraceGroup.getArea() > traceGroup.getArea()){
           return ArgumentPosition.OUTSIDE;
         }
         else{
@@ -258,7 +259,7 @@ public abstract class Symbol implements SymbolClass {
      *  @return Returns true if symbol should accept child as a child.
      */
      boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition);
-  };
+  }
 
   /**
    *  @brief Implemented child acceptance criterion.
@@ -267,7 +268,7 @@ public abstract class Symbol implements SymbolClass {
    */
   public ChildAcceptanceCriterion sizeChildAcceptanceCriterion = new ChildAcceptanceCriterion(){
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
-      return (symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea());
+      return (symbol.getTraceGroup().getArea() > 2 * child.getTraceGroup().getArea());
     }
   };
 
@@ -279,8 +280,8 @@ public abstract class Symbol implements SymbolClass {
    */
   public ChildAcceptanceCriterion sizeWidthChildAcceptanceCriterion = new ChildAcceptanceCriterion() {
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
-      return ((symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea()) &&
-              (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth()));
+      return ((symbol.getTraceGroup().getArea() > 2 * child.getTraceGroup().getArea()) &&
+              (symbol.getTraceGroup().getWidth() > 2 * child.getTraceGroup().getWidth()));
     }
   };
 
@@ -291,7 +292,7 @@ public abstract class Symbol implements SymbolClass {
    */
   public ChildAcceptanceCriterion widthChildAcceptanceCriterion = new ChildAcceptanceCriterion() {
     public boolean accept(Symbol symbol, Symbol child, ArgumentPosition relativePosition){
-      return (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth());
+      return (symbol.getTraceGroup().getWidth() > 2 * child.getTraceGroup().getWidth());
     }
   };
 
@@ -319,8 +320,8 @@ public abstract class Symbol implements SymbolClass {
         return true;
       }
       else{
-        return ((symbol.traceGroup_.getArea() > 2 * child.traceGroup_.getArea()) &&
-                (symbol.traceGroup_.getWidth() > 2 * child.traceGroup_.getWidth()));
+        return ((symbol.getTraceGroup().getArea() > 2 * child.getTraceGroup().getArea()) &&
+                (symbol.getTraceGroup().getWidth() > 2 * child.getTraceGroup().getWidth()));
       }
     }
   };
@@ -396,12 +397,11 @@ public abstract class Symbol implements SymbolClass {
 
   protected double confidence_ = 0; // The confidence that this symbol is the symbol it says it is.
 
-  protected TraceGroup traceGroup_ = null; //!< The TraceGroup of this Symbol.
-
   // Make these private to force access only through the setters and getters in inheriting classes.
   private Symbol parent_ = null; //!< The parent of this Symbol.
   private Symbol previousSymbol_ = null;
   private Symbol nextSymbol_ = null; //!< The next Symbol after this Symbol. This is used when transforming the equation in TeX.
+  private final TraceGroup traceGroup_; //!< The TraceGroup of this Symbol.
 
   protected final ArgumentPosition[] nextSymbolPositions_ = new ArgumentPosition[] {ArgumentPosition.RIGHT};
 

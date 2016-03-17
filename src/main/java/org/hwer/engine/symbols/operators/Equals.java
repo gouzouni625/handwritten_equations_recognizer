@@ -65,34 +65,35 @@ public class Equals extends Operator {
         // 1     0     RIGHT
         // 1     1     ABOVE_RIGHT which gets changed to RIGHT. This is to avoid the case where a symbol is drawn a little
         //                         higher and thus is ABOVE_RIGHT of equals symbol and not right.
-        traceGroup_.calculateCorners();
+        TraceGroup traceGroup = getTraceGroup();
+        TraceGroup symbolTraceGroup = symbol.getTraceGroup();
 
         int xPosition;
         int yPosition;
-        if(symbol.getTraceGroup().getCenterOfMass().x_ < traceGroup_.getTopLeftCorner().x_){
+        if(symbolTraceGroup.getCenterOfMass().x_ < traceGroup.getTopLeftCorner().x_){
             xPosition = -1;
 
-            if(symbol.getTraceGroup().getCenterOfMass().y_ < Math.tan(Math.PI / 4) * (symbol.getTraceGroup().getCenterOfMass().x_ -
-                    traceGroup_.getBottomLeftCorner().x_) +
-                    traceGroup_.getBottomLeftCorner().y_){
+            if(symbolTraceGroup.getCenterOfMass().y_ < Math.tan(Math.PI / 4) * (symbolTraceGroup.getCenterOfMass().x_ -
+                    traceGroup.getBottomLeftCorner().x_) +
+                    traceGroup.getBottomLeftCorner().y_){
                 yPosition = -1;
             }
-            else if(symbol.getTraceGroup().getCenterOfMass().y_ <= -Math.tan(Math.PI / 4) *
-                    (symbol.getTraceGroup().getCenterOfMass().x_ - traceGroup_.getTopLeftCorner().x_) +
-                    traceGroup_.getTopLeftCorner().y_){
+            else if(symbolTraceGroup.getCenterOfMass().y_ <= -Math.tan(Math.PI / 4) *
+                    (symbolTraceGroup.getCenterOfMass().x_ - traceGroup.getTopLeftCorner().x_) +
+                    traceGroup.getTopLeftCorner().y_){
                 yPosition = 0;
             }
             else{
                 yPosition = 1;
             }
         }
-        else if(symbol.getTraceGroup().getCenterOfMass().x_ <= traceGroup_.getBottomRightCorner().x_){
+        else if(symbolTraceGroup.getCenterOfMass().x_ <= traceGroup.getBottomRightCorner().x_){
             xPosition = 0;
 
-            if(symbol.getTraceGroup().getCenterOfMass().y_ < traceGroup_.getBottomRightCorner().y_){
+            if(symbolTraceGroup.getCenterOfMass().y_ < traceGroup.getBottomRightCorner().y_){
                 yPosition = -1;
             }
-            else if(symbol.getTraceGroup().getCenterOfMass().y_ <= traceGroup_.getTopLeftCorner().y_){
+            else if(symbolTraceGroup.getCenterOfMass().y_ <= traceGroup.getTopLeftCorner().y_){
                 yPosition = 0;
             }
             else{
@@ -101,14 +102,14 @@ public class Equals extends Operator {
         }
         else{
             xPosition = 1;
-            if(symbol.getTraceGroup().getCenterOfMass().y_ < -Math.tan(Math.PI / 4) * (symbol.getTraceGroup().getCenterOfMass().x_ -
-                    traceGroup_.getBottomRightCorner().x_) +
-                    traceGroup_.getBottomRightCorner().y_){
+            if(symbolTraceGroup.getCenterOfMass().y_ < -Math.tan(Math.PI / 4) * (symbolTraceGroup.getCenterOfMass().x_ -
+                    traceGroup.getBottomRightCorner().x_) +
+                    traceGroup.getBottomRightCorner().y_){
                 yPosition = -1;
             }
-            else if(symbol.getTraceGroup().getCenterOfMass().y_ <= Math.tan(Math.PI / 4) *
-                    (symbol.getTraceGroup().getCenterOfMass().x_ - traceGroup_.getTopRightCorner().x_) +
-                    traceGroup_.getTopRightCorner().y_){
+            else if(symbolTraceGroup.getCenterOfMass().y_ <= Math.tan(Math.PI / 4) *
+                    (symbolTraceGroup.getCenterOfMass().x_ - traceGroup.getTopRightCorner().x_) +
+                    traceGroup.getTopRightCorner().y_){
                 yPosition = 0;
             }
             else{
@@ -135,7 +136,7 @@ public class Equals extends Operator {
                 return ArgumentPosition.LEFT;
             }
             else if(xPosition == 0){
-                if(symbol.getTraceGroup().getArea() > traceGroup_.getArea()){
+                if(symbolTraceGroup.getArea() > traceGroup.getArea()){
                     return ArgumentPosition.OUTSIDE;
                 }
                 else{
