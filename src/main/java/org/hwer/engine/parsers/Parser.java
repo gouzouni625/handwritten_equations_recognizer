@@ -39,7 +39,7 @@ public abstract class Parser{
 
   public abstract void reset();
 
-  public Symbol[] getSymbols(){
+  public synchronized Symbol[] getSymbols(){
     return symbols_;
   }
 

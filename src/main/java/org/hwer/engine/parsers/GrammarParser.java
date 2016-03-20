@@ -23,7 +23,7 @@ public abstract class GrammarParser extends Parser{
    *  @brief Parses a given set of groups of ink traces along with its labels.
    */
   @Override
-  public void parse(Symbol[] symbols){
+  public synchronized void parse(Symbol[] symbols){
     symbols_ = symbols;
 
     // /* ===== Logs ===== */
@@ -234,7 +234,7 @@ public abstract class GrammarParser extends Parser{
    *
    *  @return Returns the paths that result from the preprocessing.
    */
-  public int[][] processPath(Symbol[] symbols, Symbol symbol1, int index1, Symbol symbol2, int index2){
+  private int[][] processPath(Symbol[] symbols, Symbol symbol1, int index1, Symbol symbol2, int index2){
     Trace connectionLine = new Trace();
     Point[] closestPoints = TraceGroup.closestPoints(symbol1.getTraceGroup(), symbol2.getTraceGroup());
     connectionLine.add(closestPoints[0]);
@@ -262,7 +262,7 @@ public abstract class GrammarParser extends Parser{
   /**
    *
    */
-  public String toString(){
+  public synchronized String toString(){
     if(symbols_ != null && symbols_.length > 0){
       String equation = symbols_[0].buildExpression();
 
@@ -304,7 +304,7 @@ public abstract class GrammarParser extends Parser{
     grammar_.setQuiet(silent);
   }
 
-  public void reset(){
+  public synchronized void reset(){
     symbols_ = null;
   }
 
