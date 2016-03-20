@@ -17,7 +17,8 @@ public abstract class Parser{
   /**
    *  @brief Returns a String with the equation parsed in TeX format.
    */
-  public abstract String toString();
+  public abstract String getEquation();
+  public abstract void buildEquation();
 
   /**
    *  @brief Setter method for the silent mode of this Parser.

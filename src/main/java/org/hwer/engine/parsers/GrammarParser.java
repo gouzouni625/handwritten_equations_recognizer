@@ -19,6 +19,10 @@ import org.hwer.engine.utilities.traces.TraceGroup;
  *  @brief Implements a Parser using a grammar to parse the given ink traces.
  */
 public abstract class GrammarParser extends Parser{
+  public GrammarParser(){
+    equation_ = "";
+    calculateEquation_ = true;
+  }
   /**
    *  @brief Parses a given set of groups of ink traces along with its labels.
    */
@@ -46,6 +50,8 @@ public abstract class GrammarParser extends Parser{
         symbol.reEvaluate(true);
       }
     }
+
+    calculateEquation_ = true;
   }
 
   /**
@@ -259,12 +265,23 @@ public abstract class GrammarParser extends Parser{
     return (new int[][] {{index1, index2}});
   }
 
-  /**
-   *
-   */
-  public synchronized String toString(){
+  @Override
+  public String getEquation(){
+    if(calculateEquation_){
+      buildEquation();
+    }
+
+    return equation_;
+  }
+
+  @Override
+  public synchronized void buildEquation(){
+    if(!calculateEquation_){
+      return;
+    }
+
     if(symbols_ != null && symbols_.length > 0){
-      String equation = symbols_[0].buildExpression();
+      equation_ = symbols_[0].buildExpression();
 
       for(int i = 0;i < symbols_.length - 1;i++){
         if(symbols_[i].getNextSymbol() != null){
@@ -272,16 +289,16 @@ public abstract class GrammarParser extends Parser{
           // a parent for this symbol, then, it should be print through
           // the parent.
           if(symbols_[i].getNextSymbol().getParent() == null){
-            equation += symbols_[i].getNextSymbol().buildExpression();
+            equation_ += symbols_[i].getNextSymbol().buildExpression();
           }
         }
       }
-
-      return equation;
     }
     else{
-      return "";
+      equation_ = "";
     }
+
+    calculateEquation_ = false;
   }
 
   /**
@@ -306,7 +323,12 @@ public abstract class GrammarParser extends Parser{
 
   public synchronized void reset(){
     symbols_ = null;
+
+    calculateEquation_ = true;
   }
+
+  private String equation_;
+  private boolean calculateEquation_;
 
   protected Grammar grammar_; //!< The main.java.utilities.grammars.Grammar to be used by this GrammarParser.
 

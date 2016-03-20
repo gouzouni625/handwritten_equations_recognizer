@@ -11,6 +11,8 @@ public class GGParser extends GrammarParser{
    *  @brief Default constructor.
    */
   public GGParser(){
+    super();
+
     grammar_ = new GeometricalGrammar();
   }
 
