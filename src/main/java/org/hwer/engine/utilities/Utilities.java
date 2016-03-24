@@ -1,7 +1,8 @@
 package org.hwer.engine.utilities;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -439,21 +440,22 @@ public class Utilities{
    *
    *  @return Returns the array with the specified rows removed.
    */
-  public static int[][] removeRows(int[][] array, ArrayList<Integer> rowsIndices){
+  public static int[][] removeRows(int[][] array, Collection<Integer> rowsIndices){
     int newLength = array.length - rowsIndices.size();
     int[][] newArray = new int[newLength][];
 
-    Collections.sort(rowsIndices);
+    ArrayList<Integer> listOfRows = new ArrayList<Integer>(rowsIndices);
+    Collections.sort(listOfRows);
 
     int currentRowInNewArray = 0;
     int currentIndexInArray = 0;
     for(int i = 0;i < array.length;i++){
-      if(currentIndexInArray < rowsIndices.size() && i == rowsIndices.get(currentIndexInArray)){
+      if(currentIndexInArray < listOfRows.size() && i == listOfRows.get(currentIndexInArray)){
         currentIndexInArray++;
         continue;
       }
 
-      newArray[currentRowInNewArray] = array[i].clone();
+      newArray[currentRowInNewArray] = array[i];
       currentRowInNewArray++;
     }
 

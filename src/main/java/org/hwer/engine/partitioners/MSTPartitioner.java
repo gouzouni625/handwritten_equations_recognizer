@@ -138,7 +138,7 @@ public class MSTPartitioner extends Partitioner {
         int numberOfDots = dots.length;
 
         // Delete all the paths that combine dots with other traces.
-        ArrayList<Integer> pathsToClear = new ArrayList<Integer>();
+        HashSet<Integer> pathsToClear = new HashSet<Integer>();
         for(int path = 0;path < numberOfPaths;path++){
             for(int dot = 0;dot < numberOfDots;dot++) {
                 if (Utilities.arrayContains(paths[path], dot) && paths[path].length > 1){
