@@ -417,8 +417,8 @@ public class MSTPartitioner extends Partitioner {
                     TraceGroup combined = new TraceGroup(symbols[j].getTraceGroup()).add(newTraces.get(i));
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
-                    // TODO add label fraction line as well, not only minus.
-                    if (symbol.getLabel() == Labels.EQUALS && symbols[j].getLabel() == Labels.MINUS) {
+                    if (symbol.getLabel() == Labels.EQUALS && (symbols[j].getLabel() == Labels.MINUS || symbols[j].getLabel() == Labels.FRACTION_LINE ||
+                                                               symbols[j].getLabel() == Labels.HORIZONTAL_LINE)) {
                         symbols[j].getTraceGroup().add(newTraces.get(i));
                         changedSymbols.add(j);
 
