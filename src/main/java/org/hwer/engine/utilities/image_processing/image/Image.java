@@ -33,6 +33,25 @@ public class Image{
     }
   }
 
+  @Override
+  public String toString(){
+    StringBuilder stringBuilder = new StringBuilder();
+
+    for(int j = height_ - 1;j >= 0;j--){
+      for(int i = 0;i < width_;i++){
+        if((pixels_[i][j] & 0xFF) > 0) {
+          stringBuilder.append("1");
+        }
+        else{
+          stringBuilder.append("0");
+        }
+      }
+      stringBuilder.append("\n");
+    }
+
+    return stringBuilder.toString();
+  }
+
   public byte getPixel(int x, int y){
     return pixels_[x][y];
   }
