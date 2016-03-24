@@ -30,6 +30,10 @@ public abstract class GrammarParser extends Parser{
   public synchronized void parse(Symbol[] symbols){
     symbols_ = symbols;
 
+    if(symbols_ == null){
+      return;
+    }
+
     // /* ===== Logs ===== */
     // if(!silent_){
     //   System.out.println("Log: symbols... ===== Start =====");

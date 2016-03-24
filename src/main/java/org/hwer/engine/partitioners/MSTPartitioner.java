@@ -37,7 +37,7 @@ public class MSTPartitioner extends Partitioner {
      */
     public Symbol[] partition (TraceGroup expression) throws IllegalArgumentException {
         if (expression == null) {
-            throw new IllegalArgumentException();
+            return null;
         }
 
         expression_ = expression;
