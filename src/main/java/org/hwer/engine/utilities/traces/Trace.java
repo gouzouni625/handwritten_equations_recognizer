@@ -391,8 +391,8 @@ public class Trace {
         image_ = new Image(width, height);
 
         for (int i = 0, n = points_.size() - 1; i < n; i++) {
-            Drawer.drawLine(image_, (int) points_.get(i).x_, (int) (height - points_.get(i).y_),
-                    (int) (points_.get(i + 1).x_), (int) (height - points_.get(i + 1).y_));
+            Drawer.drawLine(image_, (int) points_.get(i).x_, (int) (points_.get(i).y_),
+                    (int) (points_.get(i + 1).x_), (int) (points_.get(i + 1).y_));
         }
 
         drawImage_ = false;
@@ -472,8 +472,25 @@ public class Trace {
         double width = traceGroup.getWidth();
         double height = traceGroup.getHeight();
 
-        Image image1 = trace1Copy.print((int)width, (int)height);
-        Image image2 = trace2Copy.print((int)width, (int)height);
+        Image image1;
+        if(trace1Copy.size() == 1) {
+            image1 = new Image((int) width, (int) height);
+            Drawer.drawCircle(image1, (int) trace1Copy.get(0).x_,
+                    (int) trace1Copy.get(0).y_, 10, Drawer.WHITE);
+        }
+        else{
+            image1 = trace1Copy.print((int) width, (int) height);
+        }
+
+        Image image2;
+        if(trace2Copy.size() == 1) {
+            image2 = new Image((int) width, (int) height);
+            Drawer.drawCircle(image2, (int) trace2Copy.get(0).x_,
+                    (int) trace2Copy.get(0).y_, 10, Drawer.WHITE);
+        }
+        else{
+            image2 = trace2Copy.print((int)width, (int)height);
+        }
 
         int white = Drawer.WHITE;
         for (int x = 0; x < (int) width; x++) {

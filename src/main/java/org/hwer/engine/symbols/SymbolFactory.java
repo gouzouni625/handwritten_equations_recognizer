@@ -85,6 +85,7 @@ public class SymbolFactory {
         FRACTION_LINE(FractionLine.class),
         GREATER_THAN(GreaterThan.class),
         LESS_THAN(LessThan.class),
+        DOT(Dot.class),
 
         S_LIKE(SLike.class),
         G_LIKE(GLike.class),

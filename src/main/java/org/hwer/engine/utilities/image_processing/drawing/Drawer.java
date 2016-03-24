@@ -193,6 +193,31 @@ public class Drawer{
     }
   }
 
+  public static void drawCircle(Image image, int centerX, int centerY, int radius, byte color){
+    int x = 0;
+    int y = radius;
+    int e = -radius;
+
+    while(x <= y){
+      image.setPixel(centerX + x, centerY + y, color); //  x,  y
+      image.setPixel(centerX + y, centerY + x, color); //  y,  x
+      image.setPixel(centerX + x, centerY - y, color); //  x, -y
+      image.setPixel(centerX + y, centerY - x, color); //  y, -x
+      image.setPixel(centerX - x, centerY + y, color); // -x,  y
+      image.setPixel(centerX - y, centerY + x, color); // -y,  x
+      image.setPixel(centerX - x, centerY - y, color); // -x, -y
+      image.setPixel(centerX - y, centerY - x, color); // -y, -x
+
+      e = e + (x << 1) + 1;
+      x++;
+
+      if(e >= 0){
+        e = e - (y << 1) + 2;
+        y--;
+      }
+    }
+  }
+
   public static final byte WHITE = (byte)255;
   public static final byte BLACK = (byte)0;
 

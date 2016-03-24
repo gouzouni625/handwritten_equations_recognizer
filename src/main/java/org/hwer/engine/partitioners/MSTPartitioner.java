@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.hwer.engine.classifiers.Classifier;
+import org.hwer.engine.symbols.SymbolFactory;
 import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;
@@ -41,6 +42,8 @@ public class MSTPartitioner extends Partitioner {
 
         expression_ = expression;
 
+        SymbolFactory symbolFactory = SymbolFactory.getInstance();
+
         int numberOfTraces = expression.size();
 
         if (numberOfTraces == 0) {
@@ -58,8 +61,21 @@ public class MSTPartitioner extends Partitioner {
             //     System.out.println("Log: path rate and label... ===== End =======");
             // }
             // /* ===== Logs ===== */
+            if(expression.get(0).size() == 1) {
+                Symbol symbolObject = null;
+                try {
+                    symbolObject = symbolFactory.create(Labels.DOT, expression);
 
-            return (new Symbol[] {classifier_.classify(expression, null, false, false)});
+                    symbolObject.setConfidence(10000);
+                }
+                catch (Exception exception){
+                    exception.printStackTrace();
+                }
+                return new Symbol[] {symbolObject};
+            }
+            else{
+                return (new Symbol[] {classifier_.classify(expression, null, false, false)});
+            }
         }
 
         // Calculate the distances between all the traces.
@@ -117,6 +133,22 @@ public class MSTPartitioner extends Partitioner {
         }
         /* ===== Logs ===== */
 
+        // Find the traces that are dots.
+        int[] dots = findDots(expression);
+        int numberOfDots = dots.length;
+
+        // Delete all the paths that combine dots with other traces.
+        ArrayList<Integer> pathsToClear = new ArrayList<Integer>();
+        for(int path = 0;path < numberOfPaths;path++){
+            for(int dot = 0;dot < numberOfDots;dot++) {
+                if (Utilities.arrayContains(paths[path], dot) && paths[path].length > 1){
+                    pathsToClear.add(path);
+                }
+            }
+        }
+        paths = Utilities.removeRows(paths, pathsToClear);
+        numberOfPaths = paths.length;
+
         // Find the overlapping traces.
         int[][] overlaps = Utilities.concatenateArrays(this.findOverlaps(expression), this.findEqualsSymbol(expression));
         int numberOfOverlaps = overlaps.length;
@@ -135,7 +167,7 @@ public class MSTPartitioner extends Partitioner {
 
         // Delete all the paths that do not comply with the overlaps. That is, a path that contains one symbol of an overlap
         // but not the other is removed.
-        ArrayList<Integer> pathsToClear = new ArrayList<Integer>();
+        pathsToClear.clear();
         boolean foundFirstOverlapIndex;
         boolean foundSecondOvelapIndex;
         boolean clearFlag = false;
@@ -203,7 +235,21 @@ public class MSTPartitioner extends Partitioner {
 
             // Evaluate each path and discard garbage.
             //boolean subSymbolCheck = !Utilities.rowInArray(overlaps, paths[i], false);
-            pathSymbols[i] = classifier_.classify(symbol, null, false, false);
+            if(paths[i].length == 1 && Utilities.arrayContains(dots, paths[i][0])) {
+                Symbol symbolObject = null;
+                try {
+                    symbolObject = symbolFactory.create(Labels.DOT, symbol);
+
+                    symbolObject.setConfidence(10000);
+                }
+                catch (Exception exception){
+                    exception.printStackTrace();
+                }
+                pathSymbols[i] = symbolObject;
+            }
+            else{
+                pathSymbols[i] = classifier_.classify(symbol, null, false, false);
+            }
             pathsRates[i] = pathSymbols[i].getConfidence();
 
             /* ===== Logs ===== */
@@ -371,6 +417,7 @@ public class MSTPartitioner extends Partitioner {
                     TraceGroup combined = new TraceGroup(symbols[j].getTraceGroup()).add(newTraces.get(i));
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
+                    // TODO add label fraction line as well, not only minus.
                     if (symbol.getLabel() == Labels.EQUALS && symbols[j].getLabel() == Labels.MINUS) {
                         symbols[j].getTraceGroup().add(newTraces.get(i));
                         changedSymbols.add(j);
@@ -458,6 +505,25 @@ public class MSTPartitioner extends Partitioner {
 
         return finalSymbols;
     }
+
+    private int[] findDots(TraceGroup expression) {
+        ArrayList<Integer> dotIndices = new ArrayList<Integer>();
+
+        for (int i = 0, n = expression.size();i < n;i++) {
+            if(expression.get(i).size() == 1){
+                dotIndices.add(i);
+            }
+        }
+
+        int numberOfDots = dotIndices.size();
+        int[] dotIndicesArray = new int[numberOfDots];
+        for(int i = 0;i < numberOfDots;i++){
+            dotIndicesArray[i] = dotIndices.get(i);
+        }
+
+        return dotIndicesArray;
+    }
+
         /**
          * @param partition      The partition to be checked.
          * @param paths          All the paths upon the minimum spanning tree.
@@ -467,7 +533,6 @@ public class MSTPartitioner extends Partitioner {
          * <p>
          * Concretely, it checks if an ink trace is used by, at least, two different paths in the given partition.
          */
-
     private boolean isPartitionEligible (int[] partition, int[][] paths, int numberOfTraces) {
         int[] tracesOccurenceCounter = new int[numberOfTraces];
         for (int i = 0; i < numberOfTraces; i++) {
