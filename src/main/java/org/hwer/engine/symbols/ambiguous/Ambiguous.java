@@ -197,6 +197,11 @@ public abstract class Ambiguous extends Symbol {
         }
     }
 
+    @Override
+    public boolean hasChildren() {
+        return chosenSymbol_ != this && chosenSymbol_.hasChildren();
+    }
+
     public String toString(String symbolString){
         return toString();
     }

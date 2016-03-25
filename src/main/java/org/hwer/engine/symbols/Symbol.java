@@ -394,6 +394,16 @@ public abstract class Symbol implements SymbolClass {
     return children_;
   }
 
+  public boolean hasChildren(){
+    for(List<Symbol> samePositionChildren : children_){
+      if(samePositionChildren.size() != 0){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 
   protected double confidence_ = 0; // The confidence that this symbol is the symbol it says it is.
 

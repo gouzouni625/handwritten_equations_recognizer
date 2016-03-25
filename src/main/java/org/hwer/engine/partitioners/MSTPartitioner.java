@@ -392,10 +392,6 @@ public class MSTPartitioner extends Partitioner {
             return symbols;
         }
 
-        for(Symbol symbol : symbols){
-            symbol.reset();
-        }
-
         int numberOfSymbols = symbols.length;
         int numberOfNewTraces = newTraces.size();
 
@@ -417,8 +413,8 @@ public class MSTPartitioner extends Partitioner {
                     TraceGroup combined = new TraceGroup(symbols[j].getTraceGroup()).add(newTraces.get(i));
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
-                    if (symbol.getLabel() == Labels.EQUALS && (symbols[j].getLabel() == Labels.MINUS || symbols[j].getLabel() == Labels.FRACTION_LINE ||
-                                                               symbols[j].getLabel() == Labels.HORIZONTAL_LINE)) {
+                    if (symbol.getLabel() == Labels.EQUALS && (symbols[j].getLabel() == Labels.MINUS || symbols[j].getLabel() == Labels.HORIZONTAL_LINE ||
+                            (symbols[j].getLabel() == Labels.FRACTION_LINE && !symbols[j].hasChildren()))) {
                         symbols[j].getTraceGroup().add(newTraces.get(i));
                         changedSymbols.add(j);
 
@@ -447,6 +443,10 @@ public class MSTPartitioner extends Partitioner {
 
         System.arraycopy(symbols, 0, allSymbols, 0, numberOfSymbols);
         System.arraycopy(newSymbols, 0, allSymbols, numberOfSymbols, numberOfNewSymbols);
+
+        for(Symbol symbol : allSymbols){
+            symbol.reset();
+        }
 
         return allSymbols;
     }
