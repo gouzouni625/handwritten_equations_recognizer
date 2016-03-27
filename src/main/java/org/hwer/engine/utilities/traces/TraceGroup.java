@@ -1,17 +1,17 @@
 package org.hwer.engine.utilities.traces;
 
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
  * @class TraceGroup
- * @brief Implements a group of Trace objects.
- * <p>
- * A group of Trace objects is a sequence of Trace objects.
+ * @brief Implements a group of Traces
  */
-public class TraceGroup {
+public class TraceGroup implements Iterable<Trace> {
     /**
-     * @brief Default constructor.
+     * @brief Default constructor
      */
     public TraceGroup () {
         traces_ = new ArrayList<Trace>();
@@ -20,29 +20,39 @@ public class TraceGroup {
     }
 
     /**
-     * @param traceGroup The TraceGroup to be copied.
-     * @brief Constructor.
-     * <p>
-     * This constructor is used to create an identical copy of a TraceGroup.
+     * @brief Constructor
+     *        This constructor can be used to copy a TraceGroup. The new TraceGroup will have the
+     *        same traces with the given TraceGroup but different Trace objects.
+     *
+     * @param traceGroup
+     *     The TraceGroup to be copied
      */
     public TraceGroup (TraceGroup traceGroup) {
         traces_ = new ArrayList<Trace>();
 
-        for (int i = 0; i < traceGroup.size(); i++) {
-            traces_.add(new Trace(traceGroup.get(i)));
+        for (Trace trace : traceGroup) {
+            traces_.add(new Trace(trace));
         }
 
         calculateAll();
     }
 
     /**
-     * @param trace The Trace to be added to this TraceGroup.
-     * @return Returns this TraceGroup in order for chain commands to be
-     * possible(e.g. tg.add(tr1).add(tr2);).
-     * @brief Adds a Trace to this TraceGroup.
-     * <p>
-     * It is not the actual Trace that is added but a copy of it. That is, if the given as input
-     * Trace changes, the Trace inside this TraceGroup will not change.
+     * @brief Returns an iterator over the Traces of this TraceGroup
+     *
+     * @return An iterator over the Traces of this TraceGroup
+     */
+    public Iterator<Trace> iterator () {
+        return traces_.iterator();
+    }
+
+    /**
+     * @brief Appends a Trace to this TraceGroup
+     *
+     * @param trace
+     *     The Trace to be appended to this TraceGroup
+     *
+     * @return This TraceGroup so that chain commands are possible (e.g. tg.add(tr1).add(tr2))
      */
     public TraceGroup add (Trace trace) {
         traces_.add(trace);
@@ -53,16 +63,18 @@ public class TraceGroup {
     }
 
     /**
-     * @param traceGroup The TraceGroup to be added to this TraceGroup.
-     * @return Returns this TraceGroup in order for chain commands to be
-     * possible(e.g. tg1.add(tg2).add(tg3);).
-     * @brief Adds a TraceGroup to this TraceGroup.
-     * <p>
-     * Each Trace of the given TraceGroup is added to this TraceGroup.
+     * @brief Appends a TraceGroup to this TraceGroup
+     *        A TraceGroup is appended on another TraceGroup by appending all of its Traces to the
+     *        other TraceGroup
+     *
+     * @param traceGroup
+     *     The TraceGroup to be appended to this TraceGroup
+     *
+     * @return This TraceGroup so that chain commands are possible (e.g. tg1.add(tg2).add(tg3))
      */
     public TraceGroup add (TraceGroup traceGroup) {
-        for (int i = 0; i < traceGroup.size(); i++) {
-            traces_.add(traceGroup.get(i));
+        for (Trace trace : traceGroup) {
+            traces_.add(trace);
         }
 
         calculateAll();
@@ -70,10 +82,32 @@ public class TraceGroup {
         return this;
     }
 
+    /**
+     * @brief Returns the Trace at the specified position of this TraceGroup
+     *
+     * @param index
+     *     The position of the Trace to be returned
+     *
+     * @return The Trace at the specified position in this TraceGroup
+     */
+    public Trace get (int index) {
+        return traces_.get(index);
+    }
+
+    /**
+     * @brief Removed the specified Trace from this TraceGroup
+     *        Concretely, removes the first occurrence of the specified Trace from this TraceGroup
+     *        if it is present
+     *
+     * @param trace
+     *     The Trace to be removed from this TraceGroup, if present
+     *
+     * @return True if this TraceGroup contained the specified Trace
+     */
     public boolean remove (Trace trace) {
         boolean removed = traces_.remove(trace);
 
-        if(removed){
+        if (removed) {
             calculateAll();
         }
 
@@ -81,69 +115,45 @@ public class TraceGroup {
     }
 
     /**
-     * @param index The position of the Trace to be returned.
-     * @return Returns the Trace at the specified position in this TraceGroup.
-     * @brief Returns the Trace at a specific position in this Trace.
-     * <p>
-     * The Trace returned is the actual Trace that exists inside this TraceGroup. That is,
-     * if the returned Trace is changed, then, the Trace inside this TraceGroup, will also change.
-     */
-    public Trace get (int index) {
-        return traces_.get(index);
-    }
-
-    /**
-     * @param tracesIndices The indices of the Trace objects from this TraceGroup to be returned.
-     * @return A TraceGroup that contains the Trace objects specified.
-     * @brief Returns a sub-group of Trace objects from this TraceGroup.
-     * <p>
-     * It is the user's responsibility to correctly enter the indices of the Trace objects to be
-     * returned. That is, if tracesIndices contains an index that is less than zero of greater than
-     * the size - 1 of this TraceGroup, the program will throw an exception. The Trace objects that
-     * are returned are not the actual Trace objects that exist inside this TraceGroup but a copy of
-     * them. That is, if the returned Trace objects change, the Trace objects inside this TraceGroup
-     * will not change.
-     */
-    public TraceGroup subTraceGroup (int[] tracesIndices) {
-        TraceGroup traceGroup = new TraceGroup();
-
-        for (int i = 0; i < tracesIndices.length; i++) {
-            traceGroup.add(traces_.get(tracesIndices[i]));
-        }
-
-        return traceGroup;
-    }
-
-    /**
-     * @return Returns the number of Trace objects in this TraceGroup.
-     * @brief Returns the number of Trace objects in this TraceGroup.
+     * @brief Returns the number of Traces in this TraceGroup
+     *
+     * @return The number of Traces in this TraceGroup
      */
     public int size () {
         return traces_.size();
     }
 
     /**
-     * @param factor The double that this TraceGroup should be multiplied with.
-     * @return Returns this TraceGroup in order for chain commands to be
-     * possible(e.g. tg1.multiplyBy(3).multiplyBy(4);).
-     * @brief Multiplies this TraceGroup with a double.
-     * <p>
-     * Multiplying a TraceGroup with a double is to multiply each Trace in the TraceGroup with this
-     * double.
+     * @brief Returns a sub-group of this TraceGroup
+     *
+     * @param tracesIndices
+     *     The indices of the Traces from this TraceGroup to be returned
+     *
+     * @return A TraceGroup that contains the Traces specified
+     */
+    public TraceGroup subTraceGroup (int[] tracesIndices) {
+        TraceGroup traceGroup = new TraceGroup();
+
+        for (int tracesIndex : tracesIndices) {
+            traceGroup.add(traces_.get(tracesIndex));
+        }
+
+        return traceGroup;
+    }
+
+    /**
+     * @brief Multiplies this TraceGroup with a factor
+     *        The multiplication of a TraceGroup with a factor is defined as the multiplication of
+     *        every Trace inside the TraceGroup with the factor.
+     *
+     * @param factor
+     *     The number to multiply this TraceGroup with
+     *
+     * @return This TraceGroup so that chain commands are possible (e.g. tg1.multiplyBy(3).add(tr1))
      */
     public TraceGroup multiplyBy (double factor) {
-        for (int i = 0; i < traces_.size(); i++) {
-            traces_.get(i).multiplyBy(factor);
-        }
-
-        calculateAll();
-
-        return this;
-    }
-
-    public TraceGroup multiplyBy (Point point) {
-        for (int i = 0; i < traces_.size(); i++) {
-            traces_.get(i).multiplyBy(point);
+        for (Trace trace_ : traces_) {
+            trace_.multiplyBy(factor);
         }
 
         calculateAll();
@@ -152,17 +162,38 @@ public class TraceGroup {
     }
 
     /**
-     * @param point The Point to be subtracted from this TraceGroup.
-     * @return Returns this TraceGroup in order for chain commands to be
-     * possible(e.g. tg.subtract(p1).multiplyBy(3);).
-     * @brief Subtracts a Point from this TraceGroup.
-     * <p>
-     * Subtracting a Point from a TraceGroup is to subtract the Point from each Trace in the
-     * TraceGroup.
+     * @brief Multiplies this TraceGroup with a Point
+     *        The multiplication of a TraceGroup with a Point is define as the multiplication of
+     *        every Trace inside the TraceGroup with the Point.
+     *
+     * @param point
+     *     The Point to multiply this TraceGroup with
+     *
+     * @return This TraceGroup so that chain commands are possible (e.g. tg1.multiplyBy(p1).get(1))
+     */
+    public TraceGroup multiplyBy (Point point) {
+        for (Trace trace_ : traces_) {
+            trace_.multiplyBy(point);
+        }
+
+        calculateAll();
+
+        return this;
+    }
+
+    /**
+     * @brief Subtracts a Point from this TraceGroup
+     *        The subtraction of a Point from a TraceGroup is defined as the subtraction of the
+     *        Point from every Trace inside the TraceGroup
+     *
+     * @param point
+     *     The Point to be subtracted from this TraceGroup
+     *
+     * @return This TraceGroup so that chain commands are possible (e.g. tg.subtract(p1).get(0))
      */
     public TraceGroup subtract (Point point) {
-        for (int i = 0; i < traces_.size(); i++) {
-            traces_.get(i).subtract(point);
+        for (Trace trace_ : traces_) {
+            trace_.subtract(point);
         }
 
         calculateAll();
@@ -171,16 +202,15 @@ public class TraceGroup {
     }
 
     /**
-     * @brief Calculates the corners of this TraceGroup.
-     * <p>
-     * Each TraceGroup has four(4) corners.
-     * Top Left Corner    : minimum abscissa(x), minimum ordinate(y).
-     * Top Right Corner   : maximum abscissa(x), minimum ordinate(y).
-     * Bottom Left Corner : minimum abscissa(x), maximum ordinate(y).
-     * Bottom Right Corner: maximum abscissa(x), maximum ordinate(y).
+     * @brief Calculates the four corners of this TraceGroup
+     *        The corners of a TraceGroup are defined as follows:
+     *        Top Left Corner    : minimum abscissa(x), minimum ordinate(y)
+     *        Top Right Corner   : maximum abscissa(x), minimum ordinate(y)
+     *        Bottom Left Corner : minimum abscissa(x), maximum ordinate(y)
+     *        Bottom Right Corner: maximum abscissa(x), maximum ordinate(y)
      */
     private void calculateCorners () {
-        if(!calculateCorners_){
+        if (! calculateCorners_) {
             return;
         }
 
@@ -189,9 +219,9 @@ public class TraceGroup {
         double minY = traces_.get(0).getBottomRightCorner().y_;
         double maxY = traces_.get(0).getTopLeftCorner().y_;
 
-        for (int i = 0; i < traces_.size(); i++) {
-            Point topLeftCorner = traces_.get(i).getTopLeftCorner();
-            Point bottomRightCorner = traces_.get(i).getBottomRightCorner();
+        for (Trace trace_ : traces_) {
+            Point topLeftCorner = trace_.getTopLeftCorner();
+            Point bottomRightCorner = trace_.getBottomRightCorner();
 
             if (topLeftCorner.x_ < minX) {
                 minX = topLeftCorner.x_;
@@ -219,14 +249,13 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the top left corner of this TraceGroup.
-     * @brief Getter method for topLeftCorner.
-     * <p>
-     * The Point returned is not the actual topLeftCorner but a copy of it. That is, if the returned
-     * Point is changed, topLeftCorner will not be changed.
+     * @brief Returns the topLeftCorner of this TraceGroup
+     *        The Point returned is not the actual Point object in this TraceGroup but a copy of it
+     *
+     * @return The topLeftCorner of this TraceGroup
      */
     public Point getTopLeftCorner () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -234,14 +263,13 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the bottom right corner of this TraceGroup.
-     * @brief Getter method for bottomRightCorner.
-     * <p>
-     * The Point returned is not the actual bottomRightCorner but a copy of it. That is, if the
-     * returned Point is changed, bottomRightCorner will not be changed.
+     * @brief Returns the bottomRightCorner of this TraceGroup
+     *        The Point returned is not the actual Point object in this TraceGroup but a copy of it
+     *
+     * @return The bottomRightCorner of this TraceGroup
      */
     public Point getBottomRightCorner () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -249,14 +277,13 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the bottom left corner of this TraceGroup.
-     * @brief Getter method for bottomLeftCorner.
-     * <p>
-     * The Point returned is not the actual bottomLeftCorner but a copy of it. That is, if the
-     * returned Point is changed, bottomLeftCorner will not be changed.
+     * @brief Returns the bottomLeftCorner of this TraceGroup
+     *        The Point returned is not the actual Point object in this TraceGroup but a copy of it
+     *
+     * @return The bottomLeftCorner of this TraceGroup
      */
     public Point getBottomLeftCorner () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -264,14 +291,13 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the top right corner of this TraceGroup.
-     * @brief Getter method for top right corner.
-     * <p>
-     * The Point returned is not the actual topRightCorner but a copy of it. That is, if the
-     * returned Point is changed, topRightCorner will not be changed.
+     * @brief Returns the topRightCorner of this TraceGroup
+     *        The Point returned is not the actual Point object in this TraceGroup but a copy of it
+     *
+     * @return The topRightCorner of this TraceGroup
      */
     public Point getTopRightCorner () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -279,13 +305,14 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the width of this TraceGroup.
-     * @brief Calculates and returns the width of this TraceGroup.
-     * <p>
-     * The width is calculated as width = bottomRightCorner.x - topLeftCorner.x .
+     * @brief Returns the width of this TraceGroup
+     *        The width of a TraceGroup is defined as the horizontal distance between the outermost
+     *        left and the outermost right Point of the TraceGroup
+     *
+     * @return The width of this TraceGroup
      */
     public double getWidth () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -293,13 +320,14 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the height of this TraceGroup.
-     * @brief Calculates and returns the height of this TraceGroup.
-     * <p>
-     * The height is calculated as height = topLeftCorner.y - bottomRightCorner.y .
+     * @brief Returns the height of this TraceGroup
+     *        The height of a TraceGroup is defined as the vertical distance between the outermost
+     *        top and the outermost bottom Point of the TraceGroup
+     *
+     * @return The height of this TraceGroup
      */
     public double getHeight () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -307,15 +335,14 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the center of this TraceGroup.
-     * @brief Calculates and returns the center of this TraceGroup.
-     * <p>
-     * The center is a Point calculated as:
-     * center.x = topLeftCorner.x + traceWidth / 2;
-     * center.y = bottomRightCorner.y + traceHeight / 2;
+     * @brief Returns the centroid of this TraceGroup
+     *        The centroid of a TraceGroup is the center of the rectangle formed by the four corners
+     *        of the TraceGroup
+     *
+     * @return The centroid of this TraceGroup
      */
     public Point getCentroid () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -326,13 +353,12 @@ public class TraceGroup {
     }
 
     /**
-     * @return
-     * @brief Calculates and returns the area covered by this TraceGroup.
-     * <p>
-     * The area is calculated as: area = width * height .
+     * @brief Returns the area covered by this TraceGroup
+     *
+     * @return The area covered by this TraceGroup
      */
     public double getArea () {
-        if(calculateCorners_){
+        if (calculateCorners_) {
             calculateCorners();
         }
 
@@ -340,42 +366,53 @@ public class TraceGroup {
     }
 
     /**
-     * @return Returns the center of mass of this TraceGroup.
-     * @brief Calculates and returns the center of mass of this TraceGroup.
-     * <p>
-     * The center of mass is calculated as:
-     * centerOfMass = sum{pointsInTrace} / traceSize;
+     * @brief Returns the centerOfMass of this TraceGroup
+     *        The centerOfMass of a TraceGroup is defined as the Point with abscissa equal to the
+     *        average abscissa and ordinate equal to the average ordinate of the Points in the
+     *        TraceGroup. The Point returned is not the actual Point object in this TraceGroup but a
+     *        copy of it.
+     *
+     * @return The centerOfMass of this TraceGroup
      */
     public Point getCenterOfMass () {
-        if(calculateCenterOfMass_){
+        if (calculateCenterOfMass_) {
             calculateCenterOfMass();
         }
 
         return new Point(centerOfMass_);
     }
 
-    private void calculateCenterOfMass(){
-        if(!calculateCenterOfMass_){
+    /**
+     * @brief Calculates the centerOfMass of this TraceGroup
+     */
+    private void calculateCenterOfMass () {
+        if (! calculateCenterOfMass_) {
             return;
         }
 
         centerOfMass_ = new Point(0, 0);
         int numberOfPoints = 0;
-        for (Trace trace : traces_) {
-            centerOfMass_.add(trace.getCenterOfMass().multiplyBy(trace.size()));
+        for (Trace trace_ : traces_) {
+            centerOfMass_.add(trace_.getCenterOfMass().multiplyBy(trace_.size()));
 
-            numberOfPoints += trace.size();
+            numberOfPoints += trace_.size();
         }
         centerOfMass_.divideBy(numberOfPoints);
 
         calculateCenterOfMass_ = false;
     }
 
+    /**
+     * @brief Returns true if this TraceGroup is overlapped by the given Trace
+     *
+     * @param trace
+     *     The given Trace
+     *
+     * @return True if this TraceGroup is overlapped by the given Trace
+     */
     public boolean isOverlappedBy (Trace trace) {
-        int numberOfTraces = traces_.size();
-
-        for (int i = 0; i < numberOfTraces; i++) {
-            if (Trace.areOverlapped(traces_.get(i), trace)) {
+        for (Trace trace_ : traces_) {
+            if (Trace.areOverlapped(trace_, trace)) {
                 return true;
             }
         }
@@ -383,68 +420,52 @@ public class TraceGroup {
         return false;
     }
 
-    public boolean contains (Trace trace) {
-        return traces_.contains(trace);
-    }
-
     /**
-     * @param traceGroup1 The first TraceGroup.
-     * @param traceGroup2 The second TraceGroup.
-     * @return Returns the minimum distance between the two Trace objects.
-     * @brief Calculates and returns the minimum distance between two TraceGroup objects.
-     * <p>
-     * The minimum distance between two TraceGroup objects is calculated as the distance between the
-     * closest Point objects of these TraceGroup objects.
-     */
-    public static double minimumDinstance (TraceGroup traceGroup1, TraceGroup traceGroup2) {
-        Point[] closestPoints = TraceGroup.closestPoints(traceGroup1, traceGroup2);
-
-        return (Point.distance(closestPoints[0], closestPoints[1]));
-    }
-
-    /**
-     * @param traceGroup1 The first TraceGroup.
-     * @param traceGroup2 The second TraceGroup.
-     * @return Returns and array with the two closest Trace objects. The first Trace belongs to the
-     * first TraceGroup and the second Trace belongs to the second TraceGroup.
-     * @brief Calculates and returns the two closests Trace objects from these two TraceGroup objects.
-     * <p>
-     * The Trace objects returned are the actual Trace objects that are inside the TraceGroup
-     * objects. That is, if the returned Trace objects are changed, then, the actual Trace objects
-     * will also be changed.
+     * @brief Returns the two closest Traces of the two TraceGroups
+     *        The Traces returned are not the actual Trace objects in the TraceGroups but copies of
+     *        them.
+     *
+     * @param traceGroup1
+     *     The first TraceGroup
+     * @param traceGroup2
+     *     The second TraceGroup
+     *
+     * @return An array with the two closest Traces objects. The first Trace belongs to the
+     *         first TraceGroup and the second Trace belongs to the second TraceGroup
      */
     public static Trace[] closestTraces (TraceGroup traceGroup1, TraceGroup traceGroup2) {
-        double minimumDistance = Trace.minimumDistance(traceGroup1.get(0), traceGroup2.get(0));
-        int index1 = 0;
-        int index2 = 0;
+        Trace trace1 = traceGroup1.get(0);
+        Trace trace2 = traceGroup2.get(0);
 
-        int size1 = traceGroup1.size();
-        int size2 = traceGroup2.size();
-        for (int i = 0; i < size1; i++) {
-            for (int j = 0; j < size2; j++) {
-                double distance = Trace.minimumDistance(traceGroup1.get(i), traceGroup2.get(j));
+        double minDistance = Trace.minimumDistance(trace1, trace2);
+        double distance;
+        for (Trace trace1_ : traceGroup1) {
+            for (Trace trace2_ : traceGroup2) {
+                distance = Trace.minimumDistance(trace1_, trace2_);
 
-                if (distance < minimumDistance) {
-                    minimumDistance = distance;
-                    index1 = i;
-                    index2 = j;
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    trace1 = trace1_;
+                    trace2 = trace2_;
                 }
             }
         }
 
-        return (new Trace[]{new Trace(traceGroup1.get(index1)), new Trace(traceGroup2.get(index2))});
+        return (new Trace[] {new Trace(trace1), new Trace(trace2)});
     }
 
     /**
-     * @param traceGroup1 The first TraceGroup.
-     * @param traceGroup2 The second TraceGroup.
-     * @return Returns an array with the two closest Point objects. The first Point belongs to the
-     * first TraceGroup and the second Point belongs to the second TraceGroup.
-     * @brief Calculated and returns the two closest Point objects from these two TraceGroup objects.
-     * <p>
-     * The Point objects returned are the actual Point objects that are inside the TraceGroup
-     * objects. That is, if the returned Point objects are changed, then, the actual Point objects
-     * will also be changed.
+     * @brief Returns the two closest Points of two TraceGroups
+     *        The Points returned are not the actual Point objects in the TraceGroups but copies of
+     *        them
+     *
+     * @param traceGroup1
+     *     The first TraceGroup
+     * @param traceGroup2
+     *     The second TraceGroup
+     *
+     * @return An array with the two closest Point objects. The first Point belongs to the
+     *         first TraceGroup and the second Point belongs to the second TraceGroup
      */
     public static Point[] closestPoints (TraceGroup traceGroup1, TraceGroup traceGroup2) {
         Trace[] closestTraces = TraceGroup.closestTraces(traceGroup1, traceGroup2);
@@ -452,21 +473,25 @@ public class TraceGroup {
         return (Trace.closestPoints(closestTraces[0], closestTraces[1]));
     }
 
-    private void calculateAll (){
+    /**
+     * @brief Sets all calculate* flags to true
+     */
+    private void calculateAll () {
         calculateCorners_ = true;
 
         calculateCenterOfMass_ = true;
     }
 
-    private ArrayList<Trace> traces_; //!< The Trace objects of this TraceGroup.
+    private ArrayList<Trace> traces_; //!< The Traces of this TraceGroup
 
-    private Point topLeftCorner_; //!< The top left corner of this TraceGroup.
-    private Point topRightCorner_;
-    private Point bottomLeftCorner_;
-    private Point bottomRightCorner_; //!< The bottom right corner of this TraceGroup.
-    private boolean calculateCorners_;
+    private Point topLeftCorner_; //!< The top left corner of this TraceGroup
+    private Point topRightCorner_; //!< The top right corner of this TraceGroup
+    private Point bottomLeftCorner_; //!< The bottom left corner of this TraceGroup
+    private Point bottomRightCorner_; //!< The bottom right corner of this TraceGroup
+    private boolean calculateCorners_; //!< Flag indicating that the corners should be recalculated
 
-    private Point centerOfMass_;
-    private boolean calculateCenterOfMass_;
+    private Point centerOfMass_; //!< The center of mass of this TraceGroup
+    private boolean calculateCenterOfMass_; //!< Flag indicating that the center of mass should be
+                                            //!< recalculated
 
 }
