@@ -3,7 +3,6 @@ package org.hwer.engine.utilities.math;
 
 import java.lang.IndexOutOfBoundsException;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.hwer.engine.utilities.Utilities;
 

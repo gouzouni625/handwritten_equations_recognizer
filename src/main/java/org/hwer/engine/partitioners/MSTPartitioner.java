@@ -5,14 +5,12 @@ import java.util.HashSet;
 
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.symbols.SymbolFactory;
-import org.hwer.engine.utilities.PathExtentionCheck;
 import org.hwer.engine.utilities.Utilities;
 import org.hwer.engine.utilities.math.MinimumSpanningTree;
 import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.symbols.SymbolFactory.Labels;
-import org.hwer.engine.utilities.traces.Point;
-import org.hwer.engine.utilities.traces.Trace;
-import org.hwer.engine.utilities.traces.TraceGroup;
+import org.hwer.engine.utilities.traces.*;
+import org.hwer.engine.utilities.Utilities.PathExtensionCheck;
 
 /**
  * @class MSTPartitioner
@@ -476,8 +474,7 @@ public class MSTPartitioner extends Partitioner {
 
         for(int i = 0, n = symbols.length;i < n;i++){
             for(int j = 0, m = tracesToBeRemoved.size();j < m;j++){
-                if(symbols[i].getTraceGroup().contains(tracesToBeRemoved.get(j))){
-                    symbols[i].getTraceGroup().remove(tracesToBeRemoved.get(j));
+                if(symbols[i].getTraceGroup().remove(tracesToBeRemoved.get(j))){
                     changedSymbols.add(i);
                 }
             }
@@ -740,7 +737,7 @@ public class MSTPartitioner extends Partitioner {
      * This check is used during the calculation of all possible partitions upon the remaining paths. It helps
      * reduce the number of possible partitions and thus make the partition faster.
      */
-    private class PartitionCheck implements PathExtentionCheck {
+    private class PartitionCheck implements PathExtensionCheck {
 
         /**
          * @param paths          The paths upon the minimum spanning tree.
