@@ -1,40 +1,32 @@
 package org.hwer.engine.classifiers;
 
+
 import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
-/** @class Classifier
- *
- *  @brief Implements an abstract Classifier.
- *
- *  A classifier uses a classification algorithm to classify a given main.java.utilities.symbols.Symbol.
- */
-public abstract class Classifier{
-  /**
-   *  @brief Constructor
-   */
-  public Classifier(){}
 
-  /**
-   *  @brief Classifies a given main.java.utilities.symbols.Symbol.
-   *
-   *  Besides the classification algorithm, a Classifier can use additional techniques to increase the accuracy of the
-   *  classification process. Checking the context of the given main.java.utilities.symbols.Symbol, or checking sub-groups
-   *  of main.java.utilities.traces.Trace objects inside the
-   *  main.java.utilities.symbols.Symbol are two of these techniques.
-   *
-   *  @param symbol The main.java.utilities.symbols.Symbol to classify.
-   *  @param context The context of the given main.java.utilities.symbols.Symbol. The context of a
-   *         main.java.utilities.symbols.Symbol contains all the main.java.utilities.traces.Trace objects that are near the
-   *         but not part of the main.java.utilities.symbols.Symbol. The proximity measurement can be arbitrary.
-   *  @param subSymbolCheck Check sub-groups of the main.java.utilities.traces.Trace objects of the given
-   *                        main.java.utilities.symbols.Symbol
-   *  @param subContextCheck Checks sub-groups of the main.java.utilities.traces.Trace objects of the context of the
-   *                         given main.java.utilities.symbols.Symbol
-   *
-   *  @return Returns the confidence of the Classifier for the classification of the given
-   *          main.java.utilities.symbols.Symbol.
-   */
-  public abstract Symbol classify(TraceGroup symbol, TraceGroup context, boolean subSymbolCheck, boolean subContextCheck);
+/**
+ * @class Classifier
+ * @brief Defines the API that every classifier should provide
+ */
+public abstract class Classifier {
+    /**
+     * @brief Classifies a given TraceGroup
+     *        The context of a TraceGroup contains all the Traces that are near but not a part of
+     *        the TraceGroup.
+     *
+     * @param traceGroup
+     *     The TraceGroup to classify
+     * @param context
+     *     The context of the given TraceGroup
+     * @param subSymbolCheck
+     *     Check sub-groups of the given TraceGroup
+     * @param subContextCheck
+     *     Check sub-groups of the given context
+     *
+     * @return The Symbol that the given TraceGroup was classified
+     */
+    public abstract Symbol classify (TraceGroup traceGroup, TraceGroup context,
+                                     boolean subSymbolCheck, boolean subContextCheck);
 
 }
