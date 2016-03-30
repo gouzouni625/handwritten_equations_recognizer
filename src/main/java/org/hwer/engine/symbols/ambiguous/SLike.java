@@ -7,26 +7,38 @@ import org.hwer.engine.symbols.SymbolFactory.Classes;
 import org.hwer.engine.symbols.SymbolFactory.Labels;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
-public class SLike extends Ambiguous {
 
-    public SLike(TraceGroup traceGroup){
+/**
+ * @class SLike
+ * @brief Implements the ambiguous Symbol that looks like an s
+ */
+public class SLike extends Ambiguous {
+    /**
+     * @brief Constructor
+     *
+     * @param traceGroup
+     *     The TraceGroup of this Symbol
+     */
+    public SLike (TraceGroup traceGroup) {
         super(traceGroup);
 
         SymbolFactory symbolFactory = SymbolFactory.getInstance();
 
         try {
             possibleSymbols_ = new Symbol[] {
-                    symbolFactory.create(Labels.LOWER_S, traceGroup),
-                    symbolFactory.create(Labels.FIVE, traceGroup)
+                symbolFactory.create(Labels.LOWER_S, traceGroup),
+                symbolFactory.create(Labels.FIVE, traceGroup)
             };
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * @brief Chooses the type of this UnrecognizedSymbol.
+     * @brief Use this method to give the ability to Symbols for internal changes and decisions
+     *
+     * @param force
+     *     If there are any decisions to be made based on context, force this Symbol to take them
      */
     @Override
     public void reEvaluate (boolean force) {
@@ -35,29 +47,29 @@ public class SLike extends Ambiguous {
         }
 
         // Choose LOWER_S only in case of sin or cos.
-        if(getPreviousSymbol() == null && getNextSymbol() == null){
+        if (getPreviousSymbol() == null && getNextSymbol() == null) {
             this.choose(possibleSymbols_[1]);
         }
-        else if(getPreviousSymbol() == null){
+        else if (getPreviousSymbol() == null) {
             // check for sin.
             Classes nextClass = getNextSymbol().getClazz();
             Labels nextLabel = getNextSymbol().getLabel();
 
-            switch(nextClass){
+            switch (nextClass) {
                 case LETTER:
-                    switch(nextLabel){
+                    switch (nextLabel) {
                         case LOWER_I:
                             // We have an 'i'. Check if there is an 'n' after that.
-                            if(getNextSymbol().getNextSymbol() == null){
+                            if (getNextSymbol().getNextSymbol() == null) {
                                 this.choose(possibleSymbols_[1]);
                             }
-                            else{
+                            else {
                                 Classes nextNextClass = getNextSymbol().getNextSymbol().getClazz();
                                 Labels nextNextLabel = getNextSymbol().getNextSymbol().getLabel();
 
-                                switch(nextNextClass){
+                                switch (nextNextClass) {
                                     case LETTER:
-                                        switch(nextNextLabel){
+                                        switch (nextNextLabel) {
                                             case LOWER_N:
                                                 // We have a sin. Choose it.
                                                 this.choose(possibleSymbols_[0]);
@@ -79,23 +91,23 @@ public class SLike extends Ambiguous {
                     }
                     break;
                 case AMBIGUOUS:
-                    switch(nextLabel){
+                    switch (nextLabel) {
                         case VERTICAL_LINE:
                             // We might have an 'i'. Check if there is an 'n' after it.
-                            if(getNextSymbol().getNextSymbol() == null){
+                            if (getNextSymbol().getNextSymbol() == null) {
                                 this.choose(possibleSymbols_[1]);
                             }
-                            else{
+                            else {
                                 Classes nextNextClass = getNextSymbol().getNextSymbol().getClazz();
                                 Labels nextNextLabel = getNextSymbol().getNextSymbol().getLabel();
 
-                                switch(nextNextClass){
+                                switch (nextNextClass) {
                                     case LETTER:
-                                        switch(nextNextLabel){
+                                        switch (nextNextLabel) {
                                             case LOWER_N:
                                                 // Don't choose yet, it is AMBIGUOUS...
                                                 // unless you are force to do so...
-                                                if(force) {
+                                                if (force) {
                                                     this.choose(possibleSymbols_[0]);
                                                 }
                                                 break;
@@ -120,26 +132,28 @@ public class SLike extends Ambiguous {
                     break;
             }
         }
-        else if(getNextSymbol() == null){
+        else if (getNextSymbol() == null) {
             // check for cos.
             Classes previousClass = getPreviousSymbol().getClazz();
             Labels previousLabel = getPreviousSymbol().getLabel();
 
-            switch(previousClass){
+            switch (previousClass) {
                 case LETTER:
-                    switch(previousLabel){
+                    switch (previousLabel) {
                         case LOWER_O:
                             // We have an 'o'. Check if there is an 'c' before that.
-                            if(getPreviousSymbol().getPreviousSymbol() == null){
+                            if (getPreviousSymbol().getPreviousSymbol() == null) {
                                 this.choose(possibleSymbols_[1]);
                             }
-                            else{
-                                Classes previousPreviousClass = getPreviousSymbol().getPreviousSymbol().getClazz();
-                                Labels previousPreviousLabel = getPreviousSymbol().getPreviousSymbol().getLabel();
+                            else {
+                                Classes previousPreviousClass = getPreviousSymbol().
+                                    getPreviousSymbol().getClazz();
+                                Labels previousPreviousLabel = getPreviousSymbol().
+                                    getPreviousSymbol().getLabel();
 
-                                switch(previousPreviousClass){
+                                switch (previousPreviousClass) {
                                     case LETTER:
-                                        switch(previousPreviousLabel){
+                                        switch (previousPreviousLabel) {
                                             case LOWER_C:
                                                 // We have a cos. Choose it.
                                                 this.choose(possibleSymbols_[0]);
@@ -150,11 +164,11 @@ public class SLike extends Ambiguous {
                                         }
                                         break;
                                     case AMBIGUOUS:
-                                        switch(previousPreviousLabel){
+                                        switch (previousPreviousLabel) {
                                             case C_LIKE:
                                                 // Don't choose yet, it is AMBIGUOUS...
                                                 // unless you are force to do so...
-                                                if(force) {
+                                                if (force) {
                                                     this.choose(possibleSymbols_[0]);
                                                 }
                                                 break;
@@ -175,23 +189,25 @@ public class SLike extends Ambiguous {
                     }
                     break;
                 case AMBIGUOUS:
-                    switch(previousLabel){
+                    switch (previousLabel) {
                         case CIRCLE:
                             // We have a possible 'o'. Check if there is an 'c' before that.
-                            if(getPreviousSymbol().getPreviousSymbol() == null){
+                            if (getPreviousSymbol().getPreviousSymbol() == null) {
                                 this.choose(possibleSymbols_[1]);
                             }
-                            else{
-                                Classes previousPreviousClass = getPreviousSymbol().getPreviousSymbol().getClazz();
-                                Labels previousPreviousLabel = getPreviousSymbol().getPreviousSymbol().getLabel();
+                            else {
+                                Classes previousPreviousClass = getPreviousSymbol().
+                                    getPreviousSymbol().getClazz();
+                                Labels previousPreviousLabel = getPreviousSymbol().
+                                    getPreviousSymbol().getLabel();
 
-                                switch(previousPreviousClass){
+                                switch (previousPreviousClass) {
                                     case LETTER:
-                                        switch(previousPreviousLabel){
+                                        switch (previousPreviousLabel) {
                                             case LOWER_C:
                                                 // Don't choose yet, it is AMBIGUOUS...
                                                 // unless you are force to do so...
-                                                if(force) {
+                                                if (force) {
                                                     this.choose(possibleSymbols_[0]);
                                                 }
                                                 break;
@@ -201,11 +217,11 @@ public class SLike extends Ambiguous {
                                         }
                                         break;
                                     case AMBIGUOUS:
-                                        switch(previousPreviousLabel){
+                                        switch (previousPreviousLabel) {
                                             case C_LIKE:
                                                 // Don't choose yet, it is AMBIGUOUS...
                                                 // unless you are force to do so...
-                                                if(force) {
+                                                if (force) {
                                                     this.choose(possibleSymbols_[0]);
                                                 }
                                                 break;
@@ -230,28 +246,28 @@ public class SLike extends Ambiguous {
                     break;
             }
         }
-        else{
+        else {
             Classes previousClass = getPreviousSymbol().getClazz();
             Classes nextClass = getNextSymbol().getClazz();
 
             Labels previousLabel = getPreviousSymbol().getLabel();
             Labels nextLabel = getNextSymbol().getLabel();
 
-            switch(nextClass){
+            switch (nextClass) {
                 case LETTER:
-                    switch(nextLabel){
+                    switch (nextLabel) {
                         case LOWER_I:
                             // We have an 'i'. Check if there is an 'n' after that.
-                            if(getNextSymbol().getNextSymbol() == null){
+                            if (getNextSymbol().getNextSymbol() == null) {
                                 checkForCos(previousClass, previousLabel, force);
                             }
-                            else{
+                            else {
                                 Classes nextNextClass = getNextSymbol().getNextSymbol().getClazz();
                                 Labels nextNextLabel = getNextSymbol().getNextSymbol().getLabel();
 
-                                switch(nextNextClass){
+                                switch (nextNextClass) {
                                     case LETTER:
-                                        switch(nextNextLabel){
+                                        switch (nextNextLabel) {
                                             case LOWER_N:
                                                 // We have a sin. Choose it.
                                                 this.choose(possibleSymbols_[0]);
@@ -276,7 +292,7 @@ public class SLike extends Ambiguous {
                     }
                     break;
                 case AMBIGUOUS:
-                    switch(nextLabel){
+                    switch (nextLabel) {
                         case VERTICAL_LINE:
                             // It might be sin, but also check for cos.
                             checkForCos(previousClass, previousLabel, force);
@@ -295,22 +311,24 @@ public class SLike extends Ambiguous {
         }
     }
 
-    private void checkForCos(Classes previousClass, Labels previousLabel, boolean force){
-        switch(previousClass){
+    private void checkForCos (Classes previousClass, Labels previousLabel, boolean force) {
+        switch (previousClass) {
             case LETTER:
-                switch(previousLabel){
+                switch (previousLabel) {
                     case LOWER_O:
                         // We have an 'o'. Check if there is an 'c' before that.
-                        if(getPreviousSymbol().getPreviousSymbol() == null){
+                        if (getPreviousSymbol().getPreviousSymbol() == null) {
                             this.choose(possibleSymbols_[1]);
                         }
-                        else{
-                            Classes previousPreviousClass = getPreviousSymbol().getPreviousSymbol().getClazz();
-                            Labels previousPreviousLabel = getPreviousSymbol().getPreviousSymbol().getLabel();
+                        else {
+                            Classes previousPreviousClass = getPreviousSymbol().
+                                getPreviousSymbol().getClazz();
+                            Labels previousPreviousLabel = getPreviousSymbol().
+                                getPreviousSymbol().getLabel();
 
-                            switch(previousPreviousClass){
+                            switch (previousPreviousClass) {
                                 case LETTER:
-                                    switch(previousPreviousLabel){
+                                    switch (previousPreviousLabel) {
                                         case LOWER_C:
                                             // We have a cos. Choose it.
                                             this.choose(possibleSymbols_[0]);
@@ -321,11 +339,11 @@ public class SLike extends Ambiguous {
                                     }
                                     break;
                                 case AMBIGUOUS:
-                                    switch(previousPreviousLabel){
+                                    switch (previousPreviousLabel) {
                                         case C_LIKE:
                                             // Don't choose yet, it is AMBIGUOUS...
                                             // unless you are force to do so...
-                                            if(force) {
+                                            if (force) {
                                                 this.choose(possibleSymbols_[0]);
                                             }
                                             break;
@@ -346,14 +364,14 @@ public class SLike extends Ambiguous {
                 }
                 break;
             case AMBIGUOUS:
-                switch(previousLabel){
+                switch (previousLabel) {
                     case CIRCLE:
                         // At this point it has no meaning to check the previousPrevious symbol
                         // since it can't be decisive for selecting cos ('o' is ambiguous) but also
                         // it cannot be decisive for 5 since it might be a sin.
                         // Don't choose yet, it is AMBIGUOUS...
                         // unless you are force to do so...
-                        if(force) {
+                        if (force) {
                             this.choose(possibleSymbols_[0]);
                         }
                         break;
@@ -368,13 +386,19 @@ public class SLike extends Ambiguous {
         }
     }
 
+    /**
+     * @brief Returns the label of this Symbol
+     *
+     * @return The label of this Symbol
+     */
     @Override
     public Labels getLabel () {
         if (chosenSymbol_ != this) {
             return chosenSymbol_.getLabel();
         }
-        else{
+        else {
             return Labels.S_LIKE;
         }
     }
+
 }

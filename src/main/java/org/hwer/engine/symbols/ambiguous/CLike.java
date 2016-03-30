@@ -1,5 +1,6 @@
 package org.hwer.engine.symbols.ambiguous;
 
+
 import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.symbols.SymbolFactory;
 import org.hwer.engine.symbols.SymbolFactory.Labels;
@@ -7,25 +8,37 @@ import org.hwer.engine.symbols.SymbolFactory.Classes;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
 
+/**
+ * @class CLike
+ * @brief Implements the ambiguous Symbol that looks like a c
+ */
 public class CLike extends Ambiguous {
-
-    public CLike(TraceGroup traceGroup){
+    /**
+     * @brief Constructor
+     *
+     * @param traceGroup
+     *     The TraceGroup of this Symbol
+     */
+    public CLike (TraceGroup traceGroup) {
         super(traceGroup);
 
         SymbolFactory symbolFactory = SymbolFactory.getInstance();
 
-        try{
+        try {
             possibleSymbols_ = new Symbol[] {
-                    symbolFactory.create(Labels.LOWER_C, traceGroup),
-                    symbolFactory.create(Labels.LEFT_PARENTHESIS, traceGroup)
+                symbolFactory.create(Labels.LOWER_C, traceGroup),
+                symbolFactory.create(Labels.LEFT_PARENTHESIS, traceGroup)
             };
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
 
     /**
-     * @brief Chooses the type of this UnrecognizedSymbol.
+     * @brief Use this method to give the ability to Symbols for internal changes and decisions
+     *
+     * @param force
+     *     If there are any decisions to be made based on context, force this Symbol to take them
      */
     @Override
     public void reEvaluate (boolean force) {
@@ -33,21 +46,17 @@ public class CLike extends Ambiguous {
             return;
         }
 
-        // Came here means that no child has been assigned to any of the possible symbols.
-        // That is because, if at least 1 child had been assigned in setArgument method,
-        // then the symbol accepting the child would have become the chosen symbol. Choose
-        // LOWER_C only in cases of cos or cot.
-        if(getNextSymbol() == null){
+        if (getNextSymbol() == null) {
             this.choose(possibleSymbols_[1]);
         }
-        else{
+        else {
             Classes nextClass = getNextSymbol().getClazz();
 
             Labels nextLabel = getNextSymbol().getLabel();
 
-            switch(nextClass){
+            switch (nextClass) {
                 case LETTER:
-                    switch(nextLabel){
+                    switch (nextLabel) {
                         case LOWER_O:
                             this.choose(possibleSymbols_[0]);
                             break;
@@ -57,11 +66,11 @@ public class CLike extends Ambiguous {
                     }
                     break;
                 case AMBIGUOUS:
-                    switch(nextLabel){
+                    switch (nextLabel) {
                         case CIRCLE:
                             // Don't choose yet, it is AMBIGUOUS...
                             // unless you are force to do so...
-                            if(force) {
+                            if (force) {
                                 this.choose(possibleSymbols_[0]);
                             }
                             break;
@@ -77,13 +86,19 @@ public class CLike extends Ambiguous {
         }
     }
 
+    /**
+     * @brief Returns the label of this Symbol
+     *
+     * @return The label of this Symbol
+     */
     @Override
     public Labels getLabel () {
         if (chosenSymbol_ != this) {
             return chosenSymbol_.getLabel();
         }
-        else{
+        else {
             return Labels.C_LIKE;
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package org.hwer.engine.symbols.operators;
 
+
 import org.hwer.engine.parsers.grammars.GeometricalGrammar.ArgumentPosition;
 import org.hwer.engine.symbols.Symbol;
 import org.hwer.engine.symbols.SymbolFactory.Labels;
@@ -9,55 +10,90 @@ import org.hwer.engine.utilities.traces.TraceGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RightParenthesis extends Operator {
 
-    public RightParenthesis(TraceGroup traceGroup){
+/**
+ * @class RightParenthesis
+ * @brief Implements right parenthesis sign
+ */
+public class RightParenthesis extends Operator {
+    /**
+     * @brief Constructor
+     *
+     * @param traceGroup
+     *     The TraceGroup of this Symbol
+     */
+    public RightParenthesis (TraceGroup traceGroup) {
         super(traceGroup);
 
         childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
-        // SymbolClass Accepted as ABOVE_RIGHT child: Number, Operator, Letter, UnrecognizedSymbol.
-        childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
-                Classes.AMBIGUOUS, Classes.VARIABLE}};
-        // Use no criteria for accepting any child.
-        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{allChildAcceptanceCriterion,
-                allChildAcceptanceCriterion,
-                allChildAcceptanceCriterion,
-                allChildAcceptanceCriterion,
-                allChildAcceptanceCriterion}};
+
+        childrenClasses_ = new Classes[][] {{
+            Classes.NUMBER,
+            Classes.LETTER,
+            Classes.OPERATOR,
+            Classes.AMBIGUOUS,
+            Classes.VARIABLE
+        }};
+
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{
+            allChildAcceptanceCriterion,
+            allChildAcceptanceCriterion,
+            allChildAcceptanceCriterion,
+            allChildAcceptanceCriterion,
+            allChildAcceptanceCriterion
+        }};
     }
 
+    /**
+     * @brief Returns the relative position of a given Symbol to this Symbol
+     *
+     * @param symbol
+     *     The given Symbol
+     *
+     * @return The relative position of a given Symbol to this Symbol
+     */
     @Override
-    public ArgumentPosition relativePosition(Symbol symbol){
-        // Get the relative position using the default implementation.
+    public ArgumentPosition relativePosition (Symbol symbol) {
         ArgumentPosition relativePosition = super.relativePosition(symbol);
 
-        // If the relative position is INSIDE or BELOW_RIGHT, change it to LEFT.
-        // This case will never be used in the current implementation since all the symbols are processed from left to
-        // right.
-        if(relativePosition == ArgumentPosition.INSIDE || relativePosition == ArgumentPosition.BELOW_RIGHT){
+        if (relativePosition == ArgumentPosition.INSIDE ||
+            relativePosition == ArgumentPosition.BELOW_RIGHT) {
             relativePosition = ArgumentPosition.LEFT;
         }
-        // If the relative position is ABOVE, change it to ABOVE_RIGHT. This is to avoid missing an exponent that is
-        // drawn a little more to the left than it should.
-        else if(relativePosition == ArgumentPosition.ABOVE){
+        else if (relativePosition == ArgumentPosition.ABOVE) {
             relativePosition = ArgumentPosition.ABOVE_RIGHT;
         }
 
         return relativePosition;
     }
 
+    /**
+     * @brief Returns the label of this Symbol
+     *
+     * @return The label of this Symbol
+     */
     @Override
     public Labels getLabel () {
         return Labels.RIGHT_PARENTHESIS;
     }
 
+    /**
+     * @brief Returns a string representation of this Symbol
+     *
+     * @return A string representation of this Symbol
+     */
     @Override
-    public String toString(){
+    public String toString () {
         return toString(")^{" + ArgumentPosition.ABOVE_RIGHT + "}");
     }
 
+    /**
+     * @brief Resets this Symbol
+     *        Resetting a Symbols means to bring the Symbol back at the state that was the moment
+     *        right after it was instantiated
+     */
     @Override
-    public void reset(){
+    public void reset () {
         super.reset();
 
         children_ = new ArrayList<List<Symbol>>();

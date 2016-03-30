@@ -7,25 +7,38 @@ import org.hwer.engine.symbols.SymbolFactory.Labels;
 import org.hwer.engine.symbols.SymbolFactory.Classes;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
-public class GLike extends Ambiguous {
 
-    public GLike(TraceGroup traceGroup){
+/**
+ * @class GLike
+ * @brief Implements the ambiguous Symbol that looks like g
+ */
+public class GLike extends Ambiguous {
+    /**
+     * @brief Constructor
+     *
+     * @param traceGroup
+     *     The TraceGroup of this Symbol
+     */
+    public GLike (TraceGroup traceGroup) {
         super(traceGroup);
 
         SymbolFactory symbolFactory = SymbolFactory.getInstance();
 
-        try{
+        try {
             possibleSymbols_ = new Symbol[] {
-                    symbolFactory.create(Labels.LOWER_G, traceGroup),
-                    symbolFactory.create(Labels.NINE, traceGroup)
+                symbolFactory.create(Labels.LOWER_G, traceGroup),
+                symbolFactory.create(Labels.NINE, traceGroup)
             };
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
 
     /**
-     * @brief Chooses the type of this UnrecognizedSymbol.
+     * @brief Use this method to give the ability to Symbols for internal changes and decisions
+     *
+     * @param force
+     *     If there are any decisions to be made based on context, force this Symbol to take them
      */
     @Override
     public void reEvaluate (boolean force) {
@@ -34,17 +47,17 @@ public class GLike extends Ambiguous {
         }
 
         // Choose LOWER_G only in case of log.
-        if(getPreviousSymbol() == null){
+        if (getPreviousSymbol() == null) {
             this.choose(possibleSymbols_[1]);
         }
-        else{
+        else {
             Classes previousClass = getPreviousSymbol().getClazz();
 
             Labels previousLabel = getPreviousSymbol().getLabel();
 
-            switch(previousClass){
+            switch (previousClass) {
                 case LETTER:
-                    switch(previousLabel){
+                    switch (previousLabel) {
                         case LOWER_O:
                             this.choose(possibleSymbols_[0]);
                             break;
@@ -54,11 +67,11 @@ public class GLike extends Ambiguous {
                     }
                     break;
                 case AMBIGUOUS:
-                    switch(previousLabel){
+                    switch (previousLabel) {
                         case CIRCLE:
                             // Don't choose yet, it is AMBIGUOUS...
                             // unless you are force to do so...
-                            if(force) {
+                            if (force) {
                                 this.choose(possibleSymbols_[0]);
                             }
                             break;
@@ -74,13 +87,19 @@ public class GLike extends Ambiguous {
         }
     }
 
+    /**
+     * @brief Returns the label of this Symbol
+     *
+     * @return The label of this Symbol
+     */
     @Override
     public Labels getLabel () {
         if (chosenSymbol_ != this) {
             return chosenSymbol_.getLabel();
         }
-        else{
+        else {
             return Labels.G_LIKE;
         }
     }
+
 }

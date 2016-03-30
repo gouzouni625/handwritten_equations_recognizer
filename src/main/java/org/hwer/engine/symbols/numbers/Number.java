@@ -1,5 +1,6 @@
 package org.hwer.engine.symbols.numbers;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,92 +10,102 @@ import org.hwer.engine.symbols.SymbolFactory.SymbolClass;
 import org.hwer.engine.utilities.traces.TraceGroup;
 import org.hwer.engine.parsers.grammars.GeometricalGrammar.ArgumentPosition;
 
-/** @class Number
- *
- *  @brief Implements a Number as a Symbol.
+
+/**
+ * @class Number
+ * @brief Implements the Symbol class of numbers
  */
-public abstract class Number extends Symbol implements SymbolClass{
-  /**
-   *  @brief Constructor.
-   *
-   *  @param traceGroup The TraceGroup of this Number.
-   */
-  public Number(TraceGroup traceGroup){
-    super(traceGroup);
+public abstract class Number extends Symbol implements SymbolClass {
+    /**
+     * @brief Constructor
+     *
+     * @param traceGroup
+     *     The TraceGroup of this Number
+     */
+    public Number (TraceGroup traceGroup) {
+        super(traceGroup);
 
-    // A Number accepts children only on ABOVE_RIGHT position, as an exponent.
-    childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
-    // A Number can accept as exponent another Number, a Letter, an Operator or an UnrecognizedSymbol.
-    childrenClasses_ = new Classes[][] {{Classes.NUMBER, Classes.LETTER, Classes.OPERATOR,
-                                           Classes.AMBIGUOUS, Classes.VARIABLE}};
-    // - Use sizeChildAcceptanceCriterion for accepting another Number in ABOVE_RIGHT position. That means that, when
-    //     drawing an equation, a Number, as an exponent, should have, at max, half the size of the base Number.
-    // - Use sizeChildAcceptanceCriterion for accepting a Letter in ABOVE_RIGHT position. That means that, when drawing
-    //     an equation, a Letter, as an exponent, should have, at max, half the size of the base Number.
-    // - Use widthSizeExceptSQRTFractionLine for accepting an Operator in ABOVE_RIGHT position. That means that, when
-    //     drawing an equation, an Operator, as an exponent, should have, at max, half the width of the base Number. This
-    //     doesn't apply for the square root and fraction line Symbol. The exclusion of these two is done to avoid the
-    //     case of long fractions or square roots not being accepted as exponents to a Number(e.g.
-    //     5^{sqrt{5x^{2} + 2x + 6}}). The size-width criterion is done avoid the case where x_{2}=5 gets recognized as
-    //     x_{2=}. In this situation, '=' will be bigger, or, at least, not twice as small as '2', so '2' will not accept
-    //     '=' as a child.
-    // - Use sizeWidthChildAcceptanceCriterion for accepting an UnrecognizedSymbol in ABOVE_RIGHT position. That means
-    //     that, when drawing an equation, an UnrecognizedSymbol, as an exponent, should have, at max, half the width
-    //     and half the size of the base Number.
-    childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{sizeChildAcceptanceCriterion,
-                                                                     sizeChildAcceptanceCriterion,
-                                                                     widthSizeExceptSQRTFractionLine,
-                                                                     sizeWidthChildAcceptanceCriterion,
-            sizeChildAcceptanceCriterion}};
-  }
+        childrenPositions_ = new ArgumentPosition[] {ArgumentPosition.ABOVE_RIGHT};
+        childrenClasses_ = new Classes[][] {{
+            Classes.NUMBER, Classes.LETTER, Classes.OPERATOR, Classes.AMBIGUOUS, Classes.VARIABLE
+        }};
 
-  /**
-   *  @brief Finds the relative position between this Symbol and a given Symbol.
-   *
-   *  Override the default implementation to treat some special cases.
-   *
-   *  @param symbol The given Symbol.
-   *
-   *  @return Returns the relative position between this Symbol and the given one.
-   */
-  @Override
-  public ArgumentPosition relativePosition(Symbol symbol){
-    // Get the relative position from the default implementation.
-    ArgumentPosition relativePosition = super.relativePosition(symbol);
-
-    // To make things easier, if the relative position is ABOVE, continue as if it was ABOVE_RIGHT. This is done to avoid
-    // missing an exponent that is drawn a little to the left, thus ABOVE this Number.
-    if(relativePosition == ArgumentPosition.ABOVE){
-      relativePosition = ArgumentPosition.ABOVE_RIGHT;
-    }
-    // To make things easier, if the relative position is BELOW_RIGHT, continue as if it was RIGHT. This is done to avoid
-    // missing a next Symbol that is drawn a little lower thus BELOW_RIGHT this Number.
-    else if(relativePosition == ArgumentPosition.BELOW_RIGHT){
-      relativePosition = ArgumentPosition.RIGHT;
+        childrenAcceptanceCriteria_ = new ChildAcceptanceCriterion[][] {{
+            sizeChildAcceptanceCriterion,
+            sizeChildAcceptanceCriterion,
+            widthSizeExceptSQRTFractionLine,
+            sizeWidthChildAcceptanceCriterion,
+            sizeChildAcceptanceCriterion
+        }};
     }
 
-    return relativePosition;
-  }
+    /**
+     * @brief Returns the relative position of a given Symbol to this Symbol
+     *
+     * @param symbol
+     *     The given Symbol
+     *
+     * @return The relative position of a given Symbol to this Symbol
+     */
+    @Override
+    public ArgumentPosition relativePosition (Symbol symbol) {
+        ArgumentPosition relativePosition = super.relativePosition(symbol);
 
-  public Classes getClazz(){
-    return Classes.NUMBER;
-  }
+        if (relativePosition == ArgumentPosition.ABOVE) {
+            relativePosition = ArgumentPosition.ABOVE_RIGHT;
+        }
+        else if (relativePosition == ArgumentPosition.BELOW_RIGHT) {
+            relativePosition = ArgumentPosition.RIGHT;
+        }
 
-  public String toString(String symbolString){
-    return (symbolString + "^{" + ArgumentPosition.ABOVE_RIGHT + "}");
-  }
+        return relativePosition;
+    }
 
-  @Override
-  public void reset(){
-    setParent(null);
-    setPreviousSymbol(null);
-    setNextSymbol(null);
+    /**
+     * @brief Returns the clazz of this SymbolClass
+     *
+     * @return The clazz of this Symbol
+     */
+    public Classes getClazz () {
+        return Classes.NUMBER;
+    }
 
-    children_ = new ArrayList<List<Symbol>>();
-    children_.add(new ArrayList<Symbol>());
-  }
+    /**
+     * @brief Returns a string representation of this SymbolClass
+     *        The string representation can vary based on the Symbol of this SymbolClass that
+     *        this method is called for.
+     *
+     * @param symbolString
+     *     A string provided by the Symbol of this SymbolClass that this method is called for
+     *
+     * @return The string representation of this SymbolClass
+     */
+    public String toString (String symbolString) {
+        return (symbolString + "^{" + ArgumentPosition.ABOVE_RIGHT + "}");
+    }
 
-  @Override
-  public void reEvaluate(boolean force){}
+    /**
+     * @brief Resets this Symbol
+     *        Resetting a Symbols means to bring the Symbol back at the state that was the moment
+     *        right after it was instantiated
+     */
+    @Override
+    public void reset () {
+        setParent(null);
+        setPreviousSymbol(null);
+        setNextSymbol(null);
+
+        children_ = new ArrayList<List<Symbol>>();
+        children_.add(new ArrayList<Symbol>());
+    }
+
+    /**
+     * @brief Use this method to give the ability to Symbols for internal changes and decisions
+     *
+     * @param force
+     *     If there are any decisions to be made based on context, force this Symbol to take them
+     */
+    @Override
+    public void reEvaluate (boolean force) {}
 
 }
