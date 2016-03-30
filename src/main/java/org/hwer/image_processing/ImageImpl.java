@@ -1,7 +1,7 @@
-package org.hwer.implementations.classifiers.nnclassifier.neural_network.image_processing;
+package org.hwer.image_processing;
 
 
-import org.hwer.implementations.classifiers.nnclassifier.neural_network.NeuralNetworkImpl.Image;
+import org.hwer.engine.classifiers.neural_network.NeuralNetworkImpl.Image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;

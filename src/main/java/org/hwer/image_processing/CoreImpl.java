@@ -1,11 +1,11 @@
-package org.hwer.implementations.classifiers.nnclassifier.neural_network.image_processing;
+package org.hwer.image_processing;
 
 
 import org.hwer.engine.utilities.traces.Point;
 import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;
-import org.hwer.implementations.classifiers.nnclassifier.neural_network.NeuralNetworkImpl.Core;
-import org.hwer.implementations.classifiers.nnclassifier.neural_network.NeuralNetworkImpl.Image;
+import org.hwer.engine.classifiers.neural_network.NeuralNetworkImpl.Core;
+import org.hwer.engine.classifiers.neural_network.NeuralNetworkImpl.Image;
 
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;

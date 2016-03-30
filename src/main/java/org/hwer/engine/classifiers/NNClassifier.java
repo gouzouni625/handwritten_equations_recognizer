@@ -1,4 +1,4 @@
-package org.hwer.implementations.classifiers.nnclassifier;
+package org.hwer.engine.classifiers;
 
 
 import org.hwer.engine.symbols.Symbol;
