@@ -9,7 +9,7 @@ import java.awt.image.DataBufferByte;
 
 /**
  * @class ImageImpl
- * @brief Implementation of an Image to be used by the NeuralNetworkImpl using the java AWT package
+ * @brief Implementation of the Image API from NeuralNetworkImpl using the java AWT package
  */
 public class ImageImpl implements Image {
     /**
