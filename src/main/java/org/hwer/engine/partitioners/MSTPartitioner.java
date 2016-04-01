@@ -1,145 +1,171 @@
 package org.hwer.engine.partitioners;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.ConsoleHandler;
 
 import org.hwer.engine.classifiers.Classifier;
-import org.hwer.engine.symbols.SymbolFactory;
-import org.hwer.engine.utilities.Utilities;
-import org.hwer.engine.utilities.math.MinimumSpanningTree;
 import org.hwer.engine.symbols.Symbol;
+import org.hwer.engine.symbols.SymbolFactory;
 import org.hwer.engine.symbols.SymbolFactory.Labels;
+import org.hwer.engine.utilities.Utilities;
+import org.hwer.engine.utilities.logging.SingleLineFormatter;
+import org.hwer.engine.utilities.math.MinimumSpanningTree;
 import org.hwer.engine.utilities.traces.*;
 import org.hwer.engine.utilities.Utilities.PathExtensionCheck;
 
+
 /**
  * @class MSTPartitioner
- * @brief A Partitioner that uses a Minimum Spanning Tree to partition the given equation.
+ * @brief A Partitioner that uses a Minimum Spanning Tree to partition the given equation
  */
 public class MSTPartitioner extends Partitioner {
-    public MSTPartitioner () {
-        super();
-    }
-
+    /**
+     * @brief Constructor
+     *
+     * @param classifier
+     *     The classifier of this Partitioner
+     */
     public MSTPartitioner (Classifier classifier) {
         super(classifier);
+
+        setupLogger();
     }
 
     /**
-     * @param expression The main.java.utilities.traces.TraceGroup with the ink traces of the equation.
-     * @return Returns an array of main.java.utilities.traces.TraceGroup each one of which contains the traces of a single
-     * symbol.
-     * @brief Partitions a group of ink traces of an equation.
-     * <p>
-     * The result is an array of groups of ink traces each one of which represents a symbol of the equation.
+     * @brief Sets up the logger
      */
-    public Symbol[] partition (TraceGroup expression) throws IllegalArgumentException {
-        if (expression == null) {
+    private void setupLogger(){
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setFormatter(new SingleLineFormatter());
+
+        logger_.setUseParentHandlers(false);
+
+        logger_.addHandler(consoleHandler);
+    }
+
+    /**
+     * @brief Partitions a TraceGroup to Symbols
+     *
+     * @param traceGroup
+     *     The TraceGroup to be partitioned
+     *
+     * @return The Symbols that the given TraceGroup is partitioned to
+     */
+    @Override
+    public Symbol[] partition (TraceGroup traceGroup) throws IllegalArgumentException {
+        if (traceGroup == null) {
             return null;
         }
 
-        expression_ = expression;
+        expression_ = traceGroup;
 
         SymbolFactory symbolFactory = SymbolFactory.getInstance();
 
-        int numberOfTraces = expression.size();
+        int numberOfTraces = traceGroup.size();
 
         if (numberOfTraces == 0) {
             return new Symbol[0];
         }
         else if (numberOfTraces == 1) {
-            // /* ===== Logs ===== */
-            // if (! silent_) {
-            //     System.out.println("Log: path rate and label... ===== Start =====");
-            //
-            //     System.out.println("path " + 0 + " subSymbolCheck: " + false);
-            //     System.out.println("path " + 0 + " rate: " + rate);
-            //     System.out.println("path " + 0 + " label: " + labels_[0]);
-            //
-            //     System.out.println("Log: path rate and label... ===== End =======");
-            // }
-            // /* ===== Logs ===== */
-            if(expression.get(0).size() == 1) {
+            if (traceGroup.get(0).size() == 1) {
                 Symbol symbolObject = null;
                 try {
-                    symbolObject = symbolFactory.create(Labels.DOT, expression);
+                    symbolObject = symbolFactory.create(Labels.DOT, traceGroup);
 
                     symbolObject.setConfidence(10000);
-                }
-                catch (Exception exception){
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 return new Symbol[] {symbolObject};
             }
-            else{
-                return (new Symbol[] {classifier_.classify(expression, null, false, false)});
+            else {
+                /* ===== Logs Start ===== */
+                if (logger_.getLevel() != Level.OFF) {
+                    logger_.info("Partitioning single size TraceGroup");
+                }
+                /* ===== Logs End ===== */
+
+                Symbol symbol = classifier_.classify(traceGroup, null, false, false);
+
+                /* ===== Logs Start ===== */
+                if (logger_.getLevel() != Level.OFF) {
+                    logger_.info("Classified to " + symbol);
+                    logger_.info("Confidence " + symbol.getConfidence());
+                }
+                /* ===== Logs End ===== */
+
+                return (new Symbol[] {symbol});
             }
         }
 
-        // Calculate the distances between all the traces.
-        double[] distances = this.calculateDistancesBetweenTraces(expression);
+        double[] distances = this.calculateDistancesBetweenTraces(traceGroup);
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: distances between traces... ===== Start =====");
 
-            for (int i = 0; i < distances.length; i++) {
-                System.out.println("distance " + i + ": " + distances[i]);
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Distances between traces... ===== Start =====");
+
+            for (double distance : distances) {
+                logger_.info(String.valueOf(distance));
             }
 
-            System.out.println("Log: distances between traces... ===== End =======");
+            logger_.info("Distances between traces... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
-        // Create a minimum spanning tree using the distances between the traces.
-        MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.kruskal(distances, numberOfTraces);
+        MinimumSpanningTree minimumSpanningTree = MinimumSpanningTree.
+            kruskal(distances, numberOfTraces);
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: minimum spanning tree... ===== Start =====");
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Minimum Spanning Tree... ===== Start =====");
 
+            StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < numberOfTraces; i++) {
                 for (int j = 0; j < numberOfTraces; j++) {
-                    System.out.print(minimumSpanningTree.areConnected(i, j) + ", ");
+                    stringBuilder.append(minimumSpanningTree.areConnected(i, j)).append(", ");
                 }
 
-                System.out.println();
+                stringBuilder.append("\n");
             }
+            logger_.info(stringBuilder.toString());
 
-            System.out.println("Log: minimum spanning tree... ===== End =======");
+            logger_.info("Minimum Spanning Tree... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
-        // Get all the unique paths upon the minimum spanning tree.
         int[][] paths = minimumSpanningTree.getUniquePaths(maxTracesInSymbol_);
         int numberOfPaths = paths.length;
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: paths upon the minimum spanning tree... ===== Start =====");
+        /* ===== Logs Start===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Paths upon the Minimum Spanning Tree... ===== Start =====");
 
             for (int i = 0; i < numberOfPaths; i++) {
-                System.out.print("path " + i + " = ");
+                logger_.info("path " + i + " = ");
+
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int j = 0; j < paths[i].length; j++) {
-                    System.out.print(paths[i][j] + ", ");
+                    stringBuilder.append(paths[i][j]).append(", ");
                 }
 
-                System.out.println();
+                logger_.info(stringBuilder.toString());
             }
 
-            System.out.println("Log: paths upon the minimum spanning tree... ===== End =======");
+            logger_.info("Paths upon the Minimum Spanning Tree... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
-        // Find the traces that are dots.
-        int[] dots = findDots(expression);
+        int[] dots = findDots(traceGroup);
         int numberOfDots = dots.length;
 
-        // Delete all the paths that combine dots with other traces.
         HashSet<Integer> pathsToClear = new HashSet<Integer>();
-        for(int path = 0;path < numberOfPaths;path++){
-            for(int dot = 0;dot < numberOfDots;dot++) {
-                if (Utilities.arrayContains(paths[path], dot) && paths[path].length > 1){
+        for (int path = 0; path < numberOfPaths; path++) {
+            for (int dot = 0; dot < numberOfDots; dot++) {
+                if (Utilities.arrayContains(paths[path], dot) && paths[path].length > 1) {
                     pathsToClear.add(path);
                 }
             }
@@ -147,44 +173,41 @@ public class MSTPartitioner extends Partitioner {
         paths = Utilities.removeRows(paths, pathsToClear);
         numberOfPaths = paths.length;
 
-        // Find the overlapping traces.
-        int[][] overlaps = Utilities.concatenateArrays(this.findOverlaps(expression), this.findEqualsSymbol(expression));
-        int numberOfOverlaps = overlaps.length;
+        int[][] overlaps = Utilities.concatenateArrays(this.findOverlaps(traceGroup),
+            this.findEqualsSymbol(traceGroup));
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: overlaps... ===== Start =====");
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Overlaps... ===== Start =====");
 
-            for (int i = 0; i < numberOfOverlaps; i++) {
-                System.out.println(overlaps[i][0] + ", " + overlaps[i][1]);
+            for (int[] overlap : overlaps) {
+                logger_.info(overlap[0] + ", " + overlap[1]);
             }
 
-            System.out.println("Log: overlaps... ===== End =======");
+            logger_.info("Overlaps... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
-        // Delete all the paths that do not comply with the overlaps. That is, a path that contains one symbol of an overlap
-        // but not the other is removed.
         pathsToClear.clear();
         boolean foundFirstOverlapIndex;
-        boolean foundSecondOvelapIndex;
+        boolean foundSecondOverlapIndex;
         boolean clearFlag = false;
         for (int path = 0; path < numberOfPaths; path++) {
-            for (int overlap = 0; overlap < numberOfOverlaps; overlap++) {
+            for (int[] overlap : overlaps) {
                 foundFirstOverlapIndex = false;
-                foundSecondOvelapIndex = false;
+                foundSecondOverlapIndex = false;
 
                 for (int trace = 0; trace < paths[path].length; trace++) {
-                    if (paths[path][trace] == overlaps[overlap][0]) {
+                    if (paths[path][trace] == overlap[0]) {
                         foundFirstOverlapIndex = true;
                     }
 
-                    if (paths[path][trace] == overlaps[overlap][1]) {
-                        foundSecondOvelapIndex = true;
+                    if (paths[path][trace] == overlap[1]) {
+                        foundSecondOverlapIndex = true;
                     }
                 }
 
-                if (foundFirstOverlapIndex != foundSecondOvelapIndex) {
+                if (foundFirstOverlapIndex != foundSecondOverlapIndex) {
                     clearFlag = true;
                     break;
                 }
@@ -199,71 +222,62 @@ public class MSTPartitioner extends Partitioner {
         paths = Utilities.removeRows(paths, pathsToClear);
         numberOfPaths = paths.length;
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: paths after removing those that didn't satisfy the overlaps... ===== Start =====");
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Paths after forcing overlaps... ===== Start =====");
 
             for (int i = 0; i < numberOfPaths; i++) {
-                System.out.print("path " + i + " = ");
+                logger_.info("path " + i + " = ");
+
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int j = 0; j < paths[i].length; j++) {
-                    System.out.print(paths[i][j] + ", ");
+                    stringBuilder.append(paths[i][j]).append(", ");
                 }
 
-                System.out.println();
+                logger_.info(stringBuilder.toString());
             }
 
-            System.out.println("Log: paths after removing those that didn't satisfy the overlaps... ===== End =======");
+            logger_.info("Paths after forcing overlaps... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
         double[] pathsRates = new double[numberOfPaths];
         Symbol[] pathSymbols = new Symbol[numberOfPaths];
 
         TraceGroup symbol;
-        //TraceGroup context;
-        //int[] contextIndices;
 
         for (int i = 0; i < numberOfPaths; i++) {
-            // Create the traceGroup of symbols.
-            symbol = expression.subTraceGroup(paths[i]);
+            symbol = traceGroup.subTraceGroup(paths[i]);
 
-            // Find the context.
-            //contextIndices = minimumSpanningTree.getContext(paths[i]);
-            //context = expression.subTraceGroup(contextIndices);
-
-            // Evaluate each path and discard garbage.
-            //boolean subSymbolCheck = !Utilities.rowInArray(overlaps, paths[i], false);
-            if(paths[i].length == 1 && Utilities.arrayContains(dots, paths[i][0])) {
+            if (paths[i].length == 1 && Utilities.arrayContains(dots, paths[i][0])) {
                 Symbol symbolObject = null;
                 try {
                     symbolObject = symbolFactory.create(Labels.DOT, symbol);
 
                     symbolObject.setConfidence(10000);
-                }
-                catch (Exception exception){
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 pathSymbols[i] = symbolObject;
             }
-            else{
+            else {
                 pathSymbols[i] = classifier_.classify(symbol, null, false, false);
             }
             pathsRates[i] = pathSymbols[i].getConfidence();
 
-            /* ===== Logs ===== */
-            if (! silent_) {
-                System.out.println("Log: path rate and label... ===== Start =====");
+            /* ===== Logs Start ===== */
+            if (logger_.getLevel() != Level.OFF) {
+                logger_.info("Path rate and label... ===== Start =====");
 
-                System.out.println("path " + i + " subSymbolCheck: " + false);
-                System.out.println("path " + i + " rate: " + pathsRates[i]);
-                System.out.println("path " + i + " label: " + pathSymbols[i].getLabel());
+                logger_.info("path " + i + " subSymbolCheck: " + false);
+                logger_.info("path " + i + " rate: " + pathsRates[i]);
+                logger_.info("path " + i + " label: " + pathSymbols[i].getLabel());
 
-                System.out.println("Log: path rate and label... ===== End =======");
+                logger_.info("Path rate and label... ===== End =====");
             }
-            /* ===== Logs ===== */
+            /* ===== Logs End ===== */
         }
 
-        // Get all the possible partitions.
         boolean[][] connections = new boolean[numberOfPaths][numberOfPaths];
         for (int i = 0; i < numberOfPaths; i++) {
             for (int j = i + 1; j < numberOfPaths; j++) {
@@ -274,26 +288,27 @@ public class MSTPartitioner extends Partitioner {
             connections[i][i] = false;
         }
 
-        int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths, new PartitionCheck(paths, numberOfTraces));
+        int[][] partitions = Utilities.findUniquePaths(connections, numberOfPaths,
+            new PartitionCheck(paths, numberOfTraces));
         int numberOfPartitions = partitions.length;
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: all partitions... ===== Start =====");
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("All partitions... ===== Start =====");
 
             for (int i = 0; i < numberOfPartitions; i++) {
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int j = 0; j < partitions[i].length; j++) {
-                    System.out.print(partitions[i][j] + ", ");
+                    stringBuilder.append(partitions[i][j]).append(", ");
                 }
 
-                System.out.println();
+                logger_.info(stringBuilder.toString());
             }
 
-            System.out.println("Log: all partitions... ===== End =======");
+            logger_.info("All partitions... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
-        // remove partitions that are not eligible(e.g. they contain the same trace more than once).
         ArrayList<Integer> partitionsToRemove = new ArrayList<Integer>();
         for (int partition = 0; partition < numberOfPartitions; partition++) {
             if (! this.isPartitionEligible(partitions[partition], paths, numberOfTraces)) {
@@ -303,24 +318,25 @@ public class MSTPartitioner extends Partitioner {
         partitions = Utilities.removeRows(partitions, partitionsToRemove);
         numberOfPartitions = partitions.length;
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: partitions after removing those that were not eligible... ===== Start =====");
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Eligible partitions... ===== Start =====");
 
             for (int i = 0; i < numberOfPartitions; i++) {
-                System.out.print("partition " + i + " = ");
+                logger_.info("partition " + i + " = ");
+
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int j = 0; j < partitions[i].length; j++) {
-                    System.out.print(partitions[i][j] + ", ");
+                    stringBuilder.append(partitions[i][j]).append(", ");
                 }
 
-                System.out.println();
+                logger_.info(stringBuilder.toString());
             }
 
-            System.out.println("Log: partitions after removing those that were not eligible... ===== End =======");
+            logger_.info("Eligible partitions... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
-        // Find the best partition.
         double currentRate = 0;
         for (int path = 0; path < partitions[0].length; path++) {
             currentRate += pathsRates[partitions[0][path]];
@@ -329,15 +345,13 @@ public class MSTPartitioner extends Partitioner {
         double maxRate = currentRate;
         int bestPartition = 0;
 
-        /* ===== Logs ===== */
-        if (! silent_) {
-            System.out.println("Log: partition rate... ===== Start =====");
-
-            System.out.println("partition 0 rate: " + currentRate);
-
-            System.out.println("Log: partition rate... ===== End =======");
+        /* ===== Logs Start ===== */
+        if (logger_.getLevel() != Level.OFF) {
+            logger_.info("Partition rate... ===== Start =====");
+            logger_.info("partition 0 rate: " + currentRate);
+            logger_.info("Partition rate... ===== End =====");
         }
-        /* ===== Logs ===== */
+        /* ===== Logs End ===== */
 
         for (int partition = 1; partition < numberOfPartitions; partition++) {
             // Calculate the rate of this partition.
@@ -346,15 +360,13 @@ public class MSTPartitioner extends Partitioner {
                 currentRate += pathsRates[partitions[partition][path]];
             }
 
-            /* ===== Logs ===== */
-            if (! silent_) {
-                System.out.println("Log: partition rate... ===== Start =====");
-
-                System.out.println("partition " + partition + " rate: " + currentRate);
-
-                System.out.println("Log: partition rate... ===== End =======");
+            /* ===== Logs Start ===== */
+            if (logger_.getLevel() != Level.OFF) {
+                logger_.info("Partition rate... ===== Start =====");
+                logger_.info("partition " + partition + " rate: " + currentRate);
+                logger_.info("Partition rate... ===== End =====");
             }
-            /* ===== Logs ===== */
+            /* ===== Logs End ===== */
 
             if (currentRate > maxRate) {
                 maxRate = currentRate;
@@ -362,8 +374,6 @@ public class MSTPartitioner extends Partitioner {
             }
         }
 
-        // Collect the traces of the best partition into an array of trace groups.
-        // Each trace group in the final array, constitutes a symbol.
         int bestPartitionLength = partitions[bestPartition].length;
         Symbol[] symbols = new Symbol[bestPartitionLength];
         for (int i = 0; i < bestPartitionLength; i++) {
@@ -373,20 +383,31 @@ public class MSTPartitioner extends Partitioner {
         return symbols;
     }
 
+    /**
+     * @brief Appends a group of Traces to an existent group of Symbols
+     *
+     * @param symbols
+     *     The Symbols already identified
+     * @param newTraces
+     *     The group of Traces to be partitioned
+     *
+     * @return All the Symbols including the identified and the newly identified
+     */
+    @Override
     public Symbol[] append (Symbol[] symbols, TraceGroup newTraces) {
         if (symbols == null) {
             return partition(newTraces);
         }
 
-        if(symbols.length == 0){
+        if (symbols.length == 0) {
             return partition(newTraces);
         }
 
-        if(newTraces == null){
+        if (newTraces == null) {
             return symbols;
         }
 
-        if(newTraces.size() == 0){
+        if (newTraces.size() == 0) {
             return symbols;
         }
 
@@ -408,11 +429,19 @@ public class MSTPartitioner extends Partitioner {
                     break;
                 }
                 else {
-                    TraceGroup combined = new TraceGroup(symbols[j].getTraceGroup()).add(newTraces.get(i));
+                    TraceGroup combined = new TraceGroup(
+                        symbols[j].getTraceGroup()).add(newTraces.get(i));
                     Symbol symbol = classifier_.classify(combined, null, false, false);
 
-                    if (symbol.getLabel() == Labels.EQUALS && (symbols[j].getLabel() == Labels.MINUS || symbols[j].getLabel() == Labels.HORIZONTAL_LINE ||
-                            (symbols[j].getLabel() == Labels.FRACTION_LINE && !symbols[j].hasChildren()))) {
+                    if (symbol.getLabel() == Labels.EQUALS &&
+                        (
+                            symbols[j].getLabel() == Labels.MINUS ||
+                            symbols[j].getLabel() == Labels.HORIZONTAL_LINE ||
+                            (
+                                symbols[j].getLabel() == Labels.FRACTION_LINE &&
+                                    ! symbols[j].hasChildren()
+                            )
+                        )) {
                         symbols[j].getTraceGroup().add(newTraces.get(i));
                         changedSymbols.add(j);
 
@@ -431,7 +460,8 @@ public class MSTPartitioner extends Partitioner {
         }
 
         for (Integer index : changedSymbols) {
-            symbols[index] = classifier_.classify(symbols[index].getTraceGroup(), null, false, false);
+            symbols[index] = classifier_.classify(symbols[index].getTraceGroup(),
+                null, false, false);
         }
 
         Symbol[] newSymbols = partition(freeTraces);
@@ -442,39 +472,50 @@ public class MSTPartitioner extends Partitioner {
         System.arraycopy(symbols, 0, allSymbols, 0, numberOfSymbols);
         System.arraycopy(newSymbols, 0, allSymbols, numberOfSymbols, numberOfNewSymbols);
 
-        for(Symbol symbol : allSymbols){
+        for (Symbol symbol : allSymbols) {
             symbol.reset();
         }
 
         return allSymbols;
     }
 
-    public Symbol[] remove (Symbol[] symbols, TraceGroup tracesToBeRemoved){
-        if(symbols == null){
+    /**
+     * @brief Removes a group of Traces from an existent group of Symbols
+     *
+     * @param symbols
+     *     The Symbols already identified
+     * @param tracesToBeRemoved
+     *     The group of Traces to be removed
+     *
+     * @return The re-evaluated Symbols after the Traces were removed
+     */
+    @Override
+    public Symbol[] remove (Symbol[] symbols, TraceGroup tracesToBeRemoved) {
+        if (symbols == null) {
             return new Symbol[] {};
         }
 
-        if(symbols.length == 0){
+        if (symbols.length == 0) {
             return symbols;
         }
 
-        if(tracesToBeRemoved == null){
+        if (tracesToBeRemoved == null) {
             return symbols;
         }
 
-        if(tracesToBeRemoved.size() == 0){
+        if (tracesToBeRemoved.size() == 0) {
             return symbols;
         }
 
-        for(Symbol symbol : symbols){
+        for (Symbol symbol : symbols) {
             symbol.reset();
         }
 
         HashSet<Integer> changedSymbols = new HashSet<Integer>();
 
-        for(int i = 0, n = symbols.length;i < n;i++){
-            for(int j = 0, m = tracesToBeRemoved.size();j < m;j++){
-                if(symbols[i].getTraceGroup().remove(tracesToBeRemoved.get(j))){
+        for (int i = 0, n = symbols.length; i < n; i++) {
+            for (int j = 0, m = tracesToBeRemoved.size(); j < m; j++) {
+                if (symbols[i].getTraceGroup().remove(tracesToBeRemoved.get(j))) {
                     changedSymbols.add(i);
                 }
             }
@@ -482,10 +523,11 @@ public class MSTPartitioner extends Partitioner {
 
         int numberOfNullSymbols = 0;
         for (Integer index : changedSymbols) {
-            if(symbols[index].getTraceGroup().size() != 0){
-                symbols[index] = classifier_.classify(symbols[index].getTraceGroup(), null, false, false);
+            if (symbols[index].getTraceGroup().size() != 0) {
+                symbols[index] = classifier_.classify(symbols[index].getTraceGroup(),
+                    null, false, false);
             }
-            else{
+            else {
                 symbols[index] = null;
                 numberOfNullSymbols++;
             }
@@ -493,8 +535,8 @@ public class MSTPartitioner extends Partitioner {
 
         Symbol[] finalSymbols = new Symbol[symbols.length - numberOfNullSymbols];
         int index = 0;
-        for(Symbol symbol : symbols){
-            if(symbol != null){
+        for (Symbol symbol : symbols) {
+            if (symbol != null) {
                 finalSymbols[index] = symbol;
                 index++;
             }
@@ -503,47 +545,60 @@ public class MSTPartitioner extends Partitioner {
         return finalSymbols;
     }
 
-    private int[] findDots(TraceGroup expression) {
+    /**
+     * @brief Returns the indices of Traces that are dots
+     *
+     * @param traceGroup
+     *     The group of Traces to check
+     *
+     * @return The indices of Traces that are dots
+     */
+    private int[] findDots (TraceGroup traceGroup) {
         ArrayList<Integer> dotIndices = new ArrayList<Integer>();
 
-        for (int i = 0, n = expression.size();i < n;i++) {
-            if(expression.get(i).size() == 1){
+        for (int i = 0, n = traceGroup.size(); i < n; i++) {
+            if (traceGroup.get(i).size() == 1) {
                 dotIndices.add(i);
             }
         }
 
         int numberOfDots = dotIndices.size();
         int[] dotIndicesArray = new int[numberOfDots];
-        for(int i = 0;i < numberOfDots;i++){
+        for (int i = 0; i < numberOfDots; i++) {
             dotIndicesArray[i] = dotIndices.get(i);
         }
 
         return dotIndicesArray;
     }
 
-        /**
-         * @param partition      The partition to be checked.
-         * @param paths          All the paths upon the minimum spanning tree.
-         * @param numberOfTraces The total number of ink traces in the equation.
-         * @return Returns true if each ink trace is used exactly once by the given partition.
-         * @brief Checks if a partition is eligible.
-         * <p>
-         * Concretely, it checks if an ink trace is used by, at least, two different paths in the given partition.
-         */
+    /**
+     * @brief Returns true if a partition is eligible
+     *        Concretely, this method returns true if and only if a Trace is used only by a single
+     *        path in the given partition
+     *
+     * @param partition
+     *     The partition to be checked
+     * @param paths
+     *     All the paths upon the minimum spanning tree
+     * @param numberOfTraces
+     *     The number of Traces
+     *
+     * @return True if a partition is eligible
+     */
     private boolean isPartitionEligible (int[] partition, int[][] paths, int numberOfTraces) {
-        int[] tracesOccurenceCounter = new int[numberOfTraces];
+        int[] tracesOccurrenceCounter = new int[numberOfTraces];
         for (int i = 0; i < numberOfTraces; i++) {
-            tracesOccurenceCounter[i] = 0;
+            tracesOccurrenceCounter[i] = 0;
         }
 
         for (int path = 0; path < partition.length; path++) {
             for (int trace = 0; trace < paths[partition[path]].length; trace++) {
-                tracesOccurenceCounter[paths[partition[path]][trace]]++;
+                tracesOccurrenceCounter[paths[partition[path]][trace]]++;
             }
         }
 
         for (int i = 0; i < numberOfTraces; i++) {
-            if (tracesOccurenceCounter[i] != 1) {
+            if (tracesOccurrenceCounter[i] != 1) {
                 return false;
             }
         }
@@ -552,18 +607,21 @@ public class MSTPartitioner extends Partitioner {
     }
 
     /**
-     * @param expression The equation.
-     * @return Returns the distances between all the ink traces.
-     * @brief Calculates the distances between all the ink traces of a given equation.
+     * @brief Returns the distances between all the given Traces
+     *
+     * @param traceGroup
+     *     The group of Traces
+     *
+     * @return The distances between all the given Traces
      */
-    private double[] calculateDistancesBetweenTraces (TraceGroup expression) {
-        int numberOfTraces = expression.size();
+    private double[] calculateDistancesBetweenTraces (TraceGroup traceGroup) {
+        int numberOfTraces = traceGroup.size();
 
         double[] distances = new double[numberOfTraces * (numberOfTraces - 1) / 2];
         int index = 0;
         for (int i = 0; i < numberOfTraces; i++) {
             for (int j = i + 1; j < numberOfTraces; j++) {
-                distances[index] = distanceOfTraces(expression.get(i), expression.get(j));
+                distances[index] = distanceOfTraces(traceGroup.get(i), traceGroup.get(j));
                 index++;
             }
         }
@@ -572,10 +630,16 @@ public class MSTPartitioner extends Partitioner {
     }
 
     /**
-     * @param trace1 The first Trace.
-     * @param trace2 The second Trace.
-     * @return Returns the distance of the two traces.
-     * @brief Calculates the distance between two main.java.utilities.traces.Trace.
+     * @brief Returns the distance between two Traces
+     *        The distance between two Traces is defined as the distance between their centers of
+     *        mass.
+     *
+     * @param trace1
+     *     The first Trace
+     * @param trace2
+     *     The second Trace
+     *
+     * @return The distance between two Traces
      */
     private double distanceOfTraces (Trace trace1, Trace trace2) {
         if (trace1.size() == 0 || trace2.size() == 0) {
@@ -589,19 +653,22 @@ public class MSTPartitioner extends Partitioner {
     }
 
     /**
-     * @param expression The equation.
-     * @return Returns the overlapping pairs of of ink traces.
-     * @brief Finds which ink traces inside an equation are overlapped.
+     * @brief Returns the pairs of Traces that are overlapped
+     *
+     * @param traceGroup
+     *     The group of Traces
+     *
+     * @return The pairs of Traces that are overlapped
      */
-    private int[][] findOverlaps (TraceGroup expression) {
-        int numberOfTraces = expression.size();
+    private int[][] findOverlaps (TraceGroup traceGroup) {
+        int numberOfTraces = traceGroup.size();
 
         ArrayList<int[]> overlaps = new ArrayList<int[]>();
 
         for (int i = 0; i < numberOfTraces; i++) {
             for (int j = i + 1; j < numberOfTraces; j++) {
-                if (Trace.areOverlapped(expression.get(i), expression.get(j))) {
-                    overlaps.add(new int[]{i, j});
+                if (Trace.areOverlapped(traceGroup.get(i), traceGroup.get(j))) {
+                    overlaps.add(new int[] {i, j});
                 }
             }
         }
@@ -617,19 +684,22 @@ public class MSTPartitioner extends Partitioner {
     }
 
     /**
-     * @param expression The equation.
-     * @return Returns the pairs of traces that create an equals symbol.
-     * @brief Finds all equals symbols in an equation.
+     * @brief Returns the pairs of Traces that create an equals sign
+     *
+     * @param traceGroup
+     *     The group of Traces
+     *
+     * @return The pairs of Traces that create an equals sign
      */
-    private int[][] findEqualsSymbol (TraceGroup expression) {
-        int numberOfTraces = expression.size();
+    private int[][] findEqualsSymbol (TraceGroup traceGroup) {
+        int numberOfTraces = traceGroup.size();
 
         ArrayList<int[]> equals = new ArrayList<int[]>();
 
         for (int i = 0; i < numberOfTraces; i++) {
             for (int j = i + 1; j < numberOfTraces; j++) {
-                if (areEqualsSymbol(expression.get(i), expression.get(j))) {
-                    equals.add(new int[]{i, j});
+                if (areEqualsSymbol(traceGroup.get(i), traceGroup.get(j))) {
+                    equals.add(new int[] {i, j});
                 }
             }
         }
@@ -645,10 +715,14 @@ public class MSTPartitioner extends Partitioner {
     }
 
     /**
-     * @param trace1 The first trace.
-     * @param trace2 The second trace.
-     * @return Returns true if the two traces create an equals symbols.
-     * @brief Checks if two main.java.utilities.traces.Trace create an equals symbol.
+     * @brief Returns true if the given Traces create an equals sign
+     *
+     * @param trace1
+     *     The first trace
+     * @param trace2
+     *     The second trace
+     *
+     * @return True if the given Traces create an equals sign
      */
     private boolean areEqualsSymbol (Trace trace1, Trace trace2) {
         boolean classifierDecision;
@@ -658,23 +732,27 @@ public class MSTPartitioner extends Partitioner {
 
         Symbol symbol = classifier_.classify(traceGroup, null, false, false);
 
-        classifierDecision = ((symbol.getLabel() == Labels.EQUALS) && symbol.getConfidence() > 0.50);
+        classifierDecision = ((symbol.getLabel() == Labels.EQUALS) &&
+            symbol.getConfidence() > 0.50);
 
-        double trace1Slope = Math.atan((trace1.getOuterRightPoint().y_ - trace1.getOuterLeftPoint().y_) / (trace1.getOuterRightPoint().x_ - trace1.getOuterLeftPoint().x_));
-        double trace2Slope = Math.atan((trace2.getOuterRightPoint().y_ - trace2.getOuterLeftPoint().y_) / (trace2.getOuterRightPoint().x_ - trace2.getOuterLeftPoint().x_));
+        double trace1Slope = Math.atan(
+            (trace1.getOuterRightPoint().y_ - trace1.getOuterLeftPoint().y_) /
+                (trace1.getOuterRightPoint().x_ - trace1.getOuterLeftPoint().x_));
+        double trace2Slope = Math.atan(
+            (trace2.getOuterRightPoint().y_ - trace2.getOuterLeftPoint().y_) /
+                (trace2.getOuterRightPoint().x_ - trace2.getOuterLeftPoint().x_));
 
         if ((trace2.getBottomRightCorner().x_ >= trace1.getTopLeftCorner().x_ &&
-                trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) && // About the relative position of the lines.
-                (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
-                (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
-                (trace1Slope >= - Math.PI / 4 && trace1Slope <= Math.PI / 4) && // About the slope of the line.
-                (trace2Slope >= - Math.PI / 4 && trace2Slope <= Math.PI / 4) && // About the slope of the line.
-                // About the distances between the two lines.
-                (Trace.minimumDistance(trace1, trace2) < Math.min(trace1.getWidth(), trace2.getWidth())) &&
-                // About the length of the two lines.
-                (Math.abs(trace1.getWidth() - trace2.getWidth()) < Math.min(trace1.getWidth(), trace2.getWidth()))) {
+            trace2.getTopLeftCorner().x_ <= trace1.getBottomRightCorner().x_) &&
+            (trace1.getHeight() <= 0.40 * trace1.getWidth()) &&
+            (trace2.getHeight() <= 0.40 * trace2.getWidth()) &&
+            (trace1Slope >= - Math.PI / 4 && trace1Slope <= Math.PI / 4) &&
+            (trace2Slope >= - Math.PI / 4 && trace2Slope <= Math.PI / 4) &&
+            (Trace.minimumDistance(trace1, trace2) <
+                Math.min(trace1.getWidth(), trace2.getWidth())) &&
+            (Math.abs(trace1.getWidth() - trace2.getWidth()) <
+                Math.min(trace1.getWidth(), trace2.getWidth()))) {
 
-            // Check that between these 2 lines there is no other symbol.
             Trace smaller;
             Trace bigger;
             if (trace1.getWidth() > trace2.getWidth()) {
@@ -709,20 +787,20 @@ public class MSTPartitioner extends Partitioner {
     }
 
     /**
-     * @param path1 The first path.
-     * @param path2 The second path.
-     * @return Returns true if the two paths do not contain the same ink trace.
-     * @brief Check if two paths upon the minimum spanning tree are combinable.
-     * <p>
-     * Two paths are combinable if they don't contain the same ink trace.
+     * @brief Returns true if the given paths are combinable
+     *        Two paths are combinable if they don't contain the same Trace
+     *
+     * @param path1
+     *     The first path
+     * @param path2
+     *     The second path
+     *
+     * @return True if the given paths are combinable
      */
     private boolean areCombinable (int[] path1, int[] path2) {
-        int length1 = path1.length;
-        int length2 = path2.length;
-
-        for (int i = 0; i < length1; i++) {
-            for (int j = 0; j < length2; j++) {
-                if (path1[i] == path2[j]) {
+        for (int traceIndex1 : path1) {
+            for (int traceIndex2 : path2) {
+                if (traceIndex1 == traceIndex2) {
                     return false;
                 }
             }
@@ -733,16 +811,16 @@ public class MSTPartitioner extends Partitioner {
 
     /**
      * @class PartitionCheck
-     * @brief implements PathExtentionCheck to create a check whether a partition is eligible on not.
-     * This check is used during the calculation of all possible partitions upon the remaining paths. It helps
-     * reduce the number of possible partitions and thus make the partition faster.
+     * @brief Implements PathExtensionCheck to check whether a partition is eligible or not
      */
     private class PartitionCheck implements PathExtensionCheck {
-
         /**
-         * @param paths          The paths upon the minimum spanning tree.
-         * @param numberOfTraces The number of ink traces in the given equation.
-         * @brief Constructor.
+         * @brief Constructor
+         *
+         * @param paths
+         *     The paths upon the minimum spanning tree
+         * @param numberOfTraces
+         *     The number of Traces
          */
         public PartitionCheck (int[][] paths, int numberOfTraces) {
             paths_ = paths;
@@ -750,24 +828,27 @@ public class MSTPartitioner extends Partitioner {
         }
 
         /**
-         * @param list The path that should be checked for validity.
-         * @return Returns true if the path is valid.
-         * @brief The check that will be performed to decide whether the given path is valid or not.
+         *  @brief The check that will be performed to decide whether the given path is valid or not
+         *
+         *  @param path
+         *      The path that should be checked for validity
+         *
+         *  @return True if the path is valid
          */
-        public boolean check (ArrayList<Integer> list) {
-            int[] tracesOccurenceCounter = new int[numberOfTraces_];
+        public boolean check (ArrayList<Integer> path) {
+            int[] tracesOccurrenceCounter = new int[numberOfTraces_];
             for (int i = 0; i < numberOfTraces_; i++) {
-                tracesOccurenceCounter[i] = 0;
+                tracesOccurrenceCounter[i] = 0;
             }
 
-            for (int path = 0; path < list.size(); path++) {
-                for (int trace = 0; trace < paths_[list.get(path)].length; trace++) {
-                    tracesOccurenceCounter[paths_[list.get(path)][trace]]++;
+            for (Integer traceIndex : path) {
+                for (int trace = 0; trace < paths_[traceIndex].length; trace++) {
+                    tracesOccurrenceCounter[paths_[traceIndex][trace]]++;
                 }
             }
 
             for (int i = 0; i < numberOfTraces_; i++) {
-                if (tracesOccurenceCounter[i] > 1) {
+                if (tracesOccurrenceCounter[i] > 1) {
                     return false;
                 }
             }
@@ -775,10 +856,11 @@ public class MSTPartitioner extends Partitioner {
             return true;
         }
 
-        private int[][] paths_; //!< The paths upon the minimum spanning tree.
-        private int numberOfTraces_; //!< The number of ink traces in the given equation.
+        private int[][] paths_; //!< The paths upon the minimum spanning tree
+        private int numberOfTraces_; //!< The number of Traces
+
     }
 
-    private TraceGroup expression_; //!< The given equation to be partitioned.
+    private TraceGroup expression_; //!< The TraceGroup to be partitioned
 
 }

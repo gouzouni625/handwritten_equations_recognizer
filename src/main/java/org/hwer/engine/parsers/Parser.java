@@ -1,51 +1,49 @@
 package org.hwer.engine.parsers;
 
+
 import org.hwer.engine.symbols.Symbol;
-import org.hwer.engine.utilities.traces.TraceGroup;
 
-/** @class Parser
- *
- *  @brief Processes a set of groups of ink traces to find their relative position an construct an equation in TeX format.
+import java.util.logging.Logger;
+
+
+/**
+ * @class Parser
+ * @brief Defines the API that every Parser should provide
+ *        A Parser processes a set of Symbols their relative position an construct an equation.
  */
-public abstract class Parser{
-  /**
-   *  @brief Parses a given set of groups of ink traces along with its labels.
-   *
-   */
-  public abstract void parse(Symbol[] symbols);
+public abstract class Parser {
+    public final Logger logger_ = Logger.getLogger(this.getClass().getName()); //!< A logger
 
-  /**
-   *  @brief Returns a String with the equation parsed in TeX format.
-   */
-  public abstract String getEquation();
-  public abstract void buildEquation();
+    /**
+     * @brief Parses a given set of Symbols setting the relationships between them
+     */
+    public abstract void parse (Symbol[] symbols);
 
-  /**
-   *  @brief Setter method for the silent mode of this Parser.
-   *
-   *  @param silent The value of the silent mode of this Parser.
-   */
-  public void setSilent(boolean silent){
-    silent_ = silent;
-  }
+    /**
+     * @brief Returns the equation created by the parsed Symbols
+     *
+     * @return The equation created by the parsed Symbols
+     */
+    public abstract String getEquation ();
 
-  /**
-   *  @brief Getter method for the silent mode of this Parser.
-   *
-   *  @return Returns true if this Parser is in silent mode.
-   */
-  public boolean isSilent(){
-    return silent_;
-  }
+    /**
+     * @brief Builds the equation based upon the current state of the Symbols
+     */
+    public abstract void buildEquation ();
 
-  public abstract void reset();
+    /**
+     * @brief Resets this Parser
+     *        Resetting a Parser should bring it to the state just after it was instantiated
+     */
+    public abstract void reset ();
 
-  public synchronized Symbol[] getSymbols(){
-    return symbols_;
-  }
+    /**
+     * @brief Getter method for the Symbols of this Parser
+     *
+     * @return The Symbols of this Parser
+     */
+    public abstract Symbol[] getSymbols ();
 
-  protected boolean silent_ = true; //!< Flag for the silent mode of this Parser.
-
-  protected Symbol[] symbols_; //!< All the symbols to be parsed by this GrammarParser.
+    protected Symbol[] symbols_; //!< The Symbols of this Parser
 
 }

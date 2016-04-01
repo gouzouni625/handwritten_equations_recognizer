@@ -1,78 +1,87 @@
 package org.hwer.engine.partitioners;
 
+
 import org.hwer.engine.classifiers.Classifier;
 import org.hwer.engine.symbols.Symbol;
-import org.hwer.engine.utilities.traces.Trace;
 import org.hwer.engine.utilities.traces.TraceGroup;
 
-import java.util.ArrayList;
+import java.util.logging.Logger;
+
 
 /**
  * @class Partitioner
- * @brief A Partitioner splits a set of traces to groups. Each group of these traces represents a
- * symbol.
+ * @brief Defines the API that every partitioner should provide
+ *        A partitioner is used to separate the input Traces to Symbols. To do that, a partitioner
+ *        uses a classifier to decide the best combination of Traces that create a Symbol.
  */
 public abstract class Partitioner {
-    public Partitioner () {
-    }
+    public final Logger logger_ = Logger.getLogger(this.getClass().getName()); //!< A logger
 
+    /**
+     * @brief Constructor
+     *
+     * @param classifier
+     *     The classifier of this Partitioner
+     */
     public Partitioner (Classifier classifier) {
         classifier_ = classifier;
     }
 
     /**
-     * @param expression The main.java.utilities.traces.TraceGroup with the ink traces of the
-     *                   equation.
-     * @return Returns an array of main.java.utilities.traces.TraceGroup each one of which contains
-     * the traces of a single symbol.
-     * @brief Partitions a group of ink traces of an equation.
-     * <p>
-     * The result is an array of groups of ink traces each one of which represents a symbol of the
-     * equation.
+     * @brief Partitions a TraceGroup to Symbols
+     *
+     * @param traceGroup
+     *     The TraceGroup to be partitioned
+     *
+     * @return The Symbols that the given TraceGroup is partitioned to
      */
-    public abstract Symbol[] partition (TraceGroup expression);
+    public abstract Symbol[] partition (TraceGroup traceGroup);
 
+    /**
+     * @brief Appends a group of Traces to an existent group of Symbols
+     *
+     * @param symbols
+     *     The Symbols already identified
+     * @param newTraces
+     *     The group of Traces to be partitioned
+     *
+     * @return All the Symbols including the identified and the newly identified
+     */
     public abstract Symbol[] append (Symbol[] symbols, TraceGroup newTraces);
 
+    /**
+     * @brief Removes a group of Traces from an existent group of Symbols
+     *
+     * @param symbols
+     *     The Symbols already identified
+     * @param tracesToBeRemoved
+     *     The group of Traces to be removed
+     *
+     * @return The re-evaluated Symbols after the Traces were removed
+     */
     public abstract Symbol[] remove (Symbol[] symbols, TraceGroup tracesToBeRemoved);
 
     /**
-     * @param silent The value for the silent mode of this Partitioner.
-     * @brief Setter method for the silent mode of this Partitioner.
+     * @brief Getter method for the maximum number of Traces in a Symbol
+     *
+     * @return The maximum number of Traces in a Symbol
      */
-    public void setSilent (boolean silent) {
-        silent_ = silent;
-    }
-
-    /**
-     * @return Returns true if this Partitioner is in silent mode.
-     * @brief Getter method for the silent mode of this Partitioner.
-     */
-    public boolean isSilent () {
-        return silent_;
-    }
-
-    public void setClassifier (Classifier classifier) {
-        classifier_ = classifier;
-    }
-
-    public Classifier getClassifier () {
-        return classifier_;
-    }
-
     public int getMaxTracesInSymbol () {
         return maxTracesInSymbol_;
     }
 
+    /**
+     * @brief Setter method for the maximum number of Traces in a Symbol
+     *
+     * @param maxTracesInSymbol
+     *     The new value for the maximum number of Traces in a Symbol
+     */
     public void setMaxTracesInSymbol (int maxTracesInSymbol) {
         maxTracesInSymbol_ = maxTracesInSymbol;
     }
 
-    protected boolean silent_ = true; //!< Flag defining the silent mode of this Partitioner.
+    protected final Classifier classifier_; //!< The classifier of this Partitioner
 
-    protected Classifier classifier_; //!< The Classifier used by this Partitioner to partition the
-    //!< given equation.
-
-    protected int maxTracesInSymbol_ = 3; //!< The maximum number of traces allowed in a symbol.
+    protected int maxTracesInSymbol_ = 3; //!< The maximum number of Traces a Symbol has
 
 }
