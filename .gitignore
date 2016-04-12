@@ -1,25 +1,10 @@
-# Eclipse
-.classpath
-.project
-
-# Intelij
-*.iml
-
 # Gradle
-.gradle/
 build_for_android.gradle
-
-# Build
-build/
-target/
 
 # Doxygen
 doxygen/html
 doxygen/latex
 
 # Other
-production/
-testing_dir/
 notes
 data
-src/devel/
