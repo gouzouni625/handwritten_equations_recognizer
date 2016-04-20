@@ -54,7 +54,11 @@ class DrawingPanel extends JPanel implements MouseInputListener{
         timer_.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run () {
-                outputField_.setText(hwer_.getEquation());
+                String currentEquation = hwer_.getEquation();
+
+                if(!currentEquation.equals(outputField_.getText())) {
+                    outputField_.setText(hwer_.getEquation());
+                }
             }
         }, new Date(System.currentTimeMillis()), 10);
 
