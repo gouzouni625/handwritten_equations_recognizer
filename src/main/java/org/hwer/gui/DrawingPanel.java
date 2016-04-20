@@ -9,6 +9,7 @@ import org.hwer.image_processing.CoreImpl;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.MouseInputListener;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -21,22 +22,27 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class DrawingPanel extends JPanel implements MouseInputListener{
-    public DrawingPanel(HandwrittenEquationsRecognizer hwer){
-        this(hwer, 1024, 768);
+class DrawingPanel extends JPanel implements MouseInputListener{
+    DrawingPanel (HandwrittenEquationsRecognizer hwer, JTextField outputField){
+        this(hwer, outputField, 1536, 480);
     }
 
-    public DrawingPanel(HandwrittenEquationsRecognizer hwer, int width, int height){
+    public DrawingPanel(final HandwrittenEquationsRecognizer hwer, final JTextField outputField,
+                        int width, int height){
         setBorder(BorderFactory.createLineBorder(Color.black));
         setBackground(Color.lightGray);
 
         core_ = new CoreImpl();
 
         hwer_ = hwer;
+        outputField_ = outputField;
 
-        traceGroup_ = new TraceGroup();
         currentTrace_ = new Trace();
+        unAppendedTraceGroup_ = new TraceGroup();
+        traceGroup_ = new TraceGroup();
+
         dimension_ = new Dimension(width, height);
+        this.setPreferredSize(dimension_);
 
         timer_ = new Timer();
         timer_.scheduleAtFixedRate(new TimerTask() {
@@ -44,7 +50,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener{
             public void run () {
                 repaint();
             }
-        }, new Date(System.currentTimeMillis()), 1);
+        }, new Date(System.currentTimeMillis()), 10);
+        timer_.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run () {
+                outputField_.setText(hwer_.getEquation());
+            }
+        }, new Date(System.currentTimeMillis()), 10);
 
         basicStroke_ = new BasicStroke(10);
 
@@ -53,18 +65,13 @@ public class DrawingPanel extends JPanel implements MouseInputListener{
     }
 
     @Override
-    public Dimension getPreferredSize(){
-        return dimension_;
-    }
-
-    @Override
     protected void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
 
         ((Graphics2D) graphics).setStroke(basicStroke_);
 
-        for(Trace trace : traceGroup_){
-            drawTrace(graphics, trace);
+        for(int i = 0, n = traceGroup_.size();i < n;i++) {
+            drawTrace(graphics, traceGroup_.get(i));
         }
 
         drawTrace(graphics, currentTrace_);
@@ -79,16 +86,98 @@ public class DrawingPanel extends JPanel implements MouseInputListener{
             currentPoint = trace.get(i);
             nextPoint = trace.get(i + 1);
 
-            graphics.drawLine((int)currentPoint.x_, (int)currentPoint.y_,
-                (int)nextPoint.x_, (int)nextPoint.y_);
+            graphics.drawLine((int)currentPoint.x_, dimension_.height - (int)currentPoint.y_,
+                (int)nextPoint.x_, dimension_.height - (int)nextPoint.y_);
         }
     }
 
-    private TraceGroup traceGroup_;
+    /**
+     * @brief Schedules an AppendInputTask to the Timer of this InputSurfaceView
+     */
+    private void scheduleAppendInputTask () {
+        appendInputTask_ = new AppendInputTask();
+        timer_.schedule(appendInputTask_, new Date(System.currentTimeMillis() + 100));
+    }
+
+    /**
+     * @class AppendInputTask
+     * @brief Implements a TimerTask that will handle the newly added Traces
+     */
+    private class AppendInputTask extends TimerTask {
+        @Override
+        public void run () {
+            if (hwer_.append(unAppendedTraceGroup_)) {
+                traceGroup_.add(unAppendedTraceGroup_);
+                unAppendedTraceGroup_ = new TraceGroup();
+            }
+            else if (unAppendedTraceGroup_.size() <= 5) {
+                scheduleAppendInputTask();
+            }
+            else {
+                currentTrace_ = new Trace();
+                traceGroup_ = new TraceGroup();
+                unAppendedTraceGroup_ = new TraceGroup();
+                hwer_.reset();
+            }
+        }
+    }
+
+    /**
+     * @brief Returns true if the given Trace is an erase Trace
+     *        An erase Trace is used to remove some of the existing Traces. Concretely, the Traces
+     *        that are overlapped by the erase Trace should be removed.
+     *
+     * @param trace
+     *     The given Trace
+     *
+     * @return True if the given Trace is an erase Trace
+     */
+    private boolean isEraseTrace (Trace trace) {
+        if (trace == null) {
+            return false;
+        }
+
+        int numberOfPairs = trace.size() - 1;
+        if (numberOfPairs <= 0) {
+            return false;
+        }
+
+        double meanSlope = 0;
+
+        int numberOfNonVerticalPairs = 0;
+        for (int i = 0; i < numberOfPairs; i++) {
+            double dx = trace.get(i + 1).x_ - trace.get(i).x_;
+            double dy = trace.get(i + 1).y_ - trace.get(i).y_;
+
+            if (dx > 0) {
+                return false;
+            }
+            else if (dx < 0) {
+                meanSlope += dy / dx;
+                numberOfNonVerticalPairs++;
+            }
+        }
+
+        if (numberOfNonVerticalPairs == 0) {
+            // We have a vertical line.
+            return false;
+        }
+
+        meanSlope /= numberOfNonVerticalPairs;
+
+        double meanAngle = Math.atan(meanSlope);
+
+        return ! ((meanAngle <= - Math.PI / 9) || (meanAngle >= Math.PI / 9));
+    }
+
     private Trace currentTrace_;
+    private TraceGroup unAppendedTraceGroup_; //!< The un-appended traces of this InputSurfaceView
+    private TraceGroup traceGroup_;
 
     private int previousX_;
     private int previousY_;
+    private boolean moved_; //!< Flag indicating whether there has been a move action on this
+                            //!< DrawingPanel
 
     private Dimension dimension_;
 
@@ -97,27 +186,57 @@ public class DrawingPanel extends JPanel implements MouseInputListener{
     private final int TOUCH_TOLERANCE = 4;
 
     private final HandwrittenEquationsRecognizer hwer_;
+    private final JTextField outputField_;
 
     private final Timer timer_;
+    private TimerTask appendInputTask_; //!< The append input task of this InputSurfaceView
 
     private final BasicStroke basicStroke_;
 
     public void mousePressed (MouseEvent mouseEvent) {
+        if (appendInputTask_ != null) {
+            appendInputTask_.cancel();
+            timer_.purge();
+        }
+
+        moved_ = false;
+
         int currentX = mouseEvent.getX();
         int currentY = mouseEvent.getY();
 
-        currentTrace_.add(new Point(currentX, currentY));
+        currentTrace_ = new Trace();
+        currentTrace_.add(new Point(currentX, dimension_.height - currentY));
 
         previousX_ = currentX;
         previousY_ = currentY;
     }
 
     public void mouseReleased (MouseEvent mouseEvent) {
-        currentTrace_.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
+        if(moved_) {
+            currentTrace_.add(new Point(mouseEvent.getX(), dimension_.height - mouseEvent.getY()));
+        }
 
-        traceGroup_.add(currentTrace_);
+        if(isEraseTrace(currentTrace_)){
+            TraceGroup toBeRemoved = new TraceGroup();
+            for (int i = 0; i < traceGroup_.size(); i++) {
+                if (Trace.areOverlapped(traceGroup_.get(i), currentTrace_)) {
+                    toBeRemoved.add(traceGroup_.get(i));
+                }
+            }
 
-        currentTrace_ = new Trace();
+            if (hwer_.remove(toBeRemoved)) {
+                for (int i = 0, n = toBeRemoved.size(); i < n; i++) {
+                    traceGroup_.remove(toBeRemoved.get(i));
+                }
+            }
+
+            currentTrace_ = new Trace();
+        }
+        else{
+            unAppendedTraceGroup_.add(currentTrace_);
+
+            scheduleAppendInputTask();
+        }
     }
 
     public void mouseDragged (MouseEvent mouseEvent) {
@@ -128,7 +247,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener{
         int dy = currentY - previousY_;
 
         if(Math.abs(dx) >= TOUCH_TOLERANCE || Math.abs(dy) >= TOUCH_TOLERANCE){
-            currentTrace_.add(new Point(currentX, currentY));
+            moved_ = true;
+
+            currentTrace_.add(new Point(currentX, dimension_.height - currentY));
 
             previousX_ = currentX;
             previousY_ = currentY;
@@ -139,5 +260,9 @@ public class DrawingPanel extends JPanel implements MouseInputListener{
     public void mouseEntered (MouseEvent mouseEvent) {}
     public void mouseExited (MouseEvent mouseEvent) {}
     public void mouseMoved (MouseEvent mouseEvent) {}
+
+    public void terminate(){
+        timer_.cancel();
+    }
 
 }
