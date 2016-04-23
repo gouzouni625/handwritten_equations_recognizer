@@ -18,6 +18,7 @@ import org.hwer.image_processing.DistorterImpl;
 
 import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -28,45 +29,30 @@ public class HandwrittenEquationsRecognizer {
         CoreImpl core = new CoreImpl();
         DistorterImpl distorter = new DistorterImpl();
 
-        FileInputStream neuralNetworkInputStream = new FileInputStream(
-            getResourcePath(
-                "/neural_networks/cascade_neural_network.bin"
-            )
-        );
         NeuralNetworkImpl cascadeNeuralNetwork = new NeuralNetworkImpl(core, distorter);
-        cascadeNeuralNetwork.loadFromInputStream(neuralNetworkInputStream);
-
-        neuralNetworkInputStream = new FileInputStream(
-            getResourcePath(
-                "/neural_networks/numbers_neural_network.bin"
-            )
+        cascadeNeuralNetwork.loadFromInputStream(
+            getResource("/neural_networks/cascade_neural_network.bin")
         );
+
         NeuralNetworkImpl numbersNeuralNetwork = new NeuralNetworkImpl(core, distorter);
-        numbersNeuralNetwork.loadFromInputStream(neuralNetworkInputStream);
-
-        neuralNetworkInputStream = new FileInputStream(
-            getResourcePath(
-                "/neural_networks/variables_neural_network.bin"
-            )
+        numbersNeuralNetwork.loadFromInputStream(
+            getResource("/neural_networks/numbers_neural_network.bin")
         );
+
         NeuralNetworkImpl variablesNeuralNetwork = new NeuralNetworkImpl(core, distorter);
-        variablesNeuralNetwork.loadFromInputStream(neuralNetworkInputStream);
-
-        neuralNetworkInputStream = new FileInputStream(
-            getResourcePath(
-                "/neural_networks/operators_neural_network.bin"
-            )
+        variablesNeuralNetwork.loadFromInputStream(
+            getResource("/neural_networks/variables_neural_network.bin")
         );
+
         NeuralNetworkImpl operatorsNeuralNetwork = new NeuralNetworkImpl(core, distorter);
-        operatorsNeuralNetwork.loadFromInputStream(neuralNetworkInputStream);
-
-        neuralNetworkInputStream = new FileInputStream(
-            getResourcePath(
-                "/neural_networks/letters_neural_network.bin"
-            )
+        operatorsNeuralNetwork.loadFromInputStream(
+            getResource("/neural_networks/operators_neural_network.bin")
         );
+
         NeuralNetworkImpl lettersNeuralNetwork = new NeuralNetworkImpl(core, distorter);
-        lettersNeuralNetwork.loadFromInputStream(neuralNetworkInputStream);
+        lettersNeuralNetwork.loadFromInputStream(
+            getResource("/neural_networks/letters_neural_network.bin")
+        );
 
         NNClassifier neuralNetworkClassifier = new NNClassifier(
             cascadeNeuralNetwork,
@@ -125,8 +111,8 @@ public class HandwrittenEquationsRecognizer {
         new Thread(consumer_).start();
     }
 
-    private String getResourcePath(String resourceName){
-        return HandwrittenEquationsRecognizer.class.getResource(resourceName).getPath();
+    private InputStream getResource(String resourceName){
+        return HandwrittenEquationsRecognizer.class.getResourceAsStream(resourceName);
     }
 
     public void terminate(){
