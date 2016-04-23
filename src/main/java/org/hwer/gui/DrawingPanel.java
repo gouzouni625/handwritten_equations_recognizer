@@ -174,6 +174,16 @@ class DrawingPanel extends JPanel implements MouseInputListener{
         return ! ((meanAngle <= - Math.PI / 9) || (meanAngle >= Math.PI / 9));
     }
 
+    public void reset(){
+        currentTrace_ = new Trace();
+        unAppendedTraceGroup_ = new TraceGroup();
+        traceGroup_ = new TraceGroup();
+
+        hwer_.reset();
+
+        outputField_.setText("");
+    }
+
     private Trace currentTrace_;
     private TraceGroup unAppendedTraceGroup_; //!< The un-appended traces of this InputSurfaceView
     private TraceGroup traceGroup_;
@@ -267,6 +277,8 @@ class DrawingPanel extends JPanel implements MouseInputListener{
 
     public void terminate(){
         timer_.cancel();
+
+        hwer_.terminate();
     }
 
 }
