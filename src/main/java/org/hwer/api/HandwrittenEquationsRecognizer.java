@@ -17,7 +17,6 @@ import org.hwer.image_processing.CoreImpl;
 import org.hwer.image_processing.DistorterImpl;
 
 import java.io.IOException;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;

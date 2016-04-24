@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -72,17 +73,27 @@ class DrawingPanel extends JPanel implements MouseInputListener{
     protected void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
 
-        ((Graphics2D) graphics).setStroke(basicStroke_);
+        Graphics2D graphics2D = (Graphics2D) graphics;
+
+        graphics2D.setStroke(basicStroke_);
 
         for(int i = 0, n = traceGroup_.size();i < n;i++) {
-            drawTrace(graphics, traceGroup_.get(i));
+            drawTrace(graphics2D, traceGroup_.get(i));
         }
 
-        drawTrace(graphics, currentTrace_);
+        drawTrace(graphics2D, currentTrace_);
     }
 
     private void drawTrace(Graphics graphics, Trace trace){
         int numberOfPoints = trace.size();
+
+        if(numberOfPoints == 1){
+            Point point = trace.get(0);
+            ((Graphics2D) graphics).fill(new Ellipse2D.Double(
+                point.x_ - 5, dimension_.height - point.y_ - 5, 10, 10));
+
+            return;
+        }
 
         Point currentPoint;
         Point nextPoint;
