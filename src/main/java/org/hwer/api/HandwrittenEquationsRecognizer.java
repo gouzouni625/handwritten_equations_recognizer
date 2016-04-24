@@ -132,6 +132,17 @@ public class HandwrittenEquationsRecognizer {
     }
 
     /**
+     * @brief Set the logging Level of this HandwrittenEquationsRecognizer
+     *
+     * @param level
+     *     The new logging Level
+     */
+    public void setLogLevel(Level level){
+        partitioner_.logger_.setLevel(level);
+        parser_.logger_.setLevel(level);
+    }
+
+    /**
      * @brief Terminates this HandwrittenEquationsRecognizer
      */
     public void terminate () {

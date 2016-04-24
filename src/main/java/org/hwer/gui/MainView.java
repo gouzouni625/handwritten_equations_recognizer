@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.logging.Level;
 
 
 /**
@@ -43,8 +44,11 @@ public class MainView implements WindowListener, ActionListener {
         HandwrittenEquationsRecognizer hwer = null;
         try {
             hwer = new HandwrittenEquationsRecognizer();
+            hwer.setLogLevel(Level.OFF);
         } catch (IOException e) {
             e.printStackTrace();
+
+            System.exit(1);
         }
         hwer_ = hwer;
 
