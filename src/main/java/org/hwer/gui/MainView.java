@@ -17,15 +17,28 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 
 
-public class MainView implements WindowListener, ActionListener{
-    public static void main(String[] args){
+/**
+ * @class MainView
+ * @brief Java Desktop graphics class that demonstrates the functionality of the Handwritten
+ *        Equations Recognizer.
+ */
+public class MainView implements WindowListener, ActionListener {
+    /**
+     * @brief main method
+     *
+     * @param args
+     *     arguments pass to main
+     */
+    public static void main (String[] args) {
         new MainView();
     }
 
-    private static final HandwrittenEquationsRecognizer hwer_;
-    private static final DrawingPanel drawingPanel_;
-    private static final JTextField outputField_;
-    private static final JButton clearButton_;
+    private static final HandwrittenEquationsRecognizer hwer_; //!< The HandwrittenEquationsRecognizer
+                                                               //!< used by this MainView
+    private static final DrawingPanel drawingPanel_; //!< The DrawingPanel used by this MainView
+    private static final JTextField outputField_; //!< The text field where the recognized equation
+                                                  //!< is displayed
+    private static final JButton clearButton_; //!< The button to clear the DrawingPanel
     static {
         HandwrittenEquationsRecognizer hwer = null;
         try {
@@ -43,7 +56,10 @@ public class MainView implements WindowListener, ActionListener{
         clearButton_ = new JButton("clear");
     }
 
-    public MainView(){
+    /**
+     * @brief Default Constructor
+     */
+    public MainView () {
         JFrame jFrame = new JFrame("Handwritten Equations Recognizer");
         jFrame.addWindowListener(this);
 
@@ -68,18 +84,78 @@ public class MainView implements WindowListener, ActionListener{
         jFrame.setVisible(true);
     }
 
-    public void windowOpened (WindowEvent windowEvent) {}
+    /**
+     * @brief Invoked the first time this MainView window is made visible
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
+    public void windowOpened (WindowEvent windowEvent) {
+    }
+
+    /**
+     * @brief Invoked when the user attempts to close this MainView window
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
     public void windowClosing (WindowEvent windowEvent) {
         drawingPanel_.terminate();
 
         System.exit(0);
     }
-    public void windowClosed (WindowEvent windowEvent) {}
-    public void windowIconified (WindowEvent windowEvent) {}
-    public void windowDeiconified (WindowEvent windowEvent) {}
-    public void windowActivated (WindowEvent windowEvent) {}
-    public void windowDeactivated (WindowEvent windowEvent) {}
 
+    /**
+     * @brief Invoked when this MainView window has been closed
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
+    public void windowClosed (WindowEvent windowEvent) {
+    }
+
+    /**
+     * @brief Invoked when this MainView window is changed from a normal to a minimized state
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
+    public void windowIconified (WindowEvent windowEvent) {
+    }
+
+    /**
+     * @brief Invoked when this MainView window is changed from a minimized to a normal state
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
+    public void windowDeiconified (WindowEvent windowEvent) {
+    }
+
+    /**
+     * @brief Invoked when this MainView window is set to be the active window
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
+    public void windowActivated (WindowEvent windowEvent) {
+    }
+
+    /**
+     * @brief Invoked when this MainView window is no longer the active window
+     *
+     * @param windowEvent
+     *     The windowEvent raised
+     */
+    public void windowDeactivated (WindowEvent windowEvent) {
+    }
+
+    /**
+     * @brief Invoked when an action occurs
+     *
+     * @param actionEvent
+     *     The ActionEvent raised
+     */
     public void actionPerformed (ActionEvent actionEvent) {
         drawingPanel_.reset();
     }
