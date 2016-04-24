@@ -23,13 +23,39 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-class DrawingPanel extends JPanel implements MouseInputListener{
-    DrawingPanel (HandwrittenEquationsRecognizer hwer, JTextField outputField){
+/**
+ * @class DrawingPanel
+ * @brief Implements a canvas where the used can draw on using the mouse
+ *        The DrawingPanel uses a HandwrittenEquationsRecognizer to recognize the input equation
+ *        and also a text field to output the result.
+ */
+class DrawingPanel extends JPanel implements MouseInputListener {
+    /**
+     * @brief Constructor
+     *
+     * @param hwer
+     *     The HandwrittenEquationsRecognizer of this DrawingPanel
+     * @param outputField
+     *     The output field of this DrawingPanel
+     */
+    DrawingPanel (HandwrittenEquationsRecognizer hwer, JTextField outputField) {
         this(hwer, outputField, 1536, 480);
     }
 
-    public DrawingPanel(final HandwrittenEquationsRecognizer hwer, final JTextField outputField,
-                        int width, int height){
+    /**
+     * @brief Constructor
+     *
+     * @param hwer
+     *     The HandwrittenEquationsRecognizer of this DrawingPanel
+     * @param outputField
+     *     The output field of this DrawingPanel
+     * @param width
+     *     The width of this DrawingPanel
+     * @param height
+     *     The height of this DrawingPanel
+     */
+    public DrawingPanel (final HandwrittenEquationsRecognizer hwer, final JTextField outputField,
+                         int width, int height) {
         setBorder(BorderFactory.createLineBorder(Color.black));
         setBackground(Color.lightGray);
 
@@ -57,7 +83,7 @@ class DrawingPanel extends JPanel implements MouseInputListener{
             public void run () {
                 String currentEquation = hwer_.getEquation();
 
-                if(!currentEquation.equals(outputField_.getText())) {
+                if (! currentEquation.equals(outputField_.getText())) {
                     outputField_.setText(hwer_.getEquation());
                 }
             }
@@ -69,25 +95,39 @@ class DrawingPanel extends JPanel implements MouseInputListener{
         this.addMouseMotionListener(this);
     }
 
+    /**
+     * @brief Calls the UI delegate's paint method, if the UI delegate is non-null
+     *
+     * @param graphics
+     *    The Graphics object
+     */
     @Override
-    protected void paintComponent(Graphics graphics){
+    protected void paintComponent (Graphics graphics) {
         super.paintComponent(graphics);
 
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         graphics2D.setStroke(basicStroke_);
 
-        for(int i = 0, n = traceGroup_.size();i < n;i++) {
+        for (int i = 0, n = traceGroup_.size(); i < n; i++) {
             drawTrace(graphics2D, traceGroup_.get(i));
         }
 
         drawTrace(graphics2D, currentTrace_);
     }
 
-    private void drawTrace(Graphics graphics, Trace trace){
+    /**
+     * @brief Draws a Trace on a Graphics object
+     *
+     * @param graphics
+     *     The Graphics object to draw on
+     * @param trace
+     *     The Trace to be drawn
+     */
+    private void drawTrace (Graphics graphics, Trace trace) {
         int numberOfPoints = trace.size();
 
-        if(numberOfPoints == 1){
+        if (numberOfPoints == 1) {
             Point point = trace.get(0);
             ((Graphics2D) graphics).fill(new Ellipse2D.Double(
                 point.x_ - 5, dimension_.height - point.y_ - 5, 10, 10));
@@ -97,13 +137,155 @@ class DrawingPanel extends JPanel implements MouseInputListener{
 
         Point currentPoint;
         Point nextPoint;
-        for(int i = 0;i < numberOfPoints - 1;i++){
+        for (int i = 0; i < numberOfPoints - 1; i++) {
             currentPoint = trace.get(i);
             nextPoint = trace.get(i + 1);
 
-            graphics.drawLine((int)currentPoint.x_, dimension_.height - (int)currentPoint.y_,
-                (int)nextPoint.x_, dimension_.height - (int)nextPoint.y_);
+            graphics.drawLine((int) currentPoint.x_, dimension_.height - (int) currentPoint.y_,
+                (int) nextPoint.x_, dimension_.height - (int) nextPoint.y_);
         }
+    }
+
+    /**
+     * @brief Invoked when a mouse button has been pressed on this DrawingPanel
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mousePressed (MouseEvent mouseEvent) {
+        if (appendInputTask_ != null) {
+            appendInputTask_.cancel();
+            timer_.purge();
+        }
+
+        moved_ = false;
+
+        int currentX = mouseEvent.getX();
+        int currentY = mouseEvent.getY();
+
+        currentTrace_ = new Trace();
+        currentTrace_.add(new Point(currentX, dimension_.height - currentY));
+
+        previousX_ = currentX;
+        previousY_ = currentY;
+    }
+
+    /**
+     * @brief Invoked when a mouse button has been released on this DrawingPanel
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mouseReleased (MouseEvent mouseEvent) {
+        if (moved_) {
+            currentTrace_.add(new Point(mouseEvent.getX(), dimension_.height - mouseEvent.getY()));
+        }
+
+        if (isEraseTrace(currentTrace_)) {
+            TraceGroup toBeRemoved = new TraceGroup();
+            for (int i = 0; i < traceGroup_.size(); i++) {
+                if (Trace.areOverlapped(traceGroup_.get(i), currentTrace_)) {
+                    toBeRemoved.add(traceGroup_.get(i));
+                }
+            }
+
+            if (hwer_.remove(toBeRemoved)) {
+                for (int i = 0, n = toBeRemoved.size(); i < n; i++) {
+                    traceGroup_.remove(toBeRemoved.get(i));
+                }
+            }
+
+            currentTrace_ = new Trace();
+        }
+        else {
+            unAppendedTraceGroup_.add(currentTrace_);
+
+            scheduleAppendInputTask();
+        }
+    }
+
+    /**
+     * @brief Invoked when a mouse button is pressed on this DrawingPanel and then dragged
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mouseDragged (MouseEvent mouseEvent) {
+        int currentX = mouseEvent.getX();
+        int currentY = mouseEvent.getY();
+
+        int dx = currentX - previousX_;
+        int dy = currentY - previousY_;
+
+        if (Math.abs(dx) >= TOUCH_TOLERANCE || Math.abs(dy) >= TOUCH_TOLERANCE) {
+            moved_ = true;
+
+            currentTrace_.add(new Point(currentX, dimension_.height - currentY));
+
+            previousX_ = currentX;
+            previousY_ = currentY;
+        }
+    }
+
+    /**
+     * @brief Invoked when the mouse button has been clicked (pressed and released) on this
+     *        DrawingPanel
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mouseClicked (MouseEvent mouseEvent) {
+    }
+
+    /**
+     * @brief Invoked when the mouse enters this DrawingPanel
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mouseEntered (MouseEvent mouseEvent) {
+    }
+
+    /**
+     * @brief Invoked when the mouse exits this DrawingPanel
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mouseExited (MouseEvent mouseEvent) {
+    }
+
+    /**
+     * @brief Invoked when the mouse cursor has been moved onto this DrawingPanel but no buttons
+     *        have been pushed
+     *
+     * @param mouseEvent
+     *     The MouseEvent raised
+     */
+    public void mouseMoved (MouseEvent mouseEvent) {
+    }
+
+    /**
+     * @brief Resets this DrawingPanel
+     *        To reset a DrawingPanel is to bring it to the state it was when instantiated
+     */
+    public void reset () {
+        currentTrace_ = new Trace();
+        unAppendedTraceGroup_ = new TraceGroup();
+        traceGroup_ = new TraceGroup();
+
+        hwer_.reset();
+
+        outputField_.setText("");
+    }
+
+    /**
+     * @brief Terminates this DrawingPanel
+     */
+    public void terminate () {
+        timer_.cancel();
+
+        hwer_.terminate();
     }
 
     /**
@@ -185,111 +367,28 @@ class DrawingPanel extends JPanel implements MouseInputListener{
         return ! ((meanAngle <= - Math.PI / 9) || (meanAngle >= Math.PI / 9));
     }
 
-    public void reset(){
-        currentTrace_ = new Trace();
-        unAppendedTraceGroup_ = new TraceGroup();
-        traceGroup_ = new TraceGroup();
+    private Trace currentTrace_; //!< The current Trace of this DrawingPanel
+    private TraceGroup unAppendedTraceGroup_; //!< The un-appended traces of this DrawingPanel
+    private TraceGroup traceGroup_; //!< The TraceGroup of this DrawingPanel
 
-        hwer_.reset();
-
-        outputField_.setText("");
-    }
-
-    private Trace currentTrace_;
-    private TraceGroup unAppendedTraceGroup_; //!< The un-appended traces of this InputSurfaceView
-    private TraceGroup traceGroup_;
-
-    private int previousX_;
-    private int previousY_;
+    private int previousX_; //!< The x coordinate of the last touch on this DrawingPanel
+    private int previousY_; //!< The y coordinate of the last touch on this DrawingPanel
     private boolean moved_; //!< Flag indicating whether there has been a move action on this
                             //!< DrawingPanel
 
-    private Dimension dimension_;
+    private Dimension dimension_; //!< THe dimensions of this DrawingPanel
+    private final BasicStroke basicStroke_; //!< The Stroke used by this DrawingPanel
 
-    private final CoreImpl core_;
+    private final CoreImpl core_; //!< The image processing Core of this DrawingPanel
 
-    private final int TOUCH_TOLERANCE = 4;
+    private final int TOUCH_TOLERANCE = 4; //!< The sensitivity of this DrawingPanel as to whether a
+                                           //!< move action event has occurred
 
-    private final HandwrittenEquationsRecognizer hwer_;
-    private final JTextField outputField_;
+    private final HandwrittenEquationsRecognizer hwer_; //!< The HandwrittenEquationsRecognizer of
+                                                        //!< of this DrawingPanel
+    private final JTextField outputField_; //!< The output field of this DrawingPanel
 
-    private final Timer timer_;
-    private TimerTask appendInputTask_; //!< The append input task of this InputSurfaceView
-
-    private final BasicStroke basicStroke_;
-
-    public void mousePressed (MouseEvent mouseEvent) {
-        if (appendInputTask_ != null) {
-            appendInputTask_.cancel();
-            timer_.purge();
-        }
-
-        moved_ = false;
-
-        int currentX = mouseEvent.getX();
-        int currentY = mouseEvent.getY();
-
-        currentTrace_ = new Trace();
-        currentTrace_.add(new Point(currentX, dimension_.height - currentY));
-
-        previousX_ = currentX;
-        previousY_ = currentY;
-    }
-
-    public void mouseReleased (MouseEvent mouseEvent) {
-        if(moved_) {
-            currentTrace_.add(new Point(mouseEvent.getX(), dimension_.height - mouseEvent.getY()));
-        }
-
-        if(isEraseTrace(currentTrace_)){
-            TraceGroup toBeRemoved = new TraceGroup();
-            for (int i = 0; i < traceGroup_.size(); i++) {
-                if (Trace.areOverlapped(traceGroup_.get(i), currentTrace_)) {
-                    toBeRemoved.add(traceGroup_.get(i));
-                }
-            }
-
-            if (hwer_.remove(toBeRemoved)) {
-                for (int i = 0, n = toBeRemoved.size(); i < n; i++) {
-                    traceGroup_.remove(toBeRemoved.get(i));
-                }
-            }
-
-            currentTrace_ = new Trace();
-        }
-        else{
-            unAppendedTraceGroup_.add(currentTrace_);
-
-            scheduleAppendInputTask();
-        }
-    }
-
-    public void mouseDragged (MouseEvent mouseEvent) {
-        int currentX = mouseEvent.getX();
-        int currentY = mouseEvent.getY();
-
-        int dx = currentX - previousX_;
-        int dy = currentY - previousY_;
-
-        if(Math.abs(dx) >= TOUCH_TOLERANCE || Math.abs(dy) >= TOUCH_TOLERANCE){
-            moved_ = true;
-
-            currentTrace_.add(new Point(currentX, dimension_.height - currentY));
-
-            previousX_ = currentX;
-            previousY_ = currentY;
-        }
-    }
-
-    public void mouseClicked (MouseEvent mouseEvent) {}
-    public void mouseEntered (MouseEvent mouseEvent) {}
-    public void mouseExited (MouseEvent mouseEvent) {}
-    public void mouseMoved (MouseEvent mouseEvent) {}
-
-    public void terminate(){
-        timer_.cancel();
-
-        hwer_.terminate();
-    }
+    private final Timer timer_; //!< The Timer of this DrawingPanel
+    private TimerTask appendInputTask_; //!< The append input task of this DrawingPanel
 
 }
