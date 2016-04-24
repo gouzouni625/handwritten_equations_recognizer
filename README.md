@@ -51,6 +51,11 @@ cd build/libs
 java -jar handwritten_equations_recognizer.jar
 ```
 
+To erase some traces you can cross them with a horizontal line from right to left as shown at the
+image below:
+
+![alt tag](erase.gif)
+
 ## Efficiency
 At the moment, the recognizer can recognize the following symbols:
 
