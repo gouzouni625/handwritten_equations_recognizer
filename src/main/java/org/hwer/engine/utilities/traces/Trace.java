@@ -19,7 +19,7 @@ public class Trace implements Iterable<Point> {
      * @brief Default constructor
      */
     public Trace () {
-        points_ = new ArrayList<Point>();
+        points_ = new ArrayList<>();
 
         calculateAll();
     }
@@ -33,7 +33,7 @@ public class Trace implements Iterable<Point> {
      *     The Trace to be copied
      */
     public Trace (Trace trace) {
-        points_ = new ArrayList<Point>();
+        points_ = new ArrayList<>();
 
         for (Point point : trace) {
             points_.add(new Point(point));

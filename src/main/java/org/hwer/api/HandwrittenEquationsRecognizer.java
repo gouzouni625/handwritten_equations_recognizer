@@ -23,8 +23,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 
+/**
+ * @class HandwrittenEquationsRecognizer
+ * @brief Wraps the whole engine in a minimum API.
+ */
 public class HandwrittenEquationsRecognizer {
-    public HandwrittenEquationsRecognizer() throws IOException {
+    /**
+     * @brief Default constructor
+     *
+     * @throws IOException If any of the resources is not found
+     */
+    public HandwrittenEquationsRecognizer () throws IOException {
         CoreImpl core = new CoreImpl();
         DistorterImpl distorter = new DistorterImpl();
 
@@ -61,7 +70,7 @@ public class HandwrittenEquationsRecognizer {
                 operatorsNeuralNetwork,
                 lettersNeuralNetwork
             },
-            new Labels[][]{
+            new Labels[][] {
                 {
                     Labels.CIRCLE,
                     Labels.ONE,
@@ -110,11 +119,22 @@ public class HandwrittenEquationsRecognizer {
         new Thread(consumer_).start();
     }
 
-    private InputStream getResource(String resourceName){
+    /**
+     * @brief Returns an InputStream on a resource given its name
+     *
+     * @param resourceName
+     *     The resource name
+     *
+     * @return An InputStream on a resource given its name
+     */
+    private InputStream getResource (String resourceName) {
         return HandwrittenEquationsRecognizer.class.getResourceAsStream(resourceName);
     }
 
-    public void terminate(){
+    /**
+     * @brief Terminates this HandwrittenEquationsRecognizer
+     */
+    public void terminate () {
         consumer_.setRunning(false);
     }
 
@@ -136,7 +156,12 @@ public class HandwrittenEquationsRecognizer {
         return equation;
     }
 
-    public void reset(){
+    /**
+     * @brief Resets this HandwrittenEquationsRecognizer
+     *        To reset a HandwrittenEquationsRecognizer is to bring it to the state it was when
+     *        it was instantiated.
+     */
+    public void reset () {
         tasksQueue_.clear();
 
         resetParser();
@@ -169,7 +194,7 @@ public class HandwrittenEquationsRecognizer {
     /**
      * @brief Schedules the given TraceGroup to be removed
      *        The scheduling is done by adding a RemoveTask to the tasksQueue.
-     *
+
      * @param traceGroup
      *     The TraceGroup to be removed
      *
@@ -196,12 +221,12 @@ public class HandwrittenEquationsRecognizer {
         }
     }
 
-    private MSTPartitioner partitioner_;
-    private GrammarParser parser_;
+    private MSTPartitioner partitioner_; //!< The partitioner of this HandwrittenEquationsRecognizer
+    private GrammarParser parser_; //!< The parser of this HandwrittenEquationsRecognizer
 
-    private Consumer consumer_;
+    private Consumer consumer_; //!< The consumer that executes the tasks from the tasks queue
 
-    private ArrayBlockingQueue<Runnable> tasksQueue_;
+    private ArrayBlockingQueue<Runnable> tasksQueue_; //!< The queue where the tasks are sent
 
     private static final long TASKS_QUEUE_OFFER_TIMEOUT = 100; //!< The time to wait on the
                                                                //!< tasksQueue to accept a task in
