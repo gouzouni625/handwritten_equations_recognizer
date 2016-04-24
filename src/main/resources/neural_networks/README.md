@@ -1,36 +1,46 @@
 # Trained Feed Forward Neural Networks
-In this folder you can find the two version(binary and xml) of a
-Feed Forward Neural Network that can be used with the
-handwritten equations recognizer.
+In this directory you can find the trained Feed Forward Neural Networks that this handwritten
+Equations Recognized used.
 
 ## Architecture
-This Neural Network consists of four(4) layers(including input and output
-layers). The size of each layer is:
+Each of these neural networks consists of five layers. These layers are the input layer, the output
+layer and three hidden layers. The input layer has 400 neurons, the first hidden layer has 64, the
+second hidden layer has 32 and the third hidden layer has 16 neuron. The size of the output layer is
+different for each neural network and is given below:
 
-First(input layer)  : 2500
-
-Second              :  100
-
-Third               :  100
-
-Fourth(output layer):   18
+cascade neural network: 4  
+numbers neural network: 10  
+variables neural network: 2  
+operators neural network: 9  
+letters neural network: 6
 
 ## Recognized symbols
-The symbols that this neural network can recognize are the following:
-0, 1, 2, 3, 4, 5, 6, 7, 8, 9, x, y, +, =, -, (, ), sqrt(square root).
+The cascade neural network can classify an input into 4 categories. These categories are: number,
+variable, operator or letter.
+
+The numbers neural network can clasify an input into 10 categories. These categories are: zero,
+one, two, three, four, five, size, seven, eight and nine.
+
+The variables neural network can classify an input into 2 categories. These categories are: x or y.
+
+The operators neural network can classify an input into 9 categories. These categories are: +, =,
+-, sqrt, (, ), >, < and |.
+
+The letters neural network can classify an input into 6 categories. These categories are: a, e, i,
+l, n and t.
 
 ## Data Used from Training and Testing
-This Neural Network has been trained on data created by GeoGebra users and
-gathered during the Google Summer of Code 2015 period. The pre-processing
-of the data before being used to training the Neural Network was done using the
-symbol extractor[1].
+These neural network have been trained on data created by the GeoGebra users and gathered during
+Google Summer of Code 2015.
 
 ## Accuracy
-The data used to train this Neural Network where split into two groups. The
-first group contained the 70% of the data and was used for training the
-Neural Network while the second group contained 30% of the data and was
-used for testing the Neural Network. On this testing set, this Neural Network
-reached an accuracy of 95.70%.
+The data used to train these neural networks where split into two groups. The first group contained
+the 70% of the data and was used for training while the second group contained the rest 30% of the
+data and was used for testing. On this testing set, each neural network achieved an accuracy higher
+that 95%.
+
+The training of the neural networks was done using Tensorflow[1].
 
 ## References
-[1] https://github.com/gouzouni625/symbol_extractor
+
+[1]: https://www.tensorflow.org/
